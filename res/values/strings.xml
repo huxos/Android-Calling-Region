@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">归属地</string>
+    <string name="action_settings">设置</string>
+    <string name="label">查询归属地</string>
+    <string name="using_network">联网查询</string>
+    <string name="without_using_network">[未开启网络查询]</string>
+    <string name="search">查 询</string>
+    <string name="loading">[查询中]</string>
+    <string name="input_phone_number">[输入手机号码]</string>
+    <string name="local">本地</string>
+    <string name="remote">网络</string>
+    <string name="area">四川成都[联通]</string>
+    <string name="none_area">[暂无归属地信息]</string>
+    <string name="action_save">更新到本地</string>
+    <string name="action_about">关于</string>
+    <string name="setting_show_area_title">显示设置</string>
+    <string name="setting_show_area">归属地显示</string>
+    <string name="setting_query_title">查询设置</string>
+    <string name="setting_show_area_call_out">去电显示归属地</string>
+    <string name="setting_show_area_call_in">来电显示归属地</string>
+    <string name="setting_show_area_call_in_summary">当电话呼入时在界面显示归属地信息</string>
+    <string name="setting_show_area_call_out_summary">在您呼叫时显示所呼叫号码的归属地信息</string>
+    <string name="setting_using_network_summary">查询归属地的时候使用网络</string>
+    <string name="about_summary">来去电归属地显示、归属地查询小程序, By Huxos: http://huxos.me !</string>
+
+</resources>

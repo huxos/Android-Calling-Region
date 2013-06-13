@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/setting_show_area_title" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="view_area"
+            android:title="@string/setting_show_area" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="view_area"
+            android:key="view_area_call_in"
+            android:summary="@string/setting_show_area_call_in_summary"
+            android:title="@string/setting_show_area_call_in" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="view_area"
+            android:key="view_area_call_out"
+            android:summary="@string/setting_show_area_call_out_summary"
+            android:title="@string/setting_show_area_call_out" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/setting_query_title" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="using_network"
+            android:summary="@string/setting_using_network_summary"
+            android:title="@string/using_network" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
