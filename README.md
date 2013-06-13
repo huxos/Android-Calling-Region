@@ -12,6 +12,9 @@ Android 来去电归属地显示、归属地查询小程序。
 4.  源码里面有一个8M多的数据Sqlite数据库，27W+条手机号归属地数据，自己从网上一条一条抓取下来的，可能比我程序的价值还大些。
 
 
+##APK 安装包下载地址
+
+[http://pan.baidu.com/share/link?shareid=2100068644&uk=1140922345] [5]
 
 ##软件截图
 <br />
@@ -31,3 +34,5 @@ Android 来去电归属地显示、归属地查询小程序。
 [2]: http://bcs.duapp.com/picstore/y1qWHUgBkU.png
 
 [3]: http://bcs.duapp.com/picstore/mYxMRm3LX8.png
+
+[4]: http://pan.baidu.com/share/link?shareid=2100068644&uk=1140922345
