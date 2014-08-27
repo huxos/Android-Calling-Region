@@ -6,8 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="15"/>
     <!-- 使用网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 读取电话状态的权限 -->
