@@ -1,1 +1,10 @@
-/bin
+bin/
+.classpath
+.project
+.settings/org.eclipse.jdt.core.prefs
+gen/
+gen/me/huxos/checkout/BuildConfig.java
+gen/me/huxos/checkout/R.java
+libs/android-support-v4.jar
+lint.xml
+project.properties
