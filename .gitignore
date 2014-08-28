@@ -2,6 +2,7 @@ bin/
 .classpath
 .project
 .settings/org.eclipse.jdt.core.prefs
+.settings/
 gen/
 gen/me/huxos/checkout/BuildConfig.java
 gen/me/huxos/checkout/R.java
