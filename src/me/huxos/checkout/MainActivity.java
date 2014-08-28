@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -139,7 +140,7 @@ public class MainActivity extends Activity {
 		phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
 		if (phoneNumber.length() >= 7 && phoneNumber.length() <= 11) {
 			// 截取前面7个数字
-			phoneNumber = phoneNumber.substring(0, 7);
+			String phoneNumberShort = phoneNumber.substring(0, 7);
 
 			// 重置保存按钮
 			menuItem.setEnabled(false);
@@ -148,14 +149,14 @@ public class MainActivity extends Activity {
 			textView3.setText(R.string.loading);
 
 			textView6.setVisibility(View.VISIBLE);
-			textView6.setText(phoneNumber);
+			textView6.setText(phoneNumberShort);
 			textView6.setTextSize(40);
 			// 清空输入框
 			editText.setText("");
 
 			// 查询数据库
 			PhoneArea phoneArea;
-			if ((phoneArea = helper.findPhoneArea(new String[] { phoneNumber
+			if ((phoneArea = helper.findPhoneArea(new String[] { phoneNumberShort
 					.toString() })) != null) {
 
 				textView3.setText(phoneArea.getArea());
@@ -188,9 +189,10 @@ public class MainActivity extends Activity {
 		@Override
 		protected PhoneArea doInBackground(String... params) {
 			PhoneArea phoneArea = null;
-			// 有道手机归属地api
-			String path = "http://www.youdao.com/smartresult-xml/search.s?type=mobile&q="
+			// 财付通手机归属地api
+			String path = "http://life.tenpay.com/cgi-bin/mobile/MobileQueryAttribution.cgi?chgmobile="
 					+ params[0];
+			Log.i("RemoteHelper", "url:" + path);
 			try {
 				HttpClient client = new DefaultHttpClient();
 				HttpGet get = new HttpGet(path);
@@ -206,16 +208,7 @@ public class MainActivity extends Activity {
 							String phonenum = product.getPhonenum();
 							StringBuffer location = new StringBuffer(
 									product.getLocation());
-							//在归属地后面加上运营商
-							if (phonenum
-									.matches("^(130|131|132|145|155|156|185|186).*$")) {
-								location.append("[联通]");
-							} else if (phonenum
-									.matches("^(133|153|1349|180|181|189).*$")) {
-								location.append("[电信]");
-							} else {
-								location.append("[移动]");
-							}
+							
 							phoneArea = new PhoneArea(Integer.parseInt(phonenum
 									.substring(0, 7)), location.toString()
 									.replaceAll(" ", ""));
@@ -242,18 +235,26 @@ public class MainActivity extends Activity {
 			parser.setInput(inputStream, "GBK");
 			int event = parser.getEventType();
 			while (event != XmlPullParser.END_DOCUMENT) {
+				Log.d("RemoteHelper", "parser.getName:" + parser.getName());
 				switch (event) {
 				case XmlPullParser.START_TAG:
-					if ("product".equals(parser.getName())) {
+					if ("root".equals(parser.getName())) {
 						product = new Product();
-					} else if ("phonenum".equals(parser.getName())) {
+					} else if ("chgmobile".equals(parser.getName())) {
 						product.setPhonenum(parser.nextText());
-					} else if ("location".equals(parser.getName())) {
-						product.setLocation(parser.nextText());
+					} else if ("city".equals(parser.getName())) {
+						product.setCity(parser.nextText());
+						Log.d("RemoteHelper", "city:" + product.getLocation());
+					} else if("province".equals(parser.getName())) {
+						product.setProvince(parser.nextText());
+						Log.d("RemoteHelper", "city:" + product.getLocation());
+					} else if("supplier".equals(parser.getName())) {
+						product.setSupplier(parser.nextText());
+						Log.d("RemoteHelper", "city:" + product.getLocation());
 					}
 					break;
 				case XmlPullParser.END_TAG:
-					if ("product".equals(parser.getName())) {
+					if ("root".equals(parser.getName())) {
 						products.add(product);
 						product = null;
 					}

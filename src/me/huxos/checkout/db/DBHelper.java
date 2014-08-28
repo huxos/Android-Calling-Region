@@ -114,7 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				Integer id = c.getInt(c.getColumnIndex("_id"));
 				String area = c.getString(c.getColumnIndex("area"));
 				phoneArea = new PhoneArea(id, area);
-				Log.d(TAG, "find:" + args + ";area:" + area);
+				Log.d(TAG, "find:" + args[0] + ";area:" + area);
 			}
 			else
 			{
