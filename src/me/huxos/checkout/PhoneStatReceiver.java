@@ -44,13 +44,16 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		//来电时显示归属地
 		view_area_call_in = PreferenceManager.getDefaultSharedPreferences(
 				context).getBoolean("view_area_call_in", true);
+
 		if (view_area && (view_area_call_in || view_area_call_out)) {
 			// 拨打电话
 			if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
 				incomingFlag = false;
 				String phoneNumber = intent
 						.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-				Log.i(TAG, "CALL OUT: " + phoneNumber);
+				// 去掉非数字字符
+				phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
+				Log.i(TAG, "view_area_call_out:" + String.valueOf(view_area_call_out) + "; CALL OUT: " + phoneNumber);
 				if (view_area_call_out)
 					new ShowArea(context).execute(phoneNumber);
 			} else {
@@ -63,7 +66,9 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 				case TelephonyManager.CALL_STATE_RINGING:
 					incomingFlag = true;
 					incoming_number = intent.getStringExtra("incoming_number");
-					Log.i(TAG, "CALL IN RINGING :" + incoming_number);
+					// 去掉非数字字符
+					incoming_number = incoming_number.replaceAll("[^0-9]", "");
+					Log.i(TAG,  "view_area_call_in:" + String.valueOf(view_area_call_in) + "; CALL IN RINGING :" + incoming_number);
 					if (view_area_call_in)
 						new ShowArea(context).execute(incoming_number);
 					break;
@@ -109,6 +114,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			//得到连接
 			helper = DBHelper.getInstance(context);
 			String incomingNumber = param[0];
+			Log.d(TAG, "Number:" + incomingNumber);
 			PhoneArea phoneArea;
 			if ((incomingNumber != null && incomingNumber.length() >= 7)
 					&& ((phoneArea = helper.findPhoneArea((incomingNumber)
