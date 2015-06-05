@@ -1,6 +1,13 @@
 package me.huxos.checkout;
 
+import java.lang.reflect.Method;
+import java.util.Date;
+
+import com.android.internal.telephony.ITelephony;
+
 import me.huxos.checkout.db.DBHelper;
+import me.huxos.checkout.entity.CBlockerPhoneLog;
+import me.huxos.checkout.entity.CBrockerlist;
 import me.huxos.checkout.entity.PhoneArea;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -23,7 +30,6 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "PhoneStatReceiver";
 	private static WindowManager wm;
-	private static DBHelper helper;
 	private static TextView tv;
 	private boolean view_area;
 	private boolean view_area_call_in;
@@ -49,8 +55,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			// 拨打电话
 			if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
 				incomingFlag = false;
-				String phoneNumber = intent
-						.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+				String phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 				// 去掉非数字字符
 				phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
 				Log.i(TAG, "view_area_call_out:" + String.valueOf(view_area_call_out) + "; CALL OUT: " + phoneNumber);
@@ -62,24 +67,34 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 						.getSystemService(Service.TELEPHONY_SERVICE);
 
 				switch (tm.getCallState()) {
-				//电话等待接听
-				case TelephonyManager.CALL_STATE_RINGING:
+				case TelephonyManager.CALL_STATE_RINGING: //电话等待接听
 					incomingFlag = true;
-					incoming_number = intent.getStringExtra("incoming_number");
-					// 去掉非数字字符
+					//incoming_number = intent.getStringExtra("incoming_number");
+					incoming_number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+					// 去掉非数字字符（可能会包含空格）
 					incoming_number = incoming_number.replaceAll("[^0-9]", "");
 					Log.i(TAG,  "view_area_call_in:" + String.valueOf(view_area_call_in) + "; CALL IN RINGING :" + incoming_number);
+
+					// 来电拦截
+					CFirewallOperate firewallOperate = new CFirewallOperate(context);
+					if(firewallOperate.brockerPhone(incoming_number)) {
+						brockerPhone(context, incoming_number);
+						break;
+					}
+
+					//区域显示
 					if (view_area_call_in)
 						new ShowArea(context).execute(incoming_number);
+
 					break;
-				//电话摘机
-				case TelephonyManager.CALL_STATE_OFFHOOK:
+
+				case TelephonyManager.CALL_STATE_OFFHOOK: //电话摘机
 					if (incomingFlag) {
 						Log.i(TAG, "CALL IN ACCEPT :" + incoming_number);
 					}
 					break;
-				//电话挂机
-				case TelephonyManager.CALL_STATE_IDLE:
+
+				case TelephonyManager.CALL_STATE_IDLE: //电话挂机
 					Log.i(TAG, "CALL IDLE");
 					try {
 						if (wm != null)
@@ -93,6 +108,52 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		}
 	}
 
+	/**
+	 * 拦截电话操作
+	 * @param context
+	 */
+	private void brockerPhone(Context context, String number) {
+		//挂机
+		endCall(context);
+		//写入拦截日志
+		Date d = new Date();
+		CBlockerPhoneLog log = new CBlockerPhoneLog(number, d.getTime());
+		DBHelper db = DBHelper.getInstance(context);
+		db.insertBlockerPhoneLog(log);
+	}
+	
+	/**
+	 * 挂机
+	 * @return
+	 */
+	private boolean endCall(Context context)
+	{
+		boolean bRet = false;
+
+		//AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+		try {			
+            //mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);//静音处理
+
+			TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);  
+			Class<TelephonyManager> c =  TelephonyManager.class;
+			Method getITelephonyMethod = c.getDeclaredMethod("getITelephony",
+					(Class[]) null);
+			getITelephonyMethod.setAccessible(true);
+			ITelephony iTelephony = null;
+			Log.d(TAG, "End call.");
+			
+			iTelephony = (ITelephony) getITelephonyMethod.invoke(telMgr,
+					(Object[]) null);
+			bRet = iTelephony.endCall();
+		} catch (Exception e) {
+			Log.e(TAG, "Fail to answer ring call.", e);
+		} finally {
+			//再恢复正常铃声    
+            //mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);  			
+		}
+		return bRet;
+	}
+	
 	/**
 	 * 异步任务
 	 * @author hy511
@@ -112,7 +173,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			tv = new TextView(context);
 			tv.setTextSize(25);
 			//得到连接
-			helper = DBHelper.getInstance(context);
+			DBHelper helper = DBHelper.getInstance(context);
 			String incomingNumber = param[0];
 			Log.d(TAG, "Number:" + incomingNumber);
 			PhoneArea phoneArea;
@@ -149,5 +210,4 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			wm.addView(tv, params);
 		}
 	}
-
 }
