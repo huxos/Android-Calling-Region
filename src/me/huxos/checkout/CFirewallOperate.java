@@ -27,7 +27,7 @@ public class CFirewallOperate {
 	public boolean brockerPhone(String number) {
 		DBHelper db = DBHelper.getInstance(context);
 		//检查是否打开防火墙 
-		CSystemInformation info = db.findSystemInformation();
+		CSystemInformation info = db.getSystemInformation();
 		if(info.getFirewallstatus().equals("0"))
 			return false;
 		//检查白名单
@@ -53,7 +53,7 @@ public class CFirewallOperate {
 	public boolean brockerSMS(String number) {
 		DBHelper db = DBHelper.getInstance(context);
 		//检查是否打开防火墙 
-		CSystemInformation info = db.findSystemInformation();
+		CSystemInformation info = db.getSystemInformation();
 		if(info.getFirewallstatus().equals("0"))
 			return false;
 		//检查白名单
@@ -69,4 +69,5 @@ public class CFirewallOperate {
 			return false;
 		return true;
 	}
+
 }

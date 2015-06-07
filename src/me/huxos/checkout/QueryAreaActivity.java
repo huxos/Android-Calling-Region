@@ -37,7 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class QueryAreaActivity extends Activity {
 
 	private static DBHelper helper;
 	private TextView textView5;
@@ -49,24 +49,22 @@ public class MainActivity extends Activity {
 	private boolean using_network;
 	private Toast toast;
 
-	public MainActivity() {
+	public QueryAreaActivity() {
 	}
 
 	@SuppressLint("SdCardPath")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_query_area);
 		textView5 = (TextView) findViewById(R.id.textView5);
-		textView3 = (TextView) findViewById(R.id.textView3);
+		textView3 = (TextView) findViewById(R.id.txtWhitelist);
 		textView6 = (TextView) findViewById(R.id.textView6);
 		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar2 = (ProgressBar) findViewById(R.id.ProgressBar2);
 
-		// 初次使用将准备好的数据库文件考入到系统目录共程序使用
-		DBHelper.copyDB(getBaseContext());
 		// 获得数据库连接
-		helper = DBHelper.getInstance(this);
+		helper = DBHelper.getInstance(this.getBaseContext());
 
 	}
 
@@ -79,7 +77,7 @@ public class MainActivity extends Activity {
 		using_network = PreferenceManager.getDefaultSharedPreferences(this)
 				.getBoolean("using_network", false);
 		if (using_network) {
-			if (textView5.getText().toString().equals("[未开启网络查询]"))
+			if (textView5.getText().toString().equals(R.string.without_using_network))
 				textView5.setText(R.string.input_phone_number);
 		} else
 			textView5.setText(R.string.without_using_network);
@@ -103,23 +101,23 @@ public class MainActivity extends Activity {
 			break;
 		// 关于菜单
 		case R.id.action_about:
-			LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+			LayoutInflater inflater = LayoutInflater.from(QueryAreaActivity.this);
 			final View dialog_view = inflater.inflate(R.layout.dialog_view,
 					null);
 			new AlertDialog.Builder(this).setTitle(R.string.action_about)
 					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(dialog_view).setPositiveButton("确定", null).show();
+					.setView(dialog_view).setPositiveButton(R.string.ok, null).show();
 			break;
 		// 更新到本地
 		case R.id.action_save:
 			PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
 					.getText().toString()), textView5.getText().toString());
 			if (helper.saveOrUpdatePhoneArea(phoneArea)) {
-				toast = Toast.makeText(this, "更新到本地成功", Toast.LENGTH_SHORT);
+				toast = Toast.makeText(this, R.string.update_success_locale, Toast.LENGTH_SHORT);
 				toast.show();
 				textView3.setText(phoneArea.getArea());
 			} else {
-				toast = Toast.makeText(this, "更新到本地失败", Toast.LENGTH_SHORT);
+				toast = Toast.makeText(this, R.string.update_faile_locale, Toast.LENGTH_SHORT);
 				toast.show();
 			}
 			break;

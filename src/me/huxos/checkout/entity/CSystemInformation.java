@@ -9,15 +9,8 @@ public class CSystemInformation {
 	private String firewallstatus;
 	private String user_name;
 	private String user_password;
-	public CSystemInformation(String firewallstatus, String user_name,
-			String user_password) {
-		super();
-		this.firewallstatus = firewallstatus;
-		this.user_name = user_name;
-		this.user_password = user_password;
-	}
 	public CSystemInformation() {
-		// TODO Auto-generated constructor stub
+		firewallstatus = "0";
 	}
 	public String getFirewallstatus() {
 		return firewallstatus;

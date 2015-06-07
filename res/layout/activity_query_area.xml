@@ -6,10 +6,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".QueryAreaActivity" >
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/scrollViewFirewall"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/txtBrockerList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label"
@@ -86,7 +86,7 @@
                 android:layout_marginTop="20dp" >
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/txtNumberWhitelist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -100,7 +100,7 @@
                 android:gravity="right|center_vertical" >
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/txtWhitelist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
