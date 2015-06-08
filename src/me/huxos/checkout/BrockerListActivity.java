@@ -97,7 +97,7 @@ public class BrockerListActivity extends Activity {
 		text = (TextView) findViewById(R.id.edtBrockerNumber);
 		String number = text.getText().toString();
 		Log.d(TAG, "onAdd:name:" + name + ";number:" + number);
-		CBrockerlist brockerlist = new CBrockerlist(number, 1, 1);
+		CBrockerlist brockerlist = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(brockerlist, m_isWhite);
 		m_adapter.UpdateDate();
@@ -128,8 +128,10 @@ public class BrockerListActivity extends Activity {
 				String number = c
 						.getString(c
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				// String name = c.getString(1);
-				CBrockerlist list = new CBrockerlist(number, 1, 1);
+				String name = c
+						.getString(c
+								.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME));
+				CBrockerlist list = new CBrockerlist(number, name, 1, 1);
 				db.updateBrockerList(list, requestCode == 1 ? true : false);
 			}
 		} catch (Exception e) {
@@ -171,29 +173,6 @@ public class BrockerListActivity extends Activity {
 			m_Brockerlist = m_db.findAllBrockerList(m_isWhite);
 			notifyDataSetChanged();
 			return;
-		}
-
-		/**
-		 * 从通信录中得到相关号码的名字
-		 * 
-		 * @param number
-		 * @return
-		 */
-		public String getContactNameFromPhoneBook(Context context,
-				String phoneNum) {
-			String contactName = "";
-			ContentResolver cr = context.getContentResolver();
-			Cursor pCur = cr.query(
-					ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-					ContactsContract.CommonDataKinds.Phone.NUMBER + " = ?",
-					new String[] { phoneNum }, null);
-			if (pCur.moveToFirst()) {
-				contactName = pCur
-						.getString(pCur
-								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-				pCur.close();
-			}
-			return contactName;
 		}
 
 		@Override
@@ -238,10 +217,9 @@ public class BrockerListActivity extends Activity {
 			// 更新值
 			CBrockerlist brockerList = m_Brockerlist.get(position);
 			holder.m_Number.setText(brockerList.getPhone_number());
-			String name = getContactNameFromPhoneBook(m_context,
+			String name = CTool.getNameFromPhone(m_context,
 					brockerList.getPhone_number());
-			if (null != name)
-				holder.m_Name.setText(name);
+			holder.m_Name.setText(name);
 			holder.m_PhoneEnable
 					.setChecked(brockerList.getPhone_enable() != 0 ? true
 							: false);

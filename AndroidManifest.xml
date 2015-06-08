@@ -33,7 +33,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-       
+
         <!-- BoradcastReceiver -->
         <receiver android:name="me.huxos.checkout.PhoneStatReceiver" >
             <intent-filter>
@@ -54,7 +54,7 @@
             </intent-filter>
         </receiver>
 
-         <activity
+        <activity
             android:name="me.huxos.checkout.FirewallSettingActivity"
             android:label="@string/title_activity_firewall_setting" >
             <intent-filter>
@@ -74,6 +74,10 @@
         <activity
             android:name="me.huxos.checkout.BrockerListActivity"
             android:label="@string/title_activity_brocker_list" >
+        </activity>
+        <activity
+            android:name="me.huxos.checkout.BrockerPhoneLogActivity"
+            android:label="@string/title_activity_brocker_phone_log" >
         </activity>
     </application>
 

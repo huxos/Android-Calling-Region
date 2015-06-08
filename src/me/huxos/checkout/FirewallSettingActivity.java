@@ -110,7 +110,9 @@ public class FirewallSettingActivity extends Activity {
 	 * @param source
 	 */
 	public void onBrockerPhoneLog(View source) {
-
+		Intent intent = new Intent();
+		intent.setClass(this, BrockerPhoneLogActivity.class);
+		startActivity(intent);
 	}
 
 	/**

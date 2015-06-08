@@ -28,18 +28,19 @@ public class SMSSTateReceiver extends BroadcastReceiver {
 			SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu);
 			// 发送者
 			String sender = message.getOriginatingAddress();
-			Log.d(TAG, "sms sender:" + sender
-					+ "\nmessage:" +  message.getMessageBody()
-					+ "\ntime:" + String.valueOf(message.getTimestampMillis()));
-			CFirewallOperate firewallOperate= new CFirewallOperate(context);
-			if(firewallOperate.brockerSMS(sender))
-			{
-				//写入拦截日志
-				CBlockerSMSLog log = new CBlockerSMSLog(sender, message.getMessageBody(),
-						message.getTimestampMillis(), 0);
+			Log.d(TAG,
+					"sms sender:" + sender + "\nmessage:"
+							+ message.getMessageBody() + "\ntime:"
+							+ String.valueOf(message.getTimestampMillis()));
+			CFirewallOperate firewallOperate = new CFirewallOperate(context);
+			if (firewallOperate.brockerSMS(sender)) {
+				// 写入拦截日志
+				CBlockerSMSLog log = new CBlockerSMSLog(sender, 
+						message.getMessageBody(), message.getTimestampMillis(),
+						0);
 				DBHelper db = DBHelper.getInstance(context);
 				db.insertBlockerSMSLog(log);
-				//取消继续广播
+				// 取消继续广播
 				abortBroadcast();
 			}
 		}

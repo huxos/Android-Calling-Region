@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.31"
                     android:onClick="onBrockerPhoneLog"
-                    android:text="@string/set" />
+                    android:text="@string/brower" />
             </LinearLayout>
             
               <LinearLayout
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.31"
                     android:onClick="onBrockerSMSLog"
-                    android:text="@string/set" />
+                    android:text="@string/brower" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -6,16 +6,24 @@ package me.huxos.checkout.entity;
  *
  */
 public class CBrockerlist {
+	private String name;
 	private String phone_number;
 	private Integer phone_enable;
 	private Integer sms_enable;
 	
-	public CBrockerlist(String phone_number, Integer phone_enable,
+	public CBrockerlist(String phone_number, String name, Integer phone_enable,
 			Integer sms_enable) {
 		super();
+		this.name = name;
 		this.phone_number = phone_number;
 		this.phone_enable = phone_enable;
 		this.sms_enable = sms_enable;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getPhone_number() {
 		return phone_number;

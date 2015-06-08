@@ -73,9 +73,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			/* 电话区域查询表 */
 			db.execSQL("create table  if not exists phone_location (_id INTEGER primary key,location varchar(32) not null)");
 			/* 白名单 */
-			db.execSQL("create table  if not exists whitelist(phone_number text primary key, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table  if not exists whitelist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
 			/* 黑名单 */
-			db.execSQL("create table  if not exists blacklist(phone_number text primary key, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table  if not exists blacklist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
 			/* 拦截电话日志 */
 			db.execSQL("create table  if not exists blocker_phone_log(no integer primary key, phone_number text, time integer)");
 			/* 拦截短信日志 */
@@ -100,9 +100,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			// 电话区域查询表
 			db.execSQL("create table  if not exists phone_location (_id INTEGER primary key,location varchar(32) not null)");
 			// 白名单
-			db.execSQL("create table  if not exists whitelist(phone_number text primary key, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table  if not exists whitelist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
 			// 黑名单
-			db.execSQL("create table  if not exists blacklist(phone_number text primary key, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table  if not exists blacklist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
 			// 拦截电话日志
 			db.execSQL("create table  if not exists blocker_phone_log(no integer primary key, phone_number text, time integer)");
 			// 拦截短信日志
@@ -241,7 +241,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			if (c.getCount() == 1) {
 				c.moveToNext();
 				brockerList = new CBrockerlist(c.getString(c
-						.getColumnIndex("phone_number")), c.getInt(c
+						.getColumnIndex("phone_number")), c.getString(c
+						.getColumnIndex("name")), c.getInt(c
 						.getColumnIndex("phone_enable")), c.getInt(c
 						.getColumnIndex("sms_enable")));
 			} else {
@@ -305,12 +306,15 @@ public class DBHelper extends SQLiteOpenHelper {
 			c = db.rawQuery(szSql, null);
 			while (c.moveToNext()) {
 				CBrockerlist brockerlist = new CBrockerlist(c.getString(c
-						.getColumnIndex("phone_number")), c.getInt(c
+						.getColumnIndex("phone_number")), c.getString(c
+						.getColumnIndex("name")), c.getInt(c
 						.getColumnIndex("phone_enable")), c.getInt(c
 						.getColumnIndex("sms_enable")));
 				lstRet.add(brockerlist);
 				Log.d(TAG,
-						"findAllBrockerList:number:"
+						"findAllBrockerList:name:"
+								+ c.getString(c.getColumnIndex("name"))
+								+ ";number:"
 								+ c.getString(c.getColumnIndex("phone_number")));
 			}
 		} catch (Exception e) {
@@ -340,11 +344,13 @@ public class DBHelper extends SQLiteOpenHelper {
 		try {
 			// 更新
 			ContentValues cv = new ContentValues();
+			cv.put("name", brockerList.getName());
 			cv.put("phone_number", brockerList.getPhone_number());
 			cv.put("phone_enable", brockerList.getPhone_enable());
 			cv.put("sms_enable", brockerList.getSms_enable());
 			Log.d(TAG,
 					"updateBrockerList:number:" + brockerList.getPhone_number()
+							+ ";name:" + brockerList.getName()
 							+ ";phone_enable:"
 							+ String.valueOf(brockerList.getPhone_enable())
 							+ ";sms_enable:"
@@ -355,12 +361,13 @@ public class DBHelper extends SQLiteOpenHelper {
 				// 插入
 				nCount = db.insert(szTable, null, cv);
 			}
-			if (1 == nCount) {
+			if (0 <= nCount) {
 				bRet = true;
 			} else
 				Log.d(TAG,
 						"UpdateBrockerList fail:"
-								+ brockerList.getPhone_number());
+								+ brockerList.getPhone_number() + ";count:"
+								+ String.valueOf(nCount));
 		} catch (Exception e) {
 			Log.e(TAG, "UpdateBrockerList exception:" + e.getMessage());
 		} finally {
@@ -488,6 +495,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			ContentValues cv = new ContentValues();
 			cv.put("phone_number", log.getPhone_number());
 			cv.put("time", log.getTime());
+			Log.d(TAG,
+					"insertBlockerPhoneLog:phone_number:"
+							+ log.getPhone_number());
 			long count = db.insert("blocker_phone_log", null, cv);
 			if (-1 == count)
 				Log.e(TAG,

@@ -5,7 +5,7 @@ public class CBlockerSMSLog {
 	private String content;
 	private long time;
 	private Integer isread;
-	
+
 	public CBlockerSMSLog(String phone_number, String content, long time,
 			Integer isread) {
 		super();
@@ -14,27 +14,35 @@ public class CBlockerSMSLog {
 		this.time = time;
 		this.isread = isread;
 	}
+
 	public String getPhone_number() {
 		return phone_number;
 	}
+
 	public void setPhone_number(String phone_number) {
 		this.phone_number = phone_number;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public long getTime() {
 		return time;
 	}
+
 	public void setTime(long time) {
 		this.time = time;
 	}
+
 	public Integer getIsread() {
 		return isread;
 	}
+
 	public void setIsread(Integer isread) {
 		this.isread = isread;
 	}
