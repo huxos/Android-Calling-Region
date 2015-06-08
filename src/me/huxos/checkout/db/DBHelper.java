@@ -309,6 +309,9 @@ public class DBHelper extends SQLiteOpenHelper {
 						.getColumnIndex("phone_enable")), c.getInt(c
 						.getColumnIndex("sms_enable")));
 				lstRet.add(brockerlist);
+				Log.d(TAG,
+						"findAllBrockerList:number:"
+								+ c.getString(c.getColumnIndex("phone_number")));
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "findAllBrockerList exception:" + e.getMessage());
@@ -341,7 +344,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			cv.put("phone_enable", brockerList.getPhone_enable());
 			cv.put("sms_enable", brockerList.getSms_enable());
 			Log.d(TAG,
-					"number:" + brockerList.getPhone_number()
+					"updateBrockerList:number:" + brockerList.getPhone_number()
 							+ ";phone_enable:"
 							+ String.valueOf(brockerList.getPhone_enable())
 							+ ";sms_enable:"
@@ -358,6 +361,31 @@ public class DBHelper extends SQLiteOpenHelper {
 				Log.d(TAG,
 						"UpdateBrockerList fail:"
 								+ brockerList.getPhone_number());
+		} catch (Exception e) {
+			Log.e(TAG, "UpdateBrockerList exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
+	 * 删除名单中指定的项
+	 * 
+	 * @param brockerList
+	 *            ：要删除的实体
+	 * @param isWhite
+	 *            ：true，白名单；false，黑名单
+	 * @return
+	 */
+	public boolean DeleteBrockerlist(CBrockerlist brockerList, boolean isWhite) {
+		boolean bRet = false;
+		String szTable = "blacklist";
+		if (isWhite)
+			szTable = "whitelist";
+		try {
+			db.delete(szTable, "phone_number=?",
+					new String[] { brockerList.getPhone_number() });
 		} catch (Exception e) {
 			Log.e(TAG, "UpdateBrockerList exception:" + e.getMessage());
 		} finally {

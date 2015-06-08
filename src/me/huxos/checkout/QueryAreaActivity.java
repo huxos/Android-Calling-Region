@@ -132,7 +132,7 @@ public class QueryAreaActivity extends Activity {
 	 */
 	public void query(View view) {
 
-		EditText editText = (EditText) findViewById(R.id.editText1);
+		EditText editText = (EditText) findViewById(R.id.edtQueryAreaNumber);
 		String phoneNumber = editText.getText().toString();
 		// 去掉非数字字符
 		phoneNumber = phoneNumber.replaceAll("[^0-9]", "");

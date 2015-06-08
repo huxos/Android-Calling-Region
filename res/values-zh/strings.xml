@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">归属地</string>
     <string name="action_settings">设置</string>
     <string name="label">查询归属地</string>
@@ -28,9 +29,9 @@
     <string name="open_firewall">打开防火墙</string>
     <string name="close_firewall">关闭防火墙</string>
     <string name="Ok">确定</string>
-	<string name="update_success_locale">更新到本地成功</string>
-	<string name="update_faile_locale">更新到本地失败</string>
-	<string name="whitelist">白名单</string>
+    <string name="update_success_locale">更新到本地成功</string>
+    <string name="update_faile_locale">更新到本地失败</string>
+    <string name="whitelist">白名单</string>
     <string name="set">设置</string>
     <string name="numbers_in_whitelist">numbers in whitelist</string>
     <string name="blacklist">黑名单</string>
@@ -42,4 +43,11 @@
     <string name="title_activity_brocker_list">BrockerListActivity</string>
     <string name="from_contact">从电话薄加载</string>
     <string name="from_call_records">从通话记录中加载</string>
+    <string name="Name">姓名</string>
+    <string name="intercept_phone">拦截电话</string>
+    <string name="intercept_sms">拦截短信</string>
+    <string name="add">增加</string>
+    <string name="delete">删除</string>
+    <string name="brower">查看</string>
+
 </resources>

@@ -8,7 +8,7 @@
     tools:context=".FirewallSettingActivity" >
 
     <TextView
-        android:id="@+id/txtBrockerList"
+        android:id="@+id/txtBrocklistBrockerList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -25,7 +25,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="false"
-        android:layout_below="@+id/txtBrockerList" >
+        android:layout_below="@+id/txtBrocklistBrockerList" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
 
                     <TextView
                         android:id="@+id/txtNumberWhitelist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_in_whitelist" />
                 </LinearLayout>
@@ -82,7 +82,7 @@
 
                     <TextView
                         android:id="@+id/txtNumberBlacklist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_in_blacklist" />
                 </LinearLayout>
@@ -114,7 +114,7 @@
 
                     <TextView
                         android:id="@+id/txtNumberBrockerPhoneLog"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_brocker_phone_log" />
                 </LinearLayout>
@@ -146,7 +146,7 @@
 
                     <TextView
                         android:id="@+id/txtNumberBrockerSMSLog"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_brocker_sms_log" />
                 </LinearLayout>

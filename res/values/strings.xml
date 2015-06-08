@@ -43,5 +43,13 @@
     <string name="title_activity_brocker_list">BrockerListActivity</string>
     <string name="from_contact">From contact</string>
     <string name="from_call_records">From call records</string>
+    <string name="Name">Name</string>
+    <string name="intercept_phone">Intercept phone</string>
+    <string name="intercept_sms">Intercept SMS</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="brower">Brower</string>
+    <string name="title_activity_brocker_phone_log">BrockerPhoneLogActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
