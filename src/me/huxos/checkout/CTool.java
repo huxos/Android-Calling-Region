@@ -36,6 +36,8 @@ public class CTool {
 			if (null != brockerlist)
 				szName = brockerlist.getName();
 		}
+		if(szName.isEmpty())
+			szName = phone;
 		return szName;
 	}
 

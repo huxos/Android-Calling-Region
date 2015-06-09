@@ -67,6 +67,10 @@ public class FirewallSettingActivity extends Activity {
 		button.setEnabled(enbale);
 		button = (Button) findViewById(R.id.btnSetBlacklist);
 		button.setEnabled(enbale);
+		button = (Button) findViewById(R.id.btnSetSmsKeyWordWhitelist);
+		button.setEnabled(enbale);
+		button = (Button) findViewById(R.id.btnSetSmsKeyWordBlacklist);
+		button.setEnabled(enbale);
 		button = (Button) findViewById(R.id.btnSetBrockerPhoneLog);
 		button.setEnabled(enbale);
 		button = (Button) findViewById(R.id.btnSetBrockerSMSLog);
@@ -99,6 +103,30 @@ public class FirewallSettingActivity extends Activity {
 		startActivity(intent);
 	}
 
+	/**
+	 * 设置短信关键字白名单
+	 * @param source
+	 */
+	public void onSetSmsKeyWordWhitelist(View source){
+		Intent intent = new Intent();
+		// 用intent.putExtra(String name, String value);来传递参数。
+		intent.putExtra("isWhitelist", "true");
+		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 *  设置短信关键字黑名单
+	 * @param source
+	 */
+	public void onSetSmsKeyWordBlacklist(View source){
+		Intent intent = new Intent();
+		// 用intent.putExtra(String name, String value);来传递参数。
+		intent.putExtra("isWhitelist", "false");
+		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
+		startActivity(intent);
+	}
+	
 	/**
 	 * 查看电话拦截日志
 	 * @param source

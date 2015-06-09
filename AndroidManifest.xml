@@ -83,6 +83,14 @@
             android:name="me.huxos.checkout.BrockerSmsLogActivity"
             android:label="@string/title_activity_brocker_sms_log" >
         </activity>
+        <activity
+            android:name="me.huxos.checkout.BrockerSmsKeyWordListActivity"
+            android:label="@string/title_activity_brocker_sms_key_word_list" >
+        </activity>
+        <activity
+            android:name="me.huxos.checkout.BrockerSmsLogDetailedActivity"
+            android:label="@string/title_activity_brocker_sms_log_detailed" >
+        </activity>
     </application>
 
 </manifest>

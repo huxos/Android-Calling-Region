@@ -56,5 +56,10 @@
     <string name="enable_interception_phone">Enable interception phone</string>
     <string name="phone">Phone</string>
     <string name="sms">SMS</string>
+    <string name="brocker_sms_keyword_whitelist">SMS keyword whitelist</string>
+    <string name="brocker_sms_keyword_blacklist">SMS keyword blacklist</string>
+    <string name="title_activity_brocker_sms_key_word_list">Brocker sms key word list</string>
+    <string name="input_keyword">[Input keyword]</string>
+    <string name="title_activity_brocker_sms_log_detailed">Interception Sms Log Detailed</string>
 
 </resources>

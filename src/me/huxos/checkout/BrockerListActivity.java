@@ -164,12 +164,12 @@ public class BrockerListActivity extends Activity {
 			this.m_Inflater = LayoutInflater.from(context);
 			m_isWhite = isWhite;
 			m_db = DBHelper.getInstance(this.m_context);
-			m_Brockerlist = m_db.findAllBrockerList(isWhite);
+			m_Brockerlist = m_db.getAllBrockerList(isWhite);
 		}
 
 		// 更新数据
 		public void UpdateDate() {
-			m_Brockerlist = m_db.findAllBrockerList(m_isWhite);
+			m_Brockerlist = m_db.getAllBrockerList(m_isWhite);
 			notifyDataSetChanged();
 			return;
 		}
@@ -275,7 +275,7 @@ public class BrockerListActivity extends Activity {
 					CBrockerlist brockerlist = m_this.m_Brockerlist
 							.get(m_position);
 					DBHelper db = DBHelper.getInstance(m_this.m_context);
-					db.DeleteBrockerlist(brockerlist, m_this.m_isWhite);
+					db.deleteBrockerlist(brockerlist, m_this.m_isWhite);
 					UpdateDate();
 				}
 

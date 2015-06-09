@@ -32,8 +32,9 @@ public class SMSSTateReceiver extends BroadcastReceiver {
 					"sms sender:" + sender + "\nmessage:"
 							+ message.getMessageBody() + "\ntime:"
 							+ String.valueOf(message.getTimestampMillis()));
+
 			CFirewallOperate firewallOperate = new CFirewallOperate(context);
-			if (firewallOperate.brockerSMS(sender)) {
+			if (firewallOperate.brockerSMS(sender, message.getMessageBody())) {
 				// 写入拦截日志
 				CBlockerSMSLog log = new CBlockerSMSLog(sender, 
 						message.getMessageBody(), message.getTimestampMillis(),

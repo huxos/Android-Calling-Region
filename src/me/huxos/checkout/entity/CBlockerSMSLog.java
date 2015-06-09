@@ -1,11 +1,21 @@
 package me.huxos.checkout.entity;
 
 public class CBlockerSMSLog {
+	private Integer no;
 	private String phone_number;
 	private String content;
 	private long time;
 	private Integer isread;
-
+	
+	public CBlockerSMSLog(Integer no, String phone_number, String content, long time,
+			Integer isread) {
+		super();
+		this.no = no;
+		this.phone_number = phone_number;
+		this.content = content;
+		this.time = time;
+		this.isread = isread;
+	}
 	public CBlockerSMSLog(String phone_number, String content, long time,
 			Integer isread) {
 		super();
@@ -15,6 +25,9 @@ public class CBlockerSMSLog {
 		this.isread = isread;
 	}
 
+	public Integer getNo() {
+		return no;
+	}
 	public String getPhone_number() {
 		return phone_number;
 	}
@@ -47,3 +60,4 @@ public class CBlockerSMSLog {
 		this.isread = isread;
 	}
 }
+

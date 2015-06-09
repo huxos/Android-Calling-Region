@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+    <TextView
+        android:id="@+id/txtBrockerSmsKeyWordlistViewKeyWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/ckbBrockerSmsKeyWordlistViewEnable"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/txtBrockerSmsKeyWordlistviewNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/txtBrockerSmsKeyWordlistViewKeyWord"
+        android:layout_toLeftOf="@+id/ckbBrockerSmsKeyWordlistViewEnable"
+        android:text="TextView" />
+
+    <CheckBox
+        android:id="@+id/ckbBrockerSmsKeyWordlistViewEnable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_marginRight="17dp"
+        android:layout_toLeftOf="@+id/btnBrockerSmsKeyWordDelete" />
+
+    <Button
+        android:id="@+id/btnBrockerSmsKeyWordDelete"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/delete" />
+
+</RelativeLayout>

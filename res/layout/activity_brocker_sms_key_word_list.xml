@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".BrockerSmsKeyWordListActivity" >
+
+    <TextView
+        android:id="@+id/txtBrockerSmsKeyWordTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ListView
+        android:id="@+id/lvBrockerSmsKeyWordlistView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edtBrockerSmsKeyWordKeyWord"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtBrockerSmsKeyWordTitle" >
+    </ListView>
+
+    <EditText
+        android:id="@+id/edtBrockerSmsKeyWordKeyWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edtBrockerSmsKeyWordPhone"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/btnBrockerSmsKeyWordAdd"
+        android:hint="@string/input_keyword" />
+
+    <EditText
+        android:id="@+id/edtBrockerSmsKeyWordPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/btnBrockerSmsKeyWordAdd"
+        android:hint="@string/input_phone_number" />
+
+    <Button
+        android:id="@+id/btnBrockerSmsKeyWordAdd"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edtBrockerSmsKeyWordPhone"
+        android:layout_alignRight="@+id/lvBrockerSmsKeyWordlistView"
+        android:onClick="onAdd"
+        android:text="@string/add" />
+
+</RelativeLayout>

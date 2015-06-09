@@ -10,6 +10,8 @@ import java.util.List;
 
 import me.huxos.checkout.entity.CBlockerPhoneLog;
 import me.huxos.checkout.entity.CBlockerSMSLog;
+import me.huxos.checkout.entity.CBlockerSMSLogs;
+import me.huxos.checkout.entity.CBlockerSmsKeyword;
 import me.huxos.checkout.entity.CBrockerlist;
 import me.huxos.checkout.entity.CSystemInformation;
 import me.huxos.checkout.entity.PhoneArea;
@@ -69,22 +71,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "onCreate");
-		try {
-			/* 电话区域查询表 */
-			db.execSQL("create table  if not exists phone_location (_id INTEGER primary key,location varchar(32) not null)");
-			/* 白名单 */
-			db.execSQL("create table  if not exists whitelist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
-			/* 黑名单 */
-			db.execSQL("create table  if not exists blacklist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
-			/* 拦截电话日志 */
-			db.execSQL("create table  if not exists blocker_phone_log(no integer primary key, phone_number text, time integer)");
-			/* 拦截短信日志 */
-			db.execSQL("create table  if not exists blocker_sms_log(no integer primary key, phone_number text, time integer, content text, isread integer)");
-			/* 系统信息 */
-			db.execSQL("create table  if not exists system_infomation(key text primary key, value text)");
-		} catch (Exception e) {
-			Log.e(TAG, "onCreate Exception:" + e.getMessage(), e);
-		}
+		createDatabase(db);
 
 	}
 
@@ -96,6 +83,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onOpen(SQLiteDatabase db) {
 		Log.d(TAG, "onOpen");
+
+		createDatabase(db);
+
+		super.onOpen(db);
+	}
+
+	private boolean createDatabase(SQLiteDatabase db) {
 		try {
 			// 电话区域查询表
 			db.execSQL("create table  if not exists phone_location (_id INTEGER primary key,location varchar(32) not null)");
@@ -103,6 +97,10 @@ public class DBHelper extends SQLiteOpenHelper {
 			db.execSQL("create table  if not exists whitelist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
 			// 黑名单
 			db.execSQL("create table  if not exists blacklist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
+			/* 短信关键字白名单 */
+			db.execSQL("create table  if not exists sms_keyword_whitelist(no integer primary key, keyword text, phone_number text, enable integer)");
+			/* 短信关键字黑名单 */
+			db.execSQL("create table  if not exists sms_keyword_blacklist(no integer primary key, keyword text, phone_number text, enable integer)");
 			// 拦截电话日志
 			db.execSQL("create table  if not exists blocker_phone_log(no integer primary key, phone_number text, time integer)");
 			// 拦截短信日志
@@ -110,10 +108,10 @@ public class DBHelper extends SQLiteOpenHelper {
 			// 系统信息
 			db.execSQL("create table  if not exists system_infomation(key text primary key, value text)");
 		} catch (Exception e) {
-			Log.e(TAG, "onOpen Exception:" + e.getMessage(), e);
+			Log.e(TAG, "createDatabase Exception:" + e.getMessage(), e);
+			return false;
 		}
-
-		super.onOpen(db);
+		return true;
 	}
 
 	/**
@@ -295,7 +293,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *            :true,在白名单中查询,false,在黑名单中查询
 	 * @return
 	 */
-	public List<CBrockerlist> findAllBrockerList(boolean isWhite) {
+	public List<CBrockerlist> getAllBrockerList(boolean isWhite) {
 		List<CBrockerlist> lstRet = new ArrayList<CBrockerlist>();
 		String szTable = "blacklist";
 		if (isWhite)
@@ -385,7 +383,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 *            ：true，白名单；false，黑名单
 	 * @return
 	 */
-	public boolean DeleteBrockerlist(CBrockerlist brockerList, boolean isWhite) {
+	public boolean deleteBrockerlist(CBrockerlist brockerList, boolean isWhite) {
 		boolean bRet = false;
 		String szTable = "blacklist";
 		if (isWhite)
@@ -393,8 +391,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		try {
 			db.delete(szTable, "phone_number=?",
 					new String[] { brockerList.getPhone_number() });
+			bRet = true;
 		} catch (Exception e) {
-			Log.e(TAG, "UpdateBrockerList exception:" + e.getMessage());
+			Log.e(TAG, "DeleteBrockerlist exception:" + e.getMessage());
 		} finally {
 			;
 		}
@@ -484,6 +483,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	/**
 	 * 插入电话拦截日志
 	 * 
+	 * @author KangLin <kl222@126.com>
 	 * @param log
 	 *            ：拦截日志
 	 * @return 成功返回true；失败返回false
@@ -516,6 +516,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	/**
 	 * 查询拦截电话日志
 	 * 
+	 * @author KangLin <kl222@126.com>
 	 * @param arg
 	 *            :查询条件
 	 * @return 返回拦截日志列表
@@ -524,17 +525,19 @@ public class DBHelper extends SQLiteOpenHelper {
 		String szSql = "select * from blocker_phone_log ";
 		if (condition != null && condition.length > 0)
 			szSql += " where ?";
+		szSql += " ORDER BY  time  DESC";
 		List<CBlockerPhoneLog> blockerPhoneLog = new ArrayList<CBlockerPhoneLog>();
 		Cursor c = null;
 		try {
 			c = db.rawQuery(szSql, condition);
 			while (c.moveToNext()) {
+				Integer no = c.getInt(c.getColumnIndex("no"));
 				String number = c.getString(c.getColumnIndex("phone_number"));
 				long time = c.getLong(c.getColumnIndex("time"));
 				Date d = new Date(time);
-				Log.d(TAG, "findBlockerPhoneLog:number:" + number + ";time:"
-						+ d.toString());
-				CBlockerPhoneLog log = new CBlockerPhoneLog(number, time);
+				Log.d(TAG, "findBlockerPhoneLog:no:" + String.valueOf(no)
+						+ ";number:" + number + ";time:" + d.toString());
+				CBlockerPhoneLog log = new CBlockerPhoneLog(no, number, time);
 				blockerPhoneLog.add(log);
 			}
 		} catch (Exception e) {
@@ -549,6 +552,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	/**
 	 * 插入拦截短信日志
 	 * 
+	 * @author KangLin <kl222@126.com>
 	 * @param log
 	 *            ：拦截的短信日志
 	 * @return 成功返回true；失败返回false
@@ -577,31 +581,60 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * 更新短信已讀狀態
+	 * @param number：手機號碼
+	 * @return
+	 */
+	public boolean updateBlockerSMSLogIsread(String number) {
+		boolean bRet = false;
+		try {
+			// 更新
+			ContentValues cv = new ContentValues();
+			cv.put("isread", 1);
+			long count = db.update("blocker_sms_log", cv, "phone_number=?",
+					new String[] { number });
+			if (-1 == count)
+				Log.e(TAG, "insertBlockerSMSLog fail:" + number);
+			else
+				bRet = true;
+
+		} catch (Exception e) {
+			Log.e(TAG, "insertBlockerSMSLog exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
 	 * 查询拦截短信
 	 * 
+	 * @author KangLin <kl222@126.com>
 	 * @param arg
 	 *            :查询条件
 	 * @return 返回拦截日志列表
 	 */
-	public List<CBlockerSMSLog> findBlockerSMSLog(String[] condition) {
-		String szSql = "select * from blocker_sms_log";
-		if (condition != null && condition.length > 0)
-			szSql += " where ?";
-
+	public List<CBlockerSMSLog> findBlockerSMSLog(String condition) {
+		String szSql = "select * from blocker_sms_log ";
+		if (condition != null)
+			szSql += condition;
+		szSql += " ORDER BY  time  DESC";
 		List<CBlockerSMSLog> blockerSMSLog = new ArrayList<CBlockerSMSLog>();
 		Cursor c = null;
 		try {
-			c = db.rawQuery(szSql, condition);
+			c = db.rawQuery(szSql, null);
 			while (c.moveToNext()) {
+				Integer no = c.getInt(c.getColumnIndex("no"));
 				String number = c.getString(c.getColumnIndex("phone_number"));
 				String content = c.getString(c.getColumnIndex("content"));
 				long time = c.getLong(c.getColumnIndex("time"));
+				Integer isRead = c.getInt(c.getColumnIndex("isread"));
 				Date d = new Date(time);
-				Log.d(TAG,
-						"findBlockerSMSLog:number" + number + ";time:"
-								+ d.toString() + ";content:" + content);
-				CBlockerSMSLog log = new CBlockerSMSLog(number, content, time,
-						0);
+				Log.d(TAG, "findBlockerSMSLog:no:" + String.valueOf(no)
+						+ ";number:" + number + ";time:" + d.toString()
+						+ ";content:" + content);
+				CBlockerSMSLog log = new CBlockerSMSLog(no, number, content,
+						time, isRead);
 				blockerSMSLog.add(log);
 			}
 		} catch (Exception e) {
@@ -611,5 +644,215 @@ public class DBHelper extends SQLiteOpenHelper {
 				c.close();
 		}
 		return blockerSMSLog;
+	}
+
+	public List<CBlockerSMSLogs> findBlockerSMSLogGroup(String condition) {
+		String szSql = "select * , count(content) as c, sum(isread) as read_count from blocker_sms_log ";
+		if (condition != null)
+			szSql += condition;
+		szSql += "  GROUP BY phone_number order by time desc";
+		List<CBlockerSMSLogs> blockerSMSLogs = new ArrayList<CBlockerSMSLogs>();
+		Cursor c = null;
+		try {
+			c = db.rawQuery(szSql, null);
+			while (c.moveToNext()) {
+				Integer no = c.getInt(c.getColumnIndex("no"));
+				String number = c.getString(c.getColumnIndex("phone_number"));
+				String content = c.getString(c.getColumnIndex("content"));
+				long time = c.getLong(c.getColumnIndex("time"));
+				Integer isRead = c.getInt(c.getColumnIndex("isread"));
+				Integer count = c.getInt(c.getColumnIndex("c"));
+				Integer unread_count = count
+						- c.getInt(c.getColumnIndex("read_count"));
+				Date d = new Date(time);
+				Log.d(TAG,
+						"findBlockerSMSLog:no:" + String.valueOf(no)
+								+ ";number:" + number + ";time:" + d.toString()
+								+ ";content:" + content + ";count:"
+								+ String.valueOf(unread_count) + "/"
+								+ String.valueOf(count));
+				CBlockerSMSLogs log = new CBlockerSMSLogs(no, number, content,
+						time, isRead, count, unread_count);
+				blockerSMSLogs.add(log);
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "findBlockerSMSLog exception:" + e.getMessage());
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return blockerSMSLogs;
+	}
+
+	/**
+	 * 刪除短信攔截日志
+	 * 
+	 * @param condition
+	 * @return
+	 */
+	public boolean deleteBlockerSMSLog(String condition) {
+		boolean bRet = false;
+		String szTable = "blocker_sms_log";
+
+		try {
+			db.delete(szTable, condition, null);
+			bRet = true;
+		} catch (Exception e) {
+			Log.e(TAG, "deleteBlockerSMSLog exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
+	 * 更新短信关键字名单
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @param key
+	 *            ：关键字实体
+	 * @param isWhite
+	 *            ：true：短信关键字白名单；false：短信关键字黑名单
+	 * @return
+	 */
+	public boolean updateBrockerKeyWord(CBlockerSmsKeyword key, boolean isWhite) {
+		boolean bRet = false;
+		String szTable = "sms_keyword_blacklist";
+		if (isWhite)
+			szTable = "sms_keyword_whitelist";
+		try {
+			// 更新
+			ContentValues cv = new ContentValues();
+			cv.put("keyword", key.getKeyword());
+			cv.put("phone_number", key.getPhone_number());
+			cv.put("enable", key.getEnable());
+			Log.d(TAG,
+					"updateBrockerKeyWord:number:" + key.getPhone_number()
+							+ ";keyword:" + key.getKeyword() + ";enable:"
+							+ key.getEnable());
+			long nCount = db.update(szTable, cv, "no=?",
+					new String[] { String.valueOf(key.getNo()) });
+			if (0 <= nCount) {
+				bRet = true;
+			} else
+				Log.d(TAG, "updateBrockerKeyWord fail:" + key.getPhone_number()
+						+ ";count:" + String.valueOf(nCount));
+		} catch (Exception e) {
+			Log.e(TAG, "updateBrockerKeyWord exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
+	 * 插入短信关键字名单
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @param key
+	 *            ：关键字实体
+	 * @param isWhite
+	 *            ：true：短信关键字白名单；false：短信关键字黑名单
+	 * @return
+	 */
+	public boolean insertBrockerKeyWord(CBlockerSmsKeyword key, boolean isWhite) {
+		boolean bRet = false;
+		String szTable = "sms_keyword_blacklist";
+		if (isWhite)
+			szTable = "sms_keyword_whitelist";
+		try {
+			// 更新
+			ContentValues cv = new ContentValues();
+			cv.put("keyword", key.getKeyword());
+			cv.put("phone_number", key.getPhone_number());
+			cv.put("enable", key.getEnable());
+			Log.d(TAG,
+					"insertBrockerKeyWord:number:" + key.getPhone_number()
+							+ ";keyword:" + key.getKeyword() + ";enable:"
+							+ key.getEnable());
+			long nCount = db.insert(szTable, null, cv);
+			if (-1 == nCount) {
+				bRet = false;
+				Log.d(TAG, "insertBrockerKeyWord fail:key:" + key.getKeyword());
+			} else
+				bRet = true;
+		} catch (Exception e) {
+			Log.e(TAG, "insertBrockerKeyWord exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
+	 * 删除指定的关键字
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @param keyword
+	 *            ：关键字
+	 * @param isWhite
+	 *            ：true：短信关键字白名单；false：短信关键字黑名单
+	 * @return
+	 */
+	public boolean deleteBrockerKeyWord(CBlockerSmsKeyword keyword,
+			boolean isWhite) {
+		boolean bRet = false;
+		String szTable = "sms_keyword_blacklist";
+		if (isWhite)
+			szTable = "sms_keyword_whitelist";
+		try {
+			db.delete(szTable, "no=?",
+					new String[] { String.valueOf(keyword.getNo()) });
+			bRet = true;
+		} catch (Exception e) {
+			Log.e(TAG, "DeleteBrockerKeyWord exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+
+	/**
+	 * 得到所有关键字
+	 * 
+	 * @param isWhite
+	 *            ：true：短信关键字白名单；false：短信关键字黑名单
+	 * @param isEnable
+	 *            :true:只得到enable项；false：得到所有的项
+	 * @return
+	 */
+	public List<CBlockerSmsKeyword> getAllBrockerKeyWord(boolean isWhite,
+			boolean isEnable) {
+		List<CBlockerSmsKeyword> lstRet = new ArrayList<CBlockerSmsKeyword>();
+		String szTable = "sms_keyword_blacklist";
+		if (isWhite)
+			szTable = "sms_keyword_whitelist";
+		String szSql = "select * from " + szTable;
+		if (isEnable)
+			szSql += " where enable=1";
+		Cursor c = null;
+		try {
+			c = db.rawQuery(szSql, null);
+			while (c.moveToNext()) {
+				CBlockerSmsKeyword brockerlist = new CBlockerSmsKeyword(
+						c.getInt(c.getColumnIndex("no")), c.getString(c
+								.getColumnIndex("keyword")), c.getString(c
+								.getColumnIndex("phone_number")), c.getInt(c
+								.getColumnIndex("enable")));
+				lstRet.add(brockerlist);
+
+				Log.d(TAG,
+						"getAllBrockerKeyWord:keyword:"
+								+ c.getString(c.getColumnIndex("keyword"))
+								+ ";number:"
+								+ c.getString(c.getColumnIndex("phone_number")));
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "getAllBrockerKeyWord exception:" + e.getMessage());
+		} finally {
+			if (null != c)
+				c.close();
+		}
+		return lstRet;
 	}
 }

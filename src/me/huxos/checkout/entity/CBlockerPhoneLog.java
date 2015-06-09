@@ -7,16 +7,24 @@ package me.huxos.checkout.entity;
  * 
  */
 public class CBlockerPhoneLog {
-
+	private Integer no;
 	private String phone_number;
 	private long time;
-
+	public CBlockerPhoneLog(Integer no, String phone_number, long time) {
+		super();
+		this.no = no;
+		this.phone_number = phone_number;
+		this.time = time;
+	}
 	public CBlockerPhoneLog(String phone_number, long time) {
 		super();
 		this.phone_number = phone_number;
 		this.time = time;
 	}
 
+	public Integer getNo(){
+		return no;
+	}
 	public String getPhone_number() {
 		return phone_number;
 	}

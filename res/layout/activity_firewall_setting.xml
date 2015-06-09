@@ -14,8 +14,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="92dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/firewallsetting" />
+        android:text="@string/firewallsetting"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ScrollView
         android:id="@+id/scrollViewFirewall"
@@ -36,23 +36,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtWhitelist"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/txtWhitelist"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/whitelist" />
-
-                    <TextView
-                        android:id="@+id/txtNumberWhitelist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/numbers_in_whitelist" />
-                </LinearLayout>
+                    android:text="@string/whitelist" />
 
                 <Button
                     android:id="@+id/btnSetWhitelist"
@@ -61,30 +49,17 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onSetWhitelist"
                     android:text="@string/set" />
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtBlacklist"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/txtBlacklist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/blacklist" />
-
-                    <TextView
-                        android:id="@+id/txtNumberBlacklist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/numbers_in_blacklist" />
-                </LinearLayout>
+                    android:text="@string/blacklist" />
 
                 <Button
                     android:id="@+id/btnSetBlacklist"
@@ -93,30 +68,59 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onSetBlackist"
                     android:text="@string/set" />
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtSetSmsKeywordBlacklist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:layout_alignParentBottom="false"
+                    android:text="@string/brocker_sms_keyword_whitelist" />
 
-                    <TextView
-                        android:id="@+id/txtBrockerPhoneLog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/brocker_phone_log" />
+                <Button
+                    android:id="@+id/btnSetSmsKeyWordWhitelist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:onClick="onSetSmsKeyWordWhitelist"
+                    android:text="@string/set" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/txtNumberBrockerPhoneLog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/numbers_brocker_phone_log" />
-                </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/txtSetSmsKeywordBlacklist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:text="@string/brocker_sms_keyword_blacklist" />
+
+                <Button
+                    android:id="@+id/btnSetSmsKeyWordBlacklist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:onClick="onSetSmsKeyWordBlacklist"
+                    android:text="@string/set" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/txtBrockerPhoneLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brocker_phone_log" />
 
                 <Button
                     android:id="@+id/btnSetBrockerPhoneLog"
@@ -125,30 +129,17 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onBrockerPhoneLog"
                     android:text="@string/brower" />
-
             </RelativeLayout>
-            
-              <RelativeLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtBrockerSMSLog"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/txtBrockerSMSLog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/brocker_sms_log" />
-
-                    <TextView
-                        android:id="@+id/txtNumberBrockerSMSLog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/numbers_brocker_sms_log" />
-                </LinearLayout>
+                    android:text="@string/brocker_sms_log" />
 
                 <Button
                     android:id="@+id/btnSetBrockerSMSLog"
@@ -157,7 +148,6 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onBrockerSMSLog"
                     android:text="@string/brower" />
-
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
@@ -168,7 +158,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"
         android:onClick="onClickOpenFirewall"
         android:text="@string/open_firewall" />
 
