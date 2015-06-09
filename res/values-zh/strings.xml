@@ -9,6 +9,7 @@
     <string name="search">查 询</string>
     <string name="loading">[查询中]</string>
     <string name="input_phone_number">[输入手机号码]</string>
+    <string name="input_name">[输入姓名]</string>
     <string name="local">本地</string>
     <string name="remote">网络</string>
     <string name="area">四川成都[联通]</string>
@@ -50,5 +51,8 @@
     <string name="brower">查看</string>
     <string name="title_activity_brocker_phone_log">拦截电话日志</string>
     <string name="title_activity_brocker_list">拦截列表</string>
+    <string name="title_activity_brocker_sms_log">拦截短信日志</string>
+    <string name="phone">电话</string>
+    <string name="sms">短信</string>
 
 </resources>

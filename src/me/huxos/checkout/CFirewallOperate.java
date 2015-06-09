@@ -11,6 +11,7 @@ import android.content.Context;
  *
  */
 public class CFirewallOperate {
+	@SuppressWarnings("unused")
 	private static final String TAG = "CBrockerOperate";
 	private Context context;
 	

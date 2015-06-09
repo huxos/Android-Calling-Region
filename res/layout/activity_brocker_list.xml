@@ -25,11 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/llBrocklistlinerlayoutedit"
-        android:layout_below="@id/txtBrocklistBrockerList"
-        android:layout_centerHorizontal="false"
-        android:layout_marginLeft="23dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/txtBrocklistBrockerList" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/llBrocklistlinerlayoutedit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,30 +36,35 @@
 
         <EditText
             android:id="@+id/edtBrockerName"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:hint="@string/input_name" >
 
             <requestFocus />
         </EditText>
 
         <EditText
             android:id="@+id/edtBrockerNumber"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btnBrocklistAdd"
+            android:layout_toRightOf="@id/edtBrockerName"
             android:layout_weight="1"
-            android:ems="10" />
+            android:ems="10"
+            android:hint="@string/input_phone_number" />
 
         <Button
             android:id="@+id/btnBrocklistAdd"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:onClick="onAdd"
             android:text="@string/add" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/llBrocklistlinearlayoutbutton"

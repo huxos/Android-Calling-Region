@@ -79,6 +79,10 @@
             android:name="me.huxos.checkout.BrockerPhoneLogActivity"
             android:label="@string/title_activity_brocker_phone_log" >
         </activity>
+        <activity
+            android:name="me.huxos.checkout.BrockerSmsLogActivity"
+            android:label="@string/title_activity_brocker_sms_log" >
+        </activity>
     </application>
 
 </manifest>

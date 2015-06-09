@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -49,9 +48,9 @@ public class BrockerListActivity extends Activity {
 
 		// 设置listview数据适配器
 		ListView listView = (ListView) findViewById(R.id.lstBrockerlistView);
-		// LayoutInflater layout = LayoutInflater.from(this.getBaseContext());
-		// listView.addHeaderView(layout.inflate(R.layout.brocker_list_view_head,
-		// null));
+		LayoutInflater layout = LayoutInflater.from(this.getBaseContext());
+		/*listView.addHeaderView(layout.inflate(R.layout.brocker_list_view_head,
+				null));*/
 		m_adapter = new listAdapter(this.getBaseContext(), m_isWhite);
 		listView.setAdapter(m_adapter);
 	}

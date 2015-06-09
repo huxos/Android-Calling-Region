@@ -9,6 +9,7 @@
     <string name="search">Search</string>
     <string name="loading">[Finding]</string>
     <string name="input_phone_number">[Input phone number]</string>
+    <string name="input_name">[Input name]</string>
     <string name="local">Local</string>
     <string name="remote">Network</string>
     <string name="area">area</string>
@@ -51,5 +52,9 @@
     <string name="brower">Brower</string>
     <string name="title_activity_brocker_phone_log">Brocker Phone Log</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_brocker_sms_log">Brocker Sms Log</string>
+    <string name="enable_interception_phone">Enable interception phone</string>
+    <string name="phone">Phone</string>
+    <string name="sms">SMS</string>
 
 </resources>

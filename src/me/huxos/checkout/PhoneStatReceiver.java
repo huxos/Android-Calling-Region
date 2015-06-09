@@ -7,7 +7,6 @@ import com.android.internal.telephony.ITelephony;
 
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBlockerPhoneLog;
-import me.huxos.checkout.entity.CBrockerlist;
 import me.huxos.checkout.entity.PhoneArea;
 import android.app.Service;
 import android.content.BroadcastReceiver;

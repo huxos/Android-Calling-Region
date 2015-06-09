@@ -32,25 +32,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/txtWhitelist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/whitelist" />
 
                     <TextView
                         android:id="@+id/txtNumberWhitelist"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_in_whitelist" />
                 </LinearLayout>
@@ -59,30 +58,30 @@
                     android:id="@+id/btnSetWhitelist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
+                    android:layout_alignParentRight="true"
                     android:onClick="onSetWhitelist"
                     android:text="@string/set" />
-            </LinearLayout>
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/txtBlacklist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/blacklist" />
 
                     <TextView
                         android:id="@+id/txtNumberBlacklist"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_in_blacklist" />
                 </LinearLayout>
@@ -91,30 +90,30 @@
                     android:id="@+id/btnSetBlacklist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
+                    android:layout_alignParentRight="true"
                     android:onClick="onSetBlackist"
                     android:text="@string/set" />
-            </LinearLayout>
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/txtBrockerPhoneLog"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/brocker_phone_log" />
 
                     <TextView
                         android:id="@+id/txtNumberBrockerPhoneLog"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_brocker_phone_log" />
                 </LinearLayout>
@@ -123,30 +122,30 @@
                     android:id="@+id/btnSetBrockerPhoneLog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
+                    android:layout_alignParentRight="true"
                     android:onClick="onBrockerPhoneLog"
                     android:text="@string/brower" />
-            </LinearLayout>
+
+            </RelativeLayout>
             
-              <LinearLayout
+              <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/txtBrockerSMSLog"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/brocker_sms_log" />
 
                     <TextView
                         android:id="@+id/txtNumberBrockerSMSLog"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/numbers_brocker_sms_log" />
                 </LinearLayout>
@@ -155,10 +154,11 @@
                     android:id="@+id/btnSetBrockerSMSLog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.31"
+                    android:layout_alignParentRight="true"
                     android:onClick="onBrockerSMSLog"
                     android:text="@string/brower" />
-            </LinearLayout>
+
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
