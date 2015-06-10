@@ -27,10 +27,8 @@ import android.widget.TextView;
 
 public class BrockerListActivity extends Activity {
 	private static final String TAG = "BrockerListActivity";
-	static final int PICK_CONTACT_BLACKLIST = 0;
-	static final int PICK_CONTACT_WHITELIST = 1;
-	static final int PICK_CALL_BLACKLIST = 2;
-	static final int PICK_CALL_WHITELIST = 3;
+	static final int PICK_CONTACT = 0;
+	static final int PICK_CALL = 1;
 	boolean m_isWhite;
 	private listAdapter m_adapter;
 
@@ -48,9 +46,10 @@ public class BrockerListActivity extends Activity {
 
 		// 设置listview数据适配器
 		ListView listView = (ListView) findViewById(R.id.lstBrockerlistView);
-		LayoutInflater layout = LayoutInflater.from(this.getBaseContext());
-		/*listView.addHeaderView(layout.inflate(R.layout.brocker_list_view_head,
-				null));*/
+		/*
+		 * listView.addHeaderView(layout.inflate(R.layout.brocker_list_view_head,
+		 * null));
+		 */
 		m_adapter = new listAdapter(this.getBaseContext(), m_isWhite);
 		listView.setAdapter(m_adapter);
 	}
@@ -71,10 +70,7 @@ public class BrockerListActivity extends Activity {
 		// 打开通信薄界面
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-		if (m_isWhite)
-			startActivityForResult(intent, PICK_CONTACT_WHITELIST);
-		else
-			startActivityForResult(intent, PICK_CONTACT_BLACKLIST);
+		startActivityForResult(intent, PICK_CONTACT);
 	}
 
 	/**
@@ -83,11 +79,10 @@ public class BrockerListActivity extends Activity {
 	 * @param source
 	 */
 	public void onFromCallRecords(View source) {
-		Intent intent = new Intent(Intent.ACTION_CALL_BUTTON);
-		if (m_isWhite)
-			startActivityForResult(intent, PICK_CALL_WHITELIST);
-		else
-			startActivityForResult(intent, PICK_CALL_BLACKLIST);
+		// Intent intent = new Intent(Intent.ACTION_CALL_BUTTON);//調用系統的呼叫界面
+		Intent intent = new Intent();
+		intent.setClass(this, BrockerListCallActivity.class);
+		startActivityForResult(intent, PICK_CALL);
 	}
 
 	public void onAdd(View source) {
@@ -107,39 +102,52 @@ public class BrockerListActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(TAG, "onActivityResult");
-		// Define our database manager
-		DBHelper db = DBHelper.getInstance(this.getBaseContext());
-		if (null == data)
-			return;
-		Uri uri = data.getData();
-		if (null == uri)
-			return;
-		Cursor c = null;
-		try {
-			c = getContentResolver()
-					.query(uri,
-							new String[] {
-									ContactsContract.CommonDataKinds.Phone.NUMBER,
-									ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME },
-							null, null, null);
+		String name = "", number = "";
+		switch (requestCode) {
+		case PICK_CONTACT:
+			// Define our database manager
+			if (null == data)
+				return;
+			Uri uri = data.getData();
+			if (null == uri)
+				return;
+			Cursor c = null;
+			try {
+				c = getContentResolver()
+						.query(uri,
+								new String[] {
+										ContactsContract.CommonDataKinds.Phone.NUMBER,
+										ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME },
+								null, null, null);
 
-			if (c != null && c.moveToFirst()) {
-				String number = c
-						.getString(c
-								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				String name = c
-						.getString(c
-								.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME));
-				CBrockerlist list = new CBrockerlist(number, name, 1, 1);
-				db.updateBrockerList(list, requestCode == 1 ? true : false);
+				if (c != null && c.moveToFirst()) {
+					number = c
+							.getString(c
+									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+					name = c.getString(c
+							.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME));
+
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "onActivityResult Exception:" + e.getMessage(), e);
+			} finally {
+				if (c != null) {
+					c.close();
+				}
 			}
-		} catch (Exception e) {
-			Log.e(TAG, "onActivityResult Exception:" + e.getMessage(), e);
-		} finally {
-			if (c != null) {
-				c.close();
-			}
+			break;
+		case PICK_CALL:
+			name = data.getStringExtra("name");
+			number = data.getStringExtra("number");
+			break;
+		default:
+			Log.e(TAG,
+					"onActivityResult:don't know requestCode:"
+							+ String.valueOf(requestCode));
 		}
+		CBrockerlist list = new CBrockerlist(number, name, 1, 1);
+		DBHelper db = DBHelper.getInstance(this.getBaseContext());
+		db.updateBrockerList(list, m_isWhite == true ? true : false);
 		m_adapter.UpdateDate();
 	}
 

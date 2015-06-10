@@ -231,7 +231,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String szTable = "blacklist";
 		if (isWhite)
 			szTable = "whitelist";
-		String szSql = "select * from " + szTable + " where phone_number = "
+		String szSql = "select * from " + szTable + " where phone_number="
 				+ number;
 		Cursor c = null;
 		try {

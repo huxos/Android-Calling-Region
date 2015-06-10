@@ -24,7 +24,7 @@
     <string name="setting_show_area_call_in_summary">Show area when call incoming</string>
     <string name="setting_show_area_call_out_summary">Show area when call outing</string>
     <string name="setting_using_network_summary">Use network when query area</string>
-    <string name="about_summary">Query area、brocker call and sms, By KangLin&lt;kl222@126.com&gt;</string>
+    <string name="about_summary">Query area、Intercept call and sms, By KangLin&lt;kl222@126.com&gt;</string>
     <string name="title_activity_firewall_setting">Firewall setting</string>
     <string name="firewallsetting">Firewall setting</string>
     <string name="open_firewall">Open firewall</string>
@@ -37,11 +37,11 @@
     <string name="numbers_in_whitelist">numbers in whitelist</string>
     <string name="blacklist">blacklist</string>
     <string name="numbers_in_blacklist">numbers in blacklist</string>
-    <string name="brocker_phone_log">Brocker phone log</string>
-    <string name="numbers_brocker_phone_log">Numbers brocker phone log</string>
-    <string name="brocker_sms_log">Brocker sms log</string>
-    <string name="numbers_brocker_sms_log">number brocker sms log</string>
-    <string name="title_activity_brocker_list">Brocker List</string>
+    <string name="brocker_phone_log">Intercept phone log</string>
+    <string name="numbers_brocker_phone_log">Numbers Intercept phone log</string>
+    <string name="brocker_sms_log">Intercept sms log</string>
+    <string name="numbers_brocker_sms_log">number Intercept sms log</string>
+    <string name="title_activity_brocker_list">Intercept List</string>
     <string name="from_contact">From contact</string>
     <string name="from_call_records">From call records</string>
     <string name="Name">Name</string>
@@ -50,16 +50,17 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="brower">Brower</string>
-    <string name="title_activity_brocker_phone_log">Brocker Phone Log</string>
+    <string name="title_activity_brocker_phone_log">Intercept Phone Log</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_brocker_sms_log">Brocker Sms Log</string>
+    <string name="title_activity_brocker_sms_log">Intercept Sms Log</string>
     <string name="enable_interception_phone">Enable interception phone</string>
     <string name="phone">Phone</string>
     <string name="sms">SMS</string>
     <string name="brocker_sms_keyword_whitelist">SMS keyword whitelist</string>
     <string name="brocker_sms_keyword_blacklist">SMS keyword blacklist</string>
-    <string name="title_activity_brocker_sms_key_word_list">Brocker sms key word list</string>
+    <string name="title_activity_brocker_sms_key_word_list">Intercept sms key word list</string>
     <string name="input_keyword">[Input keyword]</string>
     <string name="title_activity_brocker_sms_log_detailed">Interception Sms Log Detailed</string>
+    <string name="title_activity_brocker_list_call">Call list</string>
 
 </resources>

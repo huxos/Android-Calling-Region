@@ -20,6 +20,8 @@ public class CBrockerlist {
 		this.sms_enable = sms_enable;
 	}
 	public String getName() {
+		if(null == name)
+			return "";
 		return name;
 	}
 	public void setName(String name) {
