@@ -2,11 +2,8 @@ package me.huxos.checkout;
 
 import java.util.List;
 
-import me.huxos.checkout.BrockerSmsLogActivity.ViewHolder;
-import me.huxos.checkout.BrockerSmsLogActivity.listAdapter;
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBlockerSMSLog;
-import me.huxos.checkout.entity.CBlockerSMSLogs;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +18,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 拦截短信日志详情
+ * 
+ * @author KangLin<kl222@126.com>
+ * 
+ */
 public class BrockerSmsLogDetailedActivity extends Activity {
 	private static final String TAG = "BrockerSmsLogDetailedActivity";
 	private String m_number;
@@ -49,6 +52,7 @@ public class BrockerSmsLogDetailedActivity extends Activity {
 		TextView m_Name;
 		TextView m_Text;
 		TextView m_Time;
+		Button m_Delete;
 	}
 
 	class listAdapter extends BaseAdapter {
@@ -56,12 +60,10 @@ public class BrockerSmsLogDetailedActivity extends Activity {
 		private Context m_context;
 		private DBHelper m_db;
 		private List<CBlockerSMSLog> m_Brockerlist;
-		private BrockerSmsLogDetailedActivity m_activity;
 		private String m_number;
 
 		public listAdapter(BrockerSmsLogDetailedActivity activity, String number) {
 			super();
-			this.m_activity = activity;
 			this.m_context = activity.getBaseContext();
 			this.m_Inflater = LayoutInflater.from(m_context);
 			m_number = number;
@@ -109,6 +111,8 @@ public class BrockerSmsLogDetailedActivity extends Activity {
 				holder.m_Time = (TextView) convertView
 						.findViewById(R.id.txtBrockerSmsLogDetailedTime);
 				convertView.setTag(holder);
+				holder.m_Delete = (Button) convertView
+						.findViewById(R.id.btnBrockerSmsLogDetailedDelete);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
@@ -119,6 +123,27 @@ public class BrockerSmsLogDetailedActivity extends Activity {
 			holder.m_Text.setText(brockerList.getContent());
 			holder.m_Time.setText(CTool.formatTimeStampString(m_context,
 					brockerList.getTime(), false));
+
+			// 设置删除按钮事件
+			class CDeleteClickListener implements View.OnClickListener {
+				private int m_position;
+
+				public CDeleteClickListener(int position) {
+					super();
+					this.m_position = position;
+				}
+
+				@Override
+				public void onClick(View v) {
+					CBlockerSMSLog brockerList = m_Brockerlist.get(m_position);
+					m_db.deleteBlockerSMSLog("no=" + brockerList.getNo());
+					UpdateDate();
+				}
+
+			}
+			holder.m_Delete.setOnClickListener(new CDeleteClickListener(
+					position));
+
 			return convertView;
 		}
 	}
