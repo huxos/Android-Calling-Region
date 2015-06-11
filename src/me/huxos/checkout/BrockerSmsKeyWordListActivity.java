@@ -36,11 +36,10 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 		setContentView(R.layout.activity_brocker_sms_key_word_list);
 		Intent intent = this.getIntent();
 		m_isWhite = intent.getStringExtra("isWhitelist").equals("true");
-		TextView text = (TextView) findViewById(R.id.txtBrockerSmsKeyWordTitle);
 		if (m_isWhite)
-			text.setText(R.string.brocker_sms_keyword_whitelist);
+			this.setTitle(R.string.brocker_sms_keyword_whitelist);
 		else
-			text.setText(R.string.brocker_sms_keyword_blacklist);
+			this.setTitle(R.string.brocker_sms_keyword_blacklist);
 
 		// 设置listview数据适配器
 		ListView listView = (ListView) findViewById(R.id.lvBrockerSmsKeyWordlistView);
@@ -63,6 +62,8 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 		keyword = text.getText().toString();
 		text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordPhone);
 		number = text.getText().toString();
+		if(null == keyword || keyword.isEmpty())
+			return;
 		CBlockerSmsKeyword key = new CBlockerSmsKeyword(keyword, number);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.insertBrockerKeyWord(key, m_isWhite);

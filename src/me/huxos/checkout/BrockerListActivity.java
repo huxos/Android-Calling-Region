@@ -27,8 +27,9 @@ import android.widget.TextView;
 
 /**
  * 拦截名单界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
 public class BrockerListActivity extends Activity {
 	private static final String TAG = "BrockerListActivity";
@@ -43,11 +44,10 @@ public class BrockerListActivity extends Activity {
 		setContentView(R.layout.activity_brocker_list);
 		Intent intent = this.getIntent();
 		m_isWhite = intent.getStringExtra("isWhitelist").equals("true");
-		TextView text = (TextView) findViewById(R.id.txtBrocklistBrockerList);
 		if (m_isWhite)
-			text.setText(R.string.whitelist);
+			this.setTitle(R.string.whitelist);
 		else
-			text.setText(R.string.blacklist);
+			this.setTitle(R.string.blacklist);
 
 		// 设置listview数据适配器
 		ListView listView = (ListView) findViewById(R.id.lstBrockerlistView);
@@ -62,7 +62,7 @@ public class BrockerListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.brocker_list, menu);
+		// getMenuInflater().inflate(R.menu.brocker_list, menu);
 		return true;
 	}
 
@@ -92,6 +92,7 @@ public class BrockerListActivity extends Activity {
 
 	/**
 	 * 增加按钮事件
+	 * 
 	 * @param source
 	 */
 	public void onAdd(View source) {
@@ -146,6 +147,8 @@ public class BrockerListActivity extends Activity {
 			}
 			break;
 		case PICK_CALL:
+			if (null == data)
+				return;
 			name = data.getStringExtra("name");
 			number = data.getStringExtra("number");
 			break;
@@ -154,6 +157,8 @@ public class BrockerListActivity extends Activity {
 					"onActivityResult:don't know requestCode:"
 							+ String.valueOf(requestCode));
 		}
+		if (null == number || number.isEmpty())
+			return;
 		CBrockerlist list = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(list, m_isWhite == true ? true : false);

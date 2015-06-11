@@ -64,4 +64,6 @@
     <string name="title_activity_brocker_list_call">Call list</string>
     <string name="title_activity_assistant_main">Android ssistant</string>
 	<string name="query_area">Query area</string>
+	<string name="outgoing_type">outgoing</string>
+	<string name="incoming_type">incoming</string>
 </resources>

@@ -8,13 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BrockerSmsKeyWordListActivity" >
 
-    <TextView
-        android:id="@+id/txtBrockerSmsKeyWordTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <ListView
         android:id="@+id/lvBrockerSmsKeyWordlistView"
         android:layout_width="match_parent"
@@ -22,7 +15,8 @@
         android:layout_above="@+id/edtBrockerSmsKeyWordKeyWord"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtBrockerSmsKeyWordTitle" >
+        android:layout_alignParentTop="true" >
+
     </ListView>
 
     <EditText

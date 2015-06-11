@@ -67,6 +67,7 @@ public class BrockerListCallActivity extends Activity implements
 		TextView m_Name;
 		TextView m_Number;
 		TextView m_Time;
+		TextView m_Type;
 	}
 
 	/**
@@ -86,6 +87,13 @@ public class BrockerListCallActivity extends Activity implements
 			this.number = number;
 			this.type = type;
 			this.time = time;
+		}
+		public String getType(){
+			if(CallLog.Calls.OUTGOING_TYPE == type)
+				return getString(R.string.outgoing_type);
+			if(CallLog.Calls.INCOMING_TYPE == type)
+				return getString(R.string.incoming_type);
+			return "";
 		}
 	}
 
@@ -166,6 +174,8 @@ public class BrockerListCallActivity extends Activity implements
 				convertView.setTag(holder);
 				holder.m_Time = (TextView) convertView
 						.findViewById(R.id.txtBrockerListCallTiem);
+				holder.m_Type = (TextView)  convertView
+						.findViewById(R.id.txtBrockerListCallType);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
@@ -174,6 +184,7 @@ public class BrockerListCallActivity extends Activity implements
 			CCall call = m_activity.m_lstCall.get(position);
 			holder.m_Name.setText(call.name);
 			holder.m_Number.setText(call.number);
+			holder.m_Type.setText(call.getType());
 			holder.m_Time.setText(CTool.formatTimeStampString(
 					m_activity.getBaseContext(), call.time, false));
 
