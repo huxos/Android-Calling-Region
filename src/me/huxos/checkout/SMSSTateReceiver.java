@@ -9,6 +9,11 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+/**
+ * 短信接收界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class SMSSTateReceiver extends BroadcastReceiver {
 	private static final String TAG = "BroadcastReceiver";
 

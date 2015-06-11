@@ -9,6 +9,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * 防火墙设置主界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class FirewallSettingActivity extends Activity {
 
 	@Override
@@ -30,7 +35,7 @@ public class FirewallSettingActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.firewall_setting, menu);
+		//getMenuInflater().inflate(R.menu.firewall_setting, menu);
 		return true;
 	}
 

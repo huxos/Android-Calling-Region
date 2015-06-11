@@ -97,6 +97,8 @@ public class CFirewallOperate {
 		while(it.hasNext())
 		{
 			CBlockerSmsKeyword key = it.next();
+			if(key.getEnable() == 0)
+				continue;
 			if(!content.contains(key.getKeyword()))
 				continue;
 			if(!key.getPhone_number().isEmpty() &&

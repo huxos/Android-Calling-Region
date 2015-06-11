@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -21,11 +20,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 呼叫列表界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class BrockerListCallActivity extends Activity implements
 		OnItemClickListener {
 	private static final String TAG = "BrockerListCallActivity";
 	private listAdapter m_Adapter;
-	private List<CCallList> m_lstCall;
+	private List<CCall> m_lstCall;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,13 @@ public class BrockerListCallActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.brocker_list_call, menu);
+		//getMenuInflater().inflate(R.menu.brocker_list_call, menu);
 		return true;
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		CCallList call = m_lstCall.get(arg2);
+		CCall call = m_lstCall.get(arg2);
 		Intent intent = new Intent();
 		intent.putExtra("name", call.name);
 		intent.putExtra("number", call.number);
@@ -65,13 +69,18 @@ public class BrockerListCallActivity extends Activity implements
 		TextView m_Time;
 	}
 
-	public final class CCallList {
+	/**
+	 * 呼叫对象
+	 * @author KangLin<kl222@126.com>
+	 *
+	 */
+	public final class CCall {
 		String name;
 		String number;
 		int type;
 		long time;
 
-		public CCallList(String name, String number, int type, long time) {
+		public CCall(String name, String number, int type, long time) {
 			super();
 			this.name = name;
 			this.number = number;
@@ -80,8 +89,12 @@ public class BrockerListCallActivity extends Activity implements
 		}
 	}
 
-	private List<CCallList> getCallList() {
-		List<CCallList> lstCall = new ArrayList<CCallList>();
+	/**
+	 * 得到呼叫列表
+	 * @return
+	 */
+	private List<CCall> getCallList() {
+		List<CCall> lstCall = new ArrayList<CCall>();
 
 		Cursor cursor = null;
 		try {
@@ -91,7 +104,7 @@ public class BrockerListCallActivity extends Activity implements
 					CallLog.Calls.TYPE, CallLog.Calls.DATE }, null, null,
 					CallLog.Calls.DEFAULT_SORT_ORDER);
 			while (cursor.moveToNext()) {
-				CCallList call = new CCallList(
+				CCall call = new CCall(
 						cursor.getString(cursor
 								.getColumnIndex(CallLog.Calls.CACHED_NAME)),
 						cursor.getString(cursor
@@ -129,7 +142,7 @@ public class BrockerListCallActivity extends Activity implements
 
 		@Override
 		public Object getItem(int position) {
-			CCallList call = m_activity.m_lstCall.get(position);
+			CCall call = m_activity.m_lstCall.get(position);
 			return call;
 		}
 
@@ -158,7 +171,7 @@ public class BrockerListCallActivity extends Activity implements
 			}
 
 			// 更新值
-			CCallList call = m_activity.m_lstCall.get(position);
+			CCall call = m_activity.m_lstCall.get(position);
 			holder.m_Name.setText(call.name);
 			holder.m_Number.setText(call.number);
 			holder.m_Time.setText(CTool.formatTimeStampString(

@@ -2,11 +2,8 @@ package me.huxos.checkout;
 
 import java.util.List;
 
-import me.huxos.checkout.BrockerListActivity.listAdapter;
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBlockerSMSLogs;
-import me.huxos.checkout.entity.CBrockerlist;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +18,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 短信拦截日志界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class BrockerSmsLogActivity extends Activity {
 	private static final String TAG = "BrockerSmsLogActivity";
 	private listAdapter m_adapter;
@@ -43,7 +45,7 @@ public class BrockerSmsLogActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.brocker_sms_log, menu);
+		//getMenuInflater().inflate(R.menu.brocker_sms_log, menu);
 		return true;
 	}
 
@@ -137,13 +139,10 @@ public class BrockerSmsLogActivity extends Activity {
 			// 设置删除按钮事件
 			class CDeleteClickListener implements View.OnClickListener {
 				private int m_position;
-				private listAdapter m_this;
-
 				public CDeleteClickListener(listAdapter listAdapter,
 						int position) {
 					super();
 					this.m_position = position;
-					m_this = listAdapter;
 				}
 
 				@Override
@@ -161,14 +160,12 @@ public class BrockerSmsLogActivity extends Activity {
 			// 设置浏览按钮事件
 			class CBrowerClickListener implements View.OnClickListener {
 				private int m_position;
-				private listAdapter m_this;
 				private BrockerSmsLogActivity m_activity;
 
 				public CBrowerClickListener(BrockerSmsLogActivity activity,
 						listAdapter listAdapter, int position) {
 					super();
 					this.m_position = position;
-					m_this = listAdapter;
 					m_activity = activity;
 				}
 

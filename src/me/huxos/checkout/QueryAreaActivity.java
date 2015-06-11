@@ -36,7 +36,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * 区域查询界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class QueryAreaActivity extends Activity {
 
 	private static DBHelper helper;

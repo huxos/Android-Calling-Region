@@ -15,6 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 拦截电话日志界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class BrockerPhoneLogActivity extends Activity {
 	private static final String TAG = "BrockerPhoneLogActivity";
 	private listAdapter m_adapter;
@@ -32,7 +37,7 @@ public class BrockerPhoneLogActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.brocker_phone_log, menu);
+		//getMenuInflater().inflate(R.menu.brocker_phone_log, menu);
 		return true;
 	}
 
@@ -71,12 +76,12 @@ public class BrockerPhoneLogActivity extends Activity {
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return m_Brockerlist.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return position;
 		}
 
 		@Override

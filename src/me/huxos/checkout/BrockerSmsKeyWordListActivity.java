@@ -1,13 +1,8 @@
 package me.huxos.checkout;
 
 import java.util.List;
-
-import me.huxos.checkout.BrockerPhoneLogActivity.ViewHolder;
-import me.huxos.checkout.BrockerPhoneLogActivity.listAdapter;
 import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerPhoneLog;
 import me.huxos.checkout.entity.CBlockerSmsKeyword;
-import me.huxos.checkout.entity.CBrockerlist;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+/**
+ * 增加短信关键字列表界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class BrockerSmsKeyWordListActivity extends Activity {
 	private static final String TAG = "BrockerSmsKeyWordListActivity";
 	boolean m_isWhite;
@@ -52,10 +52,11 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.brocker_sms_key_word_list, menu);
+		//getMenuInflater().inflate(R.menu.brocker_sms_key_word_list, menu);
 		return true;
 	}
 
+	//增加按钮事件
 	public void onAdd(View source) {
 		String keyword, number;
 		TextView text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordKeyWord);
@@ -107,12 +108,12 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return m_Brockerlist.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return position;
 		}
 
 		@Override

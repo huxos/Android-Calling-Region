@@ -25,6 +25,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 拦截名单界面
+ * @author KangLin<kl222@126.com>
+ *
+ */
 public class BrockerListActivity extends Activity {
 	private static final String TAG = "BrockerListActivity";
 	static final int PICK_CONTACT = 0;
@@ -57,7 +62,7 @@ public class BrockerListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.brocker_list, menu);
+		//getMenuInflater().inflate(R.menu.brocker_list, menu);
 		return true;
 	}
 
@@ -85,6 +90,10 @@ public class BrockerListActivity extends Activity {
 		startActivityForResult(intent, PICK_CALL);
 	}
 
+	/**
+	 * 增加按钮事件
+	 * @param source
+	 */
 	public void onAdd(View source) {
 		TextView text = (TextView) findViewById(R.id.edtBrockerName);
 		String name = text.getText().toString();
@@ -190,12 +199,12 @@ public class BrockerListActivity extends Activity {
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return m_Brockerlist.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return position;
 		}
 
 		@Override
