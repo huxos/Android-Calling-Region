@@ -9,35 +9,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BrockerListActivity" >
 
-    <TextView
-        android:id="@+id/txtBrocklistBrockerList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="false"
-        android:text="@string/blacklist"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <ListView
         android:id="@+id/lstBrockerlistView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/llBrocklistlinerlayoutedit"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/txtBrocklistBrockerList" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
 
     <RelativeLayout
         android:id="@+id/llBrocklistlinerlayoutedit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/llBrocklistlinearlayoutbutton" >
+        android:layout_above="@+id/llBrocklistlinerlayoutedit1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
 
         <EditText
             android:id="@+id/edtBrockerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/edtBrockerNumber"
+            android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:hint="@string/input_name" >
 
@@ -59,26 +53,29 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/edtBrockerNumber"
+            android:layout_alignParentBottom="false"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:onClick="onAdd"
             android:text="@string/add" />
-
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/llBrocklistlinearlayoutbutton"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/llBrocklistlinerlayoutedit1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/lstBrockerlistView" >
+        android:layout_alignParentRight="true" >
 
         <Button
             android:id="@+id/btnBrockerlistContact"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="true"
             android:onClick="onFromContact"
             android:text="@string/from_contact" />
 
@@ -87,9 +84,12 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="14dp"
             android:onClick="onFromCallRecords"
             android:text="@string/from_call_records" />
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

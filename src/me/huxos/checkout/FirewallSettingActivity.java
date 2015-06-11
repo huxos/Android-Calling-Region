@@ -1,5 +1,10 @@
 package me.huxos.checkout;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CSystemInformation;
 import android.os.Bundle;
@@ -7,35 +12,80 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.SimpleAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 /**
  * 防火墙设置主界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
-public class FirewallSettingActivity extends Activity {
-
+public class FirewallSettingActivity extends Activity implements
+		OnItemClickListener {
+	List<Map<String, String>> m_List;
+	ListView m_lstView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_firewall_setting);
-		Button btnFirewall = (Button) findViewById(R.id.btnOpen);
+
+		initListView();
+		m_lstView = (ListView) findViewById(R.id.lvFirewallSettingListView);
+		SimpleAdapter adapter = new SimpleAdapter(this, m_List,
+				android.R.layout.simple_list_item_1, // List 显示一行item1
+				new String[] { "CONTENT" }, // "TITLE",
+				new int[] { android.R.id.text1 });
+		m_lstView.setAdapter(adapter);
+		m_lstView.setOnItemClickListener(this);
+
+		Button btnFirewall = (Button) findViewById(R.id.btnFirewallSettingOpen);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		CSystemInformation info = db.getSystemInformation();
 		if (info.getFirewallstatus().equals("0")) {
 			btnFirewall.setText(R.string.open_firewall);
-			enableSetButton(false);
+			m_lstView.setEnabled(false);
+
 		} else {
 			btnFirewall.setText(R.string.close_firewall);
-			enableSetButton(true);
+			m_lstView.setEnabled(true);
 		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.firewall_setting, menu);
+		// getMenuInflater().inflate(R.menu.firewall_setting, menu);
+		return true;
+	}
+
+	private boolean initListView() {
+		m_List = new ArrayList<Map<String, String>>();
+		Map<String, String> mapWhitelist = new HashMap<String, String>();
+		mapWhitelist.put("CONTENT", this.getString(R.string.whitelist));
+		m_List.add(mapWhitelist);
+		Map<String, String> mapBlacklist = new HashMap<String, String>();
+		mapBlacklist.put("CONTENT", getString(R.string.blacklist));
+		m_List.add(mapBlacklist);
+		Map<String, String> mapSmsKeyWhitelist = new HashMap<String, String>();
+		mapSmsKeyWhitelist.put("CONTENT",
+				getString(R.string.brocker_sms_keyword_whitelist));
+		m_List.add(mapSmsKeyWhitelist);
+		Map<String, String> mapSmsKeyBlacklist = new HashMap<String, String>();
+		mapSmsKeyBlacklist.put("CONTENT",
+				getString(R.string.brocker_sms_keyword_blacklist));
+		m_List.add(mapSmsKeyBlacklist);
+		Map<String, String> mapPhoneLog = new HashMap<String, String>();
+		mapPhoneLog.put("CONTENT", this.getString(R.string.brocker_phone_log));
+		m_List.add(mapPhoneLog);
+		Map<String, String> mapSmsLog = new HashMap<String, String>();
+		mapSmsLog.put("CONTENT", this.getString(R.string.brocker_sms_log));
+		m_List.add(mapSmsLog);
+
 		return true;
 	}
 
@@ -50,36 +100,15 @@ public class FirewallSettingActivity extends Activity {
 		else
 			info.setFirewallstatus("0");
 		db.updateSystemInformation(info);
-		Button btnFirewall = (Button) findViewById(R.id.btnOpen);
+		Button btnFirewall = (Button) findViewById(R.id.btnFirewallSettingOpen);
 		info = db.getSystemInformation();
 		if (info.getFirewallstatus().equals("0")) {
 			btnFirewall.setText(R.string.open_firewall);
-			enableSetButton(false);
+			m_lstView.setEnabled(true);
 		} else {
 			btnFirewall.setText(R.string.close_firewall);
-			enableSetButton(true);
+			m_lstView.setEnabled(false);
 		}
-	}
-
-	/**
-	 * 允许/禁止控件
-	 * 
-	 * @param enbale
-	 *            :true,允许控件;false,禁止控件
-	 */
-	private void enableSetButton(boolean enbale) {
-		Button button = (Button) findViewById(R.id.btnSetWhitelist);
-		button.setEnabled(enbale);
-		button = (Button) findViewById(R.id.btnSetBlacklist);
-		button.setEnabled(enbale);
-		button = (Button) findViewById(R.id.btnSetSmsKeyWordWhitelist);
-		button.setEnabled(enbale);
-		button = (Button) findViewById(R.id.btnSetSmsKeyWordBlacklist);
-		button.setEnabled(enbale);
-		button = (Button) findViewById(R.id.btnSetBrockerPhoneLog);
-		button.setEnabled(enbale);
-		button = (Button) findViewById(R.id.btnSetBrockerSMSLog);
-		button.setEnabled(enbale);
 	}
 
 	/**
@@ -87,7 +116,7 @@ public class FirewallSettingActivity extends Activity {
 	 * 
 	 * @param source
 	 */
-	public void onSetWhitelist(View source) {
+	private void onSetWhitelist() {
 		Intent intent = new Intent();
 		// 用intent.putExtra(String name, String value);来传递参数。
 		intent.putExtra("isWhitelist", "true");
@@ -100,7 +129,7 @@ public class FirewallSettingActivity extends Activity {
 	 * 
 	 * @param source
 	 */
-	public void onSetBlackist(View source) {
+	private void onSetBlackist() {
 		Intent intent = new Intent();
 		// 用intent.putExtra(String name, String value);来传递参数。
 		intent.putExtra("isWhitelist", "false");
@@ -110,33 +139,36 @@ public class FirewallSettingActivity extends Activity {
 
 	/**
 	 * 设置短信关键字白名单
+	 * 
 	 * @param source
 	 */
-	public void onSetSmsKeyWordWhitelist(View source){
+	private void onSetSmsKeyWordWhitelist() {
 		Intent intent = new Intent();
 		// 用intent.putExtra(String name, String value);来传递参数。
 		intent.putExtra("isWhitelist", "true");
 		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
 		startActivity(intent);
 	}
-	
+
 	/**
-	 *  设置短信关键字黑名单
+	 * 设置短信关键字黑名单
+	 * 
 	 * @param source
 	 */
-	public void onSetSmsKeyWordBlacklist(View source){
+	private void onSetSmsKeyWordBlacklist() {
 		Intent intent = new Intent();
 		// 用intent.putExtra(String name, String value);来传递参数。
 		intent.putExtra("isWhitelist", "false");
 		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
 		startActivity(intent);
 	}
-	
+
 	/**
 	 * 查看电话拦截日志
+	 * 
 	 * @param source
 	 */
-	public void onBrockerPhoneLog(View source) {
+	private void onBrockerPhoneLog() {
 		Intent intent = new Intent();
 		intent.setClass(this, BrockerPhoneLogActivity.class);
 		startActivity(intent);
@@ -144,12 +176,38 @@ public class FirewallSettingActivity extends Activity {
 
 	/**
 	 * 查看短信拦截日志
+	 * 
 	 * @param source
 	 */
-	public void onBrockerSMSLog(View source) {
+	private void onBrockerSMSLog() {
 		Intent intent = new Intent();
 		intent.setClass(this, BrockerSmsLogActivity.class);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		switch(position){
+		case 0:
+			onSetWhitelist();
+			break;
+		case 1:
+			onSetBlackist();
+			break;
+		case 2:
+			onSetSmsKeyWordWhitelist();
+			break;
+		case 3:
+			onSetSmsKeyWordBlacklist();
+			break;
+		case 4:
+			onBrockerPhoneLog();
+			break;
+		case 5:
+			onBrockerSMSLog();
+			break;
+		}
+
 	}
 
 }
