@@ -54,43 +54,57 @@
             </intent-filter>
         </receiver>
 
+        <!-- android 助手主界面 -->
         <activity
-            android:name="me.huxos.checkout.FirewallSettingActivity"
-            android:label="@string/title_activity_firewall_setting" >
+            android:name="me.huxos.checkout.AssistantMainActivity"
+            android:label="@string/title_activity_assistant_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 区域查询界面 -->
         <activity
             android:name="me.huxos.checkout.QueryAreaActivity"
             android:label="@string/app_name" >
         </activity>
+        <!-- 区域设置界面 -->
         <activity
             android:name="me.huxos.checkout.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
+		<!-- 防火墙设置界面 -->
+        <activity
+            android:name="me.huxos.checkout.FirewallSettingActivity"
+            android:label="@string/title_activity_firewall_setting" >
+        </activity>
+        <!-- 攔截列表界面 -->
         <activity
             android:name="me.huxos.checkout.BrockerListActivity"
             android:label="@string/title_activity_brocker_list" >
         </activity>
-        <activity
-            android:name="me.huxos.checkout.BrockerPhoneLogActivity"
-            android:label="@string/title_activity_brocker_phone_log" >
-        </activity>
-        <activity
-            android:name="me.huxos.checkout.BrockerSmsLogActivity"
-            android:label="@string/title_activity_brocker_sms_log" >
-        </activity>
+        <!-- 短信攔截關鍵字界面 -->
         <activity
             android:name="me.huxos.checkout.BrockerSmsKeyWordListActivity"
             android:label="@string/title_activity_brocker_sms_key_word_list" >
         </activity>
+        <!-- 攔截電話日志界面 -->
+        <activity
+            android:name="me.huxos.checkout.BrockerPhoneLogActivity"
+            android:label="@string/title_activity_brocker_phone_log" >
+        </activity>
+        <!-- 攔截短信日志界面 -->
+        <activity
+            android:name="me.huxos.checkout.BrockerSmsLogActivity"
+            android:label="@string/title_activity_brocker_sms_log" >
+        </activity>
+        <!-- 攔截短信詳情界面 -->
         <activity
             android:name="me.huxos.checkout.BrockerSmsLogDetailedActivity"
             android:label="@string/title_activity_brocker_sms_log_detailed" >
         </activity>
+        <!-- 最近呼叫界面 -->
         <activity
             android:name="me.huxos.checkout.BrockerListCallActivity"
             android:label="@string/title_activity_brocker_list_call" >

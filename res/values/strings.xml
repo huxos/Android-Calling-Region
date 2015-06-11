@@ -62,5 +62,6 @@
     <string name="input_keyword">[Input keyword]</string>
     <string name="title_activity_brocker_sms_log_detailed">Interception Sms Log Detailed</string>
     <string name="title_activity_brocker_list_call">Call list</string>
-
+    <string name="title_activity_assistant_main">Android ssistant</string>
+	<string name="query_area">Query area</string>
 </resources>
