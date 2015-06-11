@@ -1,13 +1,19 @@
 package me.huxos.checkout;
 
+import java.util.ArrayList;
+import java.util.List;
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBrockerlist;
+import me.huxos.checkout.entity.CSmsInfo;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.util.Log;
 
 /**
  * 公用函数
@@ -16,6 +22,7 @@ import android.text.format.Time;
  * 
  */
 public class CTool {
+	private static final String TAG = "CTool";
 
 	/**
 	 * 从电话号码得到相应的名字
@@ -36,7 +43,7 @@ public class CTool {
 			if (null != brockerlist)
 				szName = brockerlist.getName();
 		}
-		if(szName.isEmpty())
+		if (szName.isEmpty())
 			szName = phone;
 		return szName;
 	}
@@ -110,4 +117,63 @@ public class CTool {
 
 		return DateUtils.formatDateTime(context, when, format_flags);
 	}
+
+	/**
+	 * 所有的短信
+	 */
+	public static final String SMS_URI_ALL = "content://sms/";
+	/**
+	 * 收件箱短信
+	 */
+	public static final String SMS_URI_INBOX = "content://sms/inbox";
+	/**
+	 * 发件箱短信
+	 */
+	public static final String SMS_URI_SEND = "content://sms/sent";
+	/**
+	 * 草稿箱短信
+	 */
+	public static final String SMS_URI_DRAFT = "content://sms/draft";
+
+	/**
+	 * 得到短信
+	 * 
+	 * @param activity
+	 * @return：短信列表
+	 */
+	public List<CSmsInfo> getSmsInfo(Activity activity, String smsUri) {
+		ContentResolver cr = activity.getContentResolver();
+		Uri uri = Uri.parse(smsUri);
+		List<CSmsInfo> infos = new ArrayList<CSmsInfo>();
+		String[] projection = new String[] { "_id", "address", "person",
+				"body", "date", "type" };
+		Cursor cusor = null;
+		try {
+			cusor = cr.query(uri, projection, null, null, "date desc");
+			int nameColumn = cusor.getColumnIndex("person");
+			int phoneNumberColumn = cusor.getColumnIndex("address");
+			int smsbodyColumn = cusor.getColumnIndex("body");
+			int dateColumn = cusor.getColumnIndex("date");
+			int typeColumn = cusor.getColumnIndex("type");
+			while (cusor.moveToNext()) {
+				CSmsInfo smsinfo = new CSmsInfo();
+				smsinfo.setName(cusor.getString(nameColumn));
+				smsinfo.setDate(cusor.getLong(dateColumn));
+				smsinfo.setPhoneNumber(cusor.getString(phoneNumberColumn));
+				smsinfo.setSmsbody(cusor.getString(smsbodyColumn));
+				smsinfo.setType(cusor.getInt(typeColumn));
+				infos.add(smsinfo);
+			}
+			cusor.close();
+
+		} catch (Exception e) {
+			Log.e(TAG, "getSmsInfo exception:", e);
+		} finally {
+			if (cusor != null)
+				cusor.close();
+		}
+
+		return infos;
+	}
+
 }

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.CallLog;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -40,7 +42,7 @@ public class BrockerListCallActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_brocker_list_call);
 
-		m_lstCall = getCallList();
+		m_lstCall = getList();
 
 		ListView listView = (ListView) findViewById(R.id.lvBrockerListCallListView);
 		listView.setOnItemClickListener(this);
@@ -80,7 +82,7 @@ public class BrockerListCallActivity extends Activity implements
 	 * @author KangLin<kl222@126.com>
 	 * 
 	 */
-	public final class CCall implements Comparable<CCall> {
+	public class CCall implements Comparable<CCall> {
 		String name;
 		String number;
 		int type;
@@ -99,10 +101,12 @@ public class BrockerListCallActivity extends Activity implements
 				return getString(R.string.outgoing_type);
 			if (CallLog.Calls.INCOMING_TYPE == type)
 				return getString(R.string.incoming_type);
+			if(0 == type)
+				return getString(R.string.sms);
 			return "";
 		}
 
-		//用于去重
+		// 用于去重
 		public boolean equals(Object obj) {
 			if (obj instanceof CCall) {
 				CCall r = (CCall) obj;
@@ -112,12 +116,13 @@ public class BrockerListCallActivity extends Activity implements
 			}
 			return false;
 		}
-		//用于去重
+
+		// 用于去重
 		public int hashCode() {
 			return this.number.hashCode();
 		}
 
-		//用于排序
+		// 用于排序
 		@Override
 		public int compareTo(CCall another) {
 			return this.time < another.time ? 1
@@ -127,13 +132,21 @@ public class BrockerListCallActivity extends Activity implements
 
 	}
 
+	private List<CCall> getList(){
+		Set<CCall> setCall = getCallList();
+		// TreeSet排序
+		Set<CCall> treeset = new TreeSet<CCall>(setCall);
+		treeset.addAll(getAllSms());
+		return new ArrayList<CCall>(treeset);
+	}
+	
 	/**
 	 * 得到呼叫列表
 	 * 
 	 * @return
 	 */
-	private List<CCall> getCallList() {
-		//HashSet去重
+	private Set<CCall> getCallList() {
+		// HashSet去重
 		Set<CCall> setCall = new HashSet<CCall>();
 
 		Cursor cursor = null;
@@ -162,9 +175,33 @@ public class BrockerListCallActivity extends Activity implements
 			if (cursor != null)
 				cursor.close();
 		}
-		//TreeSet排序
-		Set<CCall> treeset = new TreeSet<CCall>(setCall);
-		return new ArrayList<CCall>(treeset);
+
+		return setCall;
+	}
+
+	private Set<CCall> getAllSms() {
+		Set<CCall> setCall = new HashSet<CCall>();
+		ContentResolver cr = this.getContentResolver();
+		Uri uri = Uri.parse("content://sms/");
+		String[] projection = new String[] { "_id", "address", "person",
+				"body", "date", "type" };
+		Cursor c = null;
+		try {
+			c = cr.query(uri, projection, null, null, "date desc");
+			while (c.moveToNext()) {
+				CCall msg = new CCall(c.getString(c.getColumnIndex("person")),
+						c.getString(c.getColumnIndex("address")), 0,
+						c.getLong(c.getColumnIndex("date")));
+				setCall.add(msg);
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "getAllSms exception", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return setCall;
+
 	}
 
 	class listAdapter extends BaseAdapter {

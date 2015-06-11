@@ -22,7 +22,7 @@
         android:id="@+id/llBrocklistlinerlayoutedit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnBrockerlistContact"
+        android:layout_above="@+id/llBrocklistlinerlayoutedit1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true" >
 
@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/edtBrockerNumber"
+            android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:hint="@string/input_name" >
 
@@ -58,28 +59,36 @@
             android:layout_weight="1"
             android:onClick="onAdd"
             android:text="@string/add" />
-
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnBrockerlistContact"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/llBrocklistlinerlayoutedit1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:onClick="onFromContact"
-        android:text="@string/from_contact" />
+        android:layout_alignParentRight="true" >
 
-    <Button
-        android:id="@+id/btnBrocklistFromCallRecords"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="14dp"
-        android:onClick="onFromCallRecords"
-        android:text="@string/from_call_records" />
+        <Button
+            android:id="@+id/btnBrockerlistContact"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="true"
+            android:onClick="onFromContact"
+            android:text="@string/from_contact" />
+
+        <Button
+            android:id="@+id/btnBrocklistFromCallRecords"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="14dp"
+            android:onClick="onFromCallRecords"
+            android:text="@string/from_call_records" />
+    </RelativeLayout>
 
 </RelativeLayout>
