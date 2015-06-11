@@ -1,7 +1,10 @@
 package me.huxos.checkout;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android.os.Bundle;
 import android.provider.CallLog;
@@ -22,8 +25,9 @@ import android.widget.TextView;
 
 /**
  * 呼叫列表界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
 public class BrockerListCallActivity extends Activity implements
 		OnItemClickListener {
@@ -48,7 +52,7 @@ public class BrockerListCallActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.brocker_list_call, menu);
+		// getMenuInflater().inflate(R.menu.brocker_list_call, menu);
 		return true;
 	}
 
@@ -72,10 +76,11 @@ public class BrockerListCallActivity extends Activity implements
 
 	/**
 	 * 呼叫对象
+	 * 
 	 * @author KangLin<kl222@126.com>
-	 *
+	 * 
 	 */
-	public final class CCall {
+	public final class CCall implements Comparable<CCall> {
 		String name;
 		String number;
 		int type;
@@ -88,21 +93,48 @@ public class BrockerListCallActivity extends Activity implements
 			this.type = type;
 			this.time = time;
 		}
-		public String getType(){
-			if(CallLog.Calls.OUTGOING_TYPE == type)
+
+		public String getType() {
+			if (CallLog.Calls.OUTGOING_TYPE == type)
 				return getString(R.string.outgoing_type);
-			if(CallLog.Calls.INCOMING_TYPE == type)
+			if (CallLog.Calls.INCOMING_TYPE == type)
 				return getString(R.string.incoming_type);
 			return "";
 		}
+
+		//用于去重
+		public boolean equals(Object obj) {
+			if (obj instanceof CCall) {
+				CCall r = (CCall) obj;
+				if (r.number.equals(this.number)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		//用于去重
+		public int hashCode() {
+			return this.number.hashCode();
+		}
+
+		//用于排序
+		@Override
+		public int compareTo(CCall another) {
+			return this.time < another.time ? 1
+					: (this.time == another.time ? 0 : -1);
+
+		}
+
 	}
 
 	/**
 	 * 得到呼叫列表
+	 * 
 	 * @return
 	 */
 	private List<CCall> getCallList() {
-		List<CCall> lstCall = new ArrayList<CCall>();
+		//HashSet去重
+		Set<CCall> setCall = new HashSet<CCall>();
 
 		Cursor cursor = null;
 		try {
@@ -120,15 +152,19 @@ public class BrockerListCallActivity extends Activity implements
 						cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE)),
 						cursor.getLong(cursor
 								.getColumnIndex(CallLog.Calls.DATE)));
-				lstCall.add(call);
+				if (!setCall.contains(call))
+					setCall.add(call);
 			}
+
 		} catch (Exception e) {
 			Log.e(TAG, "findBlockerPhoneLog exception:" + e.getMessage());
 		} finally {
 			if (cursor != null)
 				cursor.close();
 		}
-		return lstCall;
+		//TreeSet排序
+		Set<CCall> treeset = new TreeSet<CCall>(setCall);
+		return new ArrayList<CCall>(treeset);
 	}
 
 	class listAdapter extends BaseAdapter {
@@ -174,7 +210,7 @@ public class BrockerListCallActivity extends Activity implements
 				convertView.setTag(holder);
 				holder.m_Time = (TextView) convertView
 						.findViewById(R.id.txtBrockerListCallTiem);
-				holder.m_Type = (TextView)  convertView
+				holder.m_Type = (TextView) convertView
 						.findViewById(R.id.txtBrockerListCallType);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
