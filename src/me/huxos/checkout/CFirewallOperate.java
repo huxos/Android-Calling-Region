@@ -10,7 +10,7 @@ import me.huxos.checkout.entity.CSystemInformation;
 import android.content.Context;
 
 /**
- * 防火墙操作类
+ * 防火墙拦截条件操作类
  * @author KangLin <kl222@126.com>
  *
  */

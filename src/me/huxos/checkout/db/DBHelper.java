@@ -92,21 +92,34 @@ public class DBHelper extends SQLiteOpenHelper {
 	private boolean createDatabase(SQLiteDatabase db) {
 		try {
 			// 电话区域查询表
-			db.execSQL("create table  if not exists phone_location (_id INTEGER primary key,location varchar(32) not null)");
+			db.execSQL("create table if not exists phone_location"
+					+ "(_id INTEGER primary key,location varchar(32) not null)");
 			// 白名单
-			db.execSQL("create table  if not exists whitelist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table if not exists whitelist"
+					+ "(phone_number text primary key, name text default '',"
+					+ "phone_enable integer default 1, sms_enable integer default 1)");
 			// 黑名单
-			db.execSQL("create table  if not exists blacklist(phone_number text primary key, name text, phone_enable integer, sms_enable integer)");
+			db.execSQL("create table if not exists blacklist"
+					+ "(phone_number text primary key, name text default '',"
+					+ "phone_enable integer default 1, sms_enable integer default 1)");
 			/* 短信关键字白名单 */
-			db.execSQL("create table  if not exists sms_keyword_whitelist(no integer primary key, keyword text, phone_number text, enable integer)");
+			db.execSQL("create table if not exists sms_keyword_whitelist"
+					+ "(no integer primary key, keyword text not null, "
+					+ "phone_number text default '', enable integer default 1)");
 			/* 短信关键字黑名单 */
-			db.execSQL("create table  if not exists sms_keyword_blacklist(no integer primary key, keyword text, phone_number text, enable integer)");
+			db.execSQL("create table if not exists sms_keyword_blacklist"
+					+ "(no integer primary key, keyword text not null,"
+					+ "phone_number text default '', enable integer default 1)");
 			// 拦截电话日志
-			db.execSQL("create table  if not exists blocker_phone_log(no integer primary key, phone_number text, time integer)");
+			db.execSQL("create table if not exists blocker_phone_log"
+					+ "(no integer primary key, phone_number text not null,"
+					+ "time integer, isread integer default 0)");
 			// 拦截短信日志
-			db.execSQL("create table  if not exists blocker_sms_log(no integer primary key, phone_number text, time integer, content text, isread integer)");
+			db.execSQL("create table if not exists blocker_sms_log"
+					+ "(no integer primary key, phone_number text not null,"
+					+ "time integer, content text default '', isread integer default 0)");
 			// 系统信息
-			db.execSQL("create table  if not exists system_infomation(key text primary key, value text)");
+			db.execSQL("create table if not exists system_infomation(key text primary key, value text not null)");
 		} catch (Exception e) {
 			Log.e(TAG, "createDatabase Exception:" + e.getMessage(), e);
 			return false;
@@ -495,6 +508,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			ContentValues cv = new ContentValues();
 			cv.put("phone_number", log.getPhone_number());
 			cv.put("time", log.getTime());
+			cv.put("isread", log.getIsread());
 			Log.d(TAG,
 					"insertBlockerPhoneLog:phone_number:"
 							+ log.getPhone_number());
@@ -513,6 +527,60 @@ public class DBHelper extends SQLiteOpenHelper {
 		return bRet;
 	}
 
+	/**
+	 * 更新所有未读拦截电话为已读
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @return
+	 */
+	public boolean updateBlockerPhoneLogIsread() {
+		boolean bRet = false;
+		try {
+			// 更新
+			ContentValues cv = new ContentValues();
+			cv.put("isread", 1);
+			long count = db.update("blocker_phone_log", cv, "isread=?",
+					new String[] { "0" });
+			if (-1 == count)
+				Log.e(TAG, "updateBlockerPhoneLogIsread fail");
+			else
+				bRet = true;
+
+		} catch (Exception e) {
+			Log.e(TAG,
+					"updateBlockerPhoneLogIsread exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+	
+	/**
+	 * 得到未读拦截电话数
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @return:int[]{未读短信日志数,日志数}
+	 */
+	public int[] getBlockerPhoneLogUnread() {
+		String szSql = "select count(*) as c, sum(isread) as read from blocker_phone_log";
+		int nCount = 0, unRead = 0;
+		Cursor c = null;
+		try {
+			c = db.rawQuery(szSql, null);
+			while (c.moveToNext()) {
+				nCount = c.getInt(c.getColumnIndex("c"));
+				unRead = nCount - c.getInt(c.getColumnIndex("read"));
+			}
+		} catch (Exception e) {
+			Log.e(TAG,
+					"getBlockerSmsLogUnreadCount exception:" + e.getMessage());
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return new int[] { unRead, nCount };
+	}
+	
 	/**
 	 * 查询拦截电话日志
 	 * 
@@ -533,11 +601,13 @@ public class DBHelper extends SQLiteOpenHelper {
 			while (c.moveToNext()) {
 				Integer no = c.getInt(c.getColumnIndex("no"));
 				String number = c.getString(c.getColumnIndex("phone_number"));
+				int isread = c.getInt(c.getColumnIndex("isread"));
 				long time = c.getLong(c.getColumnIndex("time"));
 				Date d = new Date(time);
 				Log.d(TAG, "findBlockerPhoneLog:no:" + String.valueOf(no)
 						+ ";number:" + number + ";time:" + d.toString());
-				CBlockerPhoneLog log = new CBlockerPhoneLog(no, number, time);
+				CBlockerPhoneLog log = new CBlockerPhoneLog(no, number, time,
+						isread);
 				blockerPhoneLog.add(log);
 			}
 		} catch (Exception e) {
@@ -581,8 +651,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * 更新短信已讀狀態
-	 * @param number：手機號碼
+	 * 更新短信已读状态
+	 * 
+	 * @param number
+	 *            ：手机号码
 	 * @return
 	 */
 	public boolean updateBlockerSMSLogIsread(String number) {
@@ -612,7 +684,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * @author KangLin <kl222@126.com>
 	 * @param arg
 	 *            :查询条件
-	 * @return 返回拦截日志列表
+	 * @return 返回拦截短信日志列表
 	 */
 	public List<CBlockerSMSLog> findBlockerSMSLog(String condition) {
 		String szSql = "select * from blocker_sms_log ";
@@ -646,6 +718,13 @@ public class DBHelper extends SQLiteOpenHelper {
 		return blockerSMSLog;
 	}
 
+	/**
+	 * 分组读取短信日志
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @param condition
+	 * @return：返回拦截短信日志分组列表
+	 */
 	public List<CBlockerSMSLogs> findBlockerSMSLogGroup(String condition) {
 		String szSql = "select * , count(content) as c, sum(isread) as read_count from blocker_sms_log ";
 		if (condition != null)
@@ -685,7 +764,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * 刪除短信攔截日志
+	 * 刪除短信拦截日志
 	 * 
 	 * @param condition
 	 * @return
@@ -703,6 +782,32 @@ public class DBHelper extends SQLiteOpenHelper {
 			;
 		}
 		return bRet;
+	}
+
+	/**
+	 * 得未读短信日志数
+	 * 
+	 * @author KangLin <kl222@126.com>
+	 * @return:int[]{未读短信日志数,日志数}
+	 */
+	public int[] getBlockerSmsLogUnreadCount() {
+		String szSql = "select count(*) as c, sum(isread) as read from blocker_sms_log";
+		int nCount = 0, unRead = 0;
+		Cursor c = null;
+		try {
+			c = db.rawQuery(szSql, null);
+			while (c.moveToNext()) {
+				nCount = c.getInt(c.getColumnIndex("c"));
+				unRead = nCount - c.getInt(c.getColumnIndex("read"));
+			}
+		} catch (Exception e) {
+			Log.e(TAG,
+					"getBlockerSmsLogUnreadCount exception:" + e.getMessage());
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return new int[] { unRead, nCount };
 	}
 
 	/**

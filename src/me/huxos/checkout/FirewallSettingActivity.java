@@ -28,19 +28,14 @@ public class FirewallSettingActivity extends Activity implements
 		OnItemClickListener {
 	List<Map<String, String>> m_List;
 	ListView m_lstView;
-	
+	SimpleAdapter m_Adapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_firewall_setting);
 
-		initListView();
 		m_lstView = (ListView) findViewById(R.id.lvFirewallSettingListView);
-		SimpleAdapter adapter = new SimpleAdapter(this, m_List,
-				android.R.layout.simple_list_item_1, // List 显示一行item1
-				new String[] { "CONTENT" }, // "TITLE",
-				new int[] { android.R.id.text1 });
-		m_lstView.setAdapter(adapter);
 		m_lstView.setOnItemClickListener(this);
 
 		Button btnFirewall = (Button) findViewById(R.id.btnFirewallSettingOpen);
@@ -57,6 +52,21 @@ public class FirewallSettingActivity extends Activity implements
 	}
 
 	@Override
+	protected void onResume() {
+
+		initListView();
+		m_Adapter = new SimpleAdapter(this, m_List,
+				android.R.layout.simple_list_item_1, // List 显示一行item1
+				new String[] { "CONTENT" }, // "TITLE",
+				new int[] { android.R.id.text1 });
+		m_lstView.setAdapter(m_Adapter);
+
+		// m_Adapter.notifyDataSetChanged();
+
+		super.onResume();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.firewall_setting, menu);
@@ -64,6 +74,9 @@ public class FirewallSettingActivity extends Activity implements
 	}
 
 	private boolean initListView() {
+		DBHelper db = DBHelper.getInstance(this.getBaseContext());
+		if (null != m_List)
+			m_List.clear();
 		m_List = new ArrayList<Map<String, String>>();
 		Map<String, String> mapWhitelist = new HashMap<String, String>();
 		mapWhitelist.put("CONTENT", this.getString(R.string.whitelist));
@@ -79,11 +92,21 @@ public class FirewallSettingActivity extends Activity implements
 		mapSmsKeyBlacklist.put("CONTENT",
 				getString(R.string.brocker_sms_keyword_blacklist));
 		m_List.add(mapSmsKeyBlacklist);
+		int[] unRead = db.getBlockerPhoneLogUnread();
+		String szPhoneLog = this.getString(R.string.brocker_phone_log);
 		Map<String, String> mapPhoneLog = new HashMap<String, String>();
-		mapPhoneLog.put("CONTENT", this.getString(R.string.brocker_phone_log));
+		if (0 != unRead[0] /*|| 0 != unRead[1]*/)
+			szPhoneLog += "(" + String.valueOf(unRead[0]) + "/"
+					+ String.valueOf(unRead[1]) + ")";
+		mapPhoneLog.put("CONTENT", szPhoneLog);
 		m_List.add(mapPhoneLog);
+		unRead = db.getBlockerSmsLogUnreadCount();
+		String szSmsLog = this.getString(R.string.brocker_sms_log);
 		Map<String, String> mapSmsLog = new HashMap<String, String>();
-		mapSmsLog.put("CONTENT", this.getString(R.string.brocker_sms_log));
+		if (0 != unRead[0] /*|| 0 != unRead[1]*/)
+			szSmsLog += "(" + String.valueOf(unRead[0]) + "/"
+					+ String.valueOf(unRead[1]) + ")";
+		mapSmsLog.put("CONTENT", szSmsLog);
 		m_List.add(mapSmsLog);
 
 		return true;
@@ -104,10 +127,10 @@ public class FirewallSettingActivity extends Activity implements
 		info = db.getSystemInformation();
 		if (info.getFirewallstatus().equals("0")) {
 			btnFirewall.setText(R.string.open_firewall);
-			m_lstView.setEnabled(true);
+			m_lstView.setEnabled(false);
 		} else {
 			btnFirewall.setText(R.string.close_firewall);
-			m_lstView.setEnabled(false);
+			m_lstView.setEnabled(true);
 		}
 	}
 
@@ -186,8 +209,9 @@ public class FirewallSettingActivity extends Activity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		switch(position){
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		switch (position) {
 		case 0:
 			onSetWhitelist();
 			break;

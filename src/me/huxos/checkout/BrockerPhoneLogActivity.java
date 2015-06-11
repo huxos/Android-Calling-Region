@@ -59,6 +59,7 @@ public class BrockerPhoneLogActivity extends Activity {
 			this.m_Inflater = LayoutInflater.from(context);
 			m_db = DBHelper.getInstance(this.m_context);
 			m_Brockerlist = m_db.findBlockerPhoneLog(null);
+			m_db.updateBlockerPhoneLogIsread();
 		}
 
 		// 更新数据
