@@ -62,5 +62,18 @@
     <string name="title_activity_assistant_main">Android 助手</string>
     <string name="query_area">区域查询</string>
     <string name="outgoing_type">呼出</string>
-	<string name="incoming_type">呼入</string>
+    <string name="incoming_type">呼入</string>
+    <string name="title_activity_intercept_mode">拦截模式</string>
+    <string name="intercept_type">拦截类型</string>
+    <string name="intercept_type_no">不拦截</string>
+    <string name="intercept_type_normal">"正常拦截 "</string>
+    <string name="intercept_type_prompt">不拦截。仅禁止提示音</string>
+    <string name="intercept_direction">拦截方向</string>
+    <string name="intercept_direction_incoming">拦截呼入</string>
+    <string name="intercept_direction_outgoing">拦截呼出</string>
+    <string name="intercept_direction_double_side">双向拦截</string>
+    <string name="intercept_condition">拦截条件</string>
+    <string name="intercept_condition_normal">白名单和黑名单</string>
+    <string name="intercept_condition_no_contact">白名单、黑名单和非通信薄中</string>
+
 </resources>

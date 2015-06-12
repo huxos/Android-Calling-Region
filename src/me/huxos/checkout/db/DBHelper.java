@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import me.huxos.checkout.entity.CBlockerPhoneLog;
 import me.huxos.checkout.entity.CBlockerSMSLog;
@@ -244,8 +246,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		String szTable = "blacklist";
 		if (isWhite)
 			szTable = "whitelist";
-		String szSql = "select * from " + szTable + " where phone_number="
-				+ number;
+		String szSql = "select * from " + szTable + " where phone_number='"
+				+ number +"'";
 		Cursor c = null;
 		try {
 			c = db.rawQuery(szSql, null);
@@ -430,13 +432,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				String value = c.getString(c.getColumnIndex("value"));
 				Log.d(TAG, "getSystemInformation:key:" + key + ";value:"
 						+ value);
-				if (key.equals("firewallstatus")) {
-					info.setFirewallstatus(value);
-				} else if (key.equals("user_name")) {
-					info.setUser_name(value);
-				} else if (key.equals("user_password")) {
-					info.setUser_password(value);
-				}
+				info.m_Info.put(key, value);
 			}
 
 		} catch (Exception e) {
@@ -460,29 +456,20 @@ public class DBHelper extends SQLiteOpenHelper {
 		try {
 			String szTable = "system_infomation";
 			// 更新
-			ContentValues cv = new ContentValues();
-			cv.put("key", "firewallstatus");
-			cv.put("value", info.getFirewallstatus());
-			long count = db.update(szTable, cv, "key=?",
-					new String[] { "firewallstatus" });
-			if (1 != count) {
-				db.insert(szTable, null, cv);
-			}
-			cv.clear();
-			cv.put("key", "user_name");
-			cv.put("value", info.getUser_name());
-			count = db.update(szTable, cv, "key=?",
-					new String[] { "user_name" });
-			if (1 != count) {
-				db.insert(szTable, null, cv);
-			}
-			cv.clear();
-			cv.put("key", "user_password");
-			cv.put("value", info.getUser_password());
-			count = db.update(szTable, cv, "key=?",
-					new String[] { "user_password" });
-			if (1 != count) {
-				db.insert(szTable, null, cv);
+			Iterator<Entry<String, String>> it = info.m_Info.entrySet()
+					.iterator();
+			while (it.hasNext()) {
+				ContentValues cv = new ContentValues();
+				Entry<String, String> entry = it.next();
+				cv.put("key", entry.getKey());
+				cv.put("value", entry.getValue());
+				Log.d(TAG, "updateSystemInformation:key:" + entry.getKey()
+						+ ";value:" + entry.getValue());
+				long count = db.update(szTable, cv, "key=?",
+						new String[] { entry.getKey() });
+				if (1 != count) {
+					db.insert(szTable, null, cv);
+				}
 			}
 			bRet = true;
 		} catch (Exception e) {
@@ -554,12 +541,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		return bRet;
 	}
-	
+
 	/**
 	 * 得到未读拦截电话数
 	 * 
 	 * @author KangLin <kl222@126.com>
-	 * @return:int[]{未读短信日志数,日志数}
+	 * @return:int[]{未读短信日志数,日志数
 	 */
 	public int[] getBlockerPhoneLogUnread() {
 		String szSql = "select count(*) as c, sum(isread) as read from blocker_phone_log";
@@ -580,7 +567,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		return new int[] { unRead, nCount };
 	}
-	
+
 	/**
 	 * 查询拦截电话日志
 	 * 
@@ -788,7 +775,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * 得未读短信日志数
 	 * 
 	 * @author KangLin <kl222@126.com>
-	 * @return:int[]{未读短信日志数,日志数}
+	 * @return:int[]{未读短信日志数,日志数
 	 */
 	public int[] getBlockerSmsLogUnreadCount() {
 		String szSql = "select count(*) as c, sum(isread) as read from blocker_sms_log";
@@ -934,7 +921,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			szTable = "sms_keyword_whitelist";
 		String szSql = "select * from " + szTable;
 		if (isEnable)
-			szSql += " where enable=1";
+			szSql += " where enable='1'";
 		Cursor c = null;
 		try {
 			c = db.rawQuery(szSql, null);

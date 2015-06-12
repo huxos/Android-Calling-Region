@@ -7,12 +7,14 @@ import com.android.internal.telephony.ITelephony;
 
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBlockerPhoneLog;
+import me.huxos.checkout.entity.CSystemInformation;
 import me.huxos.checkout.entity.PhoneArea;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
@@ -27,19 +29,30 @@ import android.widget.TextView;
  * 
  */
 public class PhoneStatReceiver extends BroadcastReceiver {
-
 	private static final String TAG = "PhoneStatReceiver";
-	private static WindowManager wm;
-	private static TextView tv;
+	private static WindowManager m_wm;
+	private static TextView m_tv;
 	private boolean view_area;
 	private boolean view_area_call_in;
 	private boolean view_area_call_out;
 	private static boolean incomingFlag = false;
-
 	private static String incoming_number = null;
+	private CSystemInformation m_info;
+	private DBHelper m_db;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
+		// 获取当前的界面
+		if (null == m_wm)
+			m_wm = (WindowManager) context.getApplicationContext()
+					.getSystemService(Context.WINDOW_SERVICE);
+		// 设置显示文本框
+		if (null == m_tv) {
+			m_tv = new TextView(context);
+			m_tv.setTextSize(25);
+			m_tv.setVisibility(TextView.INVISIBLE);
+		}
 
 		// 显示归属地
 		view_area = PreferenceManager.getDefaultSharedPreferences(context)
@@ -50,6 +63,11 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		// 来电时显示归属地
 		view_area_call_in = PreferenceManager.getDefaultSharedPreferences(
 				context).getBoolean("view_area_call_in", true);
+
+		// 得到数据库
+		if (null == m_db)
+			m_db = DBHelper.getInstance(context);
+		m_info = m_db.getSystemInformation();
 
 		if (view_area && (view_area_call_in || view_area_call_out)) {
 			// 拨打电话
@@ -63,8 +81,21 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 						"view_area_call_out:"
 								+ String.valueOf(view_area_call_out)
 								+ "; CALL OUT: " + phoneNumber);
+
+				// 拦截
+				if (m_info.getInterceptionDirection() == CSystemInformation.InterceptionDirectionOutgoing
+						|| m_info.getInterceptionDirection() == CSystemInformation.InterceptionDirectionDouble) {
+					CFirewallOperate firewallOperate = new CFirewallOperate(
+							context);
+					if (firewallOperate.brockerPhone(phoneNumber)) {
+						brockerPhone(context, phoneNumber, false);
+						return;
+					}
+				}
+
 				if (view_area_call_out)
 					new ShowArea(context).execute(phoneNumber);
+
 			} else {
 				// 来电
 				TelephonyManager tm = (TelephonyManager) context
@@ -73,8 +104,6 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 				switch (tm.getCallState()) {
 				case TelephonyManager.CALL_STATE_RINGING: // 电话等待接听
 					incomingFlag = true;
-					// incoming_number =
-					// intent.getStringExtra("incoming_number");
 					incoming_number = intent
 							.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 					// 去掉非数字字符（可能会包含空格）
@@ -84,18 +113,25 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 									+ String.valueOf(view_area_call_in)
 									+ "; CALL IN RINGING :" + incoming_number);
 
-					// 来电拦截
-					CFirewallOperate firewallOperate = new CFirewallOperate(
-							context);
-					if (firewallOperate.brockerPhone(incoming_number)) {
-						brockerPhone(context, incoming_number);
-						break;
-					}
-
 					// 区域显示
 					if (view_area_call_in)
 						new ShowArea(context).execute(incoming_number);
 
+					if ((m_info.getInterceptionDirection() == CSystemInformation.InterceptionDirectionIncoming || m_info
+							.getInterceptionDirection() == CSystemInformation.InterceptionDirectionDouble)
+							&& m_info.getInterceptionType() != CSystemInformation.InterceptioinTypeNo) {
+						// 来电拦截
+						CFirewallOperate firewallOperate = new CFirewallOperate(
+								context);
+						if (firewallOperate.brockerPhone(incoming_number)) {
+							AudioManager mAudioManager = (AudioManager) context
+									.getSystemService(Context.AUDIO_SERVICE);
+							mAudioManager
+									.setRingerMode(AudioManager.RINGER_MODE_SILENT);// 静音处理
+
+							brockerPhone(context, incoming_number, true);
+						}
+					}
 					break;
 
 				case TelephonyManager.CALL_STATE_OFFHOOK: // 电话摘机
@@ -106,11 +142,19 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 
 				case TelephonyManager.CALL_STATE_IDLE: // 电话挂机
 					Log.i(TAG, "CALL IDLE");
+					// 再恢复正常铃声
+					AudioManager mAudioManager = (AudioManager) context
+							.getSystemService(Context.AUDIO_SERVICE);
+					mAudioManager
+							.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 					try {
-						if (wm != null)
-							wm.removeView(tv);
+						if (null != m_wm && null != m_tv) {
+							m_wm.removeView(m_tv);
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
+					} finally {
+						m_tv = null;
 					}
 					break;
 				}
@@ -123,14 +167,18 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 	 * 
 	 * @param context
 	 */
-	private void brockerPhone(Context context, String number) {
-		// 挂机
-		endCall(context);
+	private void brockerPhone(Context context, String number, boolean bIncoming) {
+		if (m_info.getInterceptionType() == CSystemInformation.InterceptionTypeNormal) {
+			// 挂机
+			if (bIncoming)
+				endCall(context);
+			else
+				setResultData(null); // 清除电话，广播被传给系统的接收者后，因为电话为null，取消电话拔打
+		}
 		// 写入拦截日志
 		Date d = new Date();
 		CBlockerPhoneLog log = new CBlockerPhoneLog(number, d.getTime());
-		DBHelper db = DBHelper.getInstance(context);
-		db.insertBlockerPhoneLog(log);
+		m_db.insertBlockerPhoneLog(log);
 	}
 
 	/**
@@ -141,11 +189,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 	private boolean endCall(Context context) {
 		boolean bRet = false;
 
-		// AudioManager mAudioManager = (AudioManager)
-		// context.getSystemService(Context.AUDIO_SERVICE);
 		try {
-			// mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);//静音处理
-
 			TelephonyManager telMgr = (TelephonyManager) context
 					.getSystemService(Service.TELEPHONY_SERVICE);
 			Class<TelephonyManager> c = TelephonyManager.class;
@@ -161,8 +205,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		} catch (Exception e) {
 			Log.e(TAG, "Fail to answer ring call.", e);
 		} finally {
-			// 再恢复正常铃声
-			// mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
 		}
 		return bRet;
 	}
@@ -183,29 +226,29 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 
 		@Override
 		protected TextView doInBackground(String... param) {
-			// 构建显示内容
-			tv = new TextView(context);
-			tv.setTextSize(25);
-			// 得到连接
-			DBHelper helper = DBHelper.getInstance(context);
-			String incomingNumber = param[0];
-			Log.d(TAG, "Number:" + incomingNumber);
-			PhoneArea phoneArea;
-			if ((incomingNumber != null && incomingNumber.length() >= 7)
-					&& ((phoneArea = helper.findPhoneArea((incomingNumber)
-							.substring(0, 7))) != null)) {
-				tv.setText(phoneArea.getArea());
-			} else {
-				tv.setText(R.string.none_area);
+			if (null == m_tv)
+				return null;
+			try {
+				// 构建显示内容
+				String incomingNumber = param[0];
+				Log.d(TAG, "Number:" + incomingNumber);
+				PhoneArea phoneArea;
+				if ((incomingNumber != null && incomingNumber.length() >= 7)
+						&& ((phoneArea = m_db.findPhoneArea((incomingNumber)
+								.substring(0, 7))) != null)) {
+					m_tv.setText(phoneArea.getArea());
+				} else {
+					m_tv.setText(R.string.none_area);
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "doInBackground exception", e);
 			}
-			return tv;
+			return m_tv;
 		}
 
 		@Override
 		protected void onPostExecute(TextView textView) {
-			// 获取当前的界面
-			wm = (WindowManager) context.getApplicationContext()
-					.getSystemService(Context.WINDOW_SERVICE);
+
 			// 构造显示参数
 			WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 
@@ -221,7 +264,11 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			// 透明
 			params.format = PixelFormat.RGBA_8888;
 			// 显示
-			wm.addView(tv, params);
+			if (null != m_wm && null != m_tv) {
+				m_tv.setVisibility(TextView.VISIBLE);
+				m_wm.addView(m_tv, params);
+
+			}
 		}
 	}
 }

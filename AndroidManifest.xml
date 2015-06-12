@@ -74,7 +74,7 @@
             android:name="me.huxos.checkout.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
-		<!-- 防火墙设置界面 -->
+        <!-- 防火墙设置界面 -->
         <activity
             android:name="me.huxos.checkout.FirewallSettingActivity"
             android:label="@string/title_activity_firewall_setting" >
@@ -108,6 +108,10 @@
         <activity
             android:name="me.huxos.checkout.BrockerListCallActivity"
             android:label="@string/title_activity_brocker_list_call" >
+        </activity>
+        <activity
+            android:name="me.huxos.checkout.InterceptModeActivity"
+            android:label="@string/title_activity_intercept_mode" >
         </activity>
     </application>
 

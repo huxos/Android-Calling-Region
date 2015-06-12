@@ -59,15 +59,22 @@ public class CTool {
 			String phoneNum) {
 		String contactName = "";
 		ContentResolver cr = context.getContentResolver();
-		Cursor pCur = cr.query(
-				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-				ContactsContract.CommonDataKinds.Phone.NUMBER + " = ?",
-				new String[] { phoneNum }, null);
-		if (pCur.moveToFirst()) {
-			contactName = pCur
-					.getString(pCur
-							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-			pCur.close();
+		Cursor cursor = null;
+		try {
+			cursor = cr.query(
+					ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+					ContactsContract.CommonDataKinds.Phone.NUMBER + " = ?",
+					new String[] { phoneNum }, null);
+			if (cursor.moveToFirst()) {
+				contactName = cursor
+						.getString(cursor
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "getContactNameFromPhoneBook exception", e);
+		}finally {
+			if(null != cursor)
+				cursor.close();
 		}
 		return contactName;
 	}

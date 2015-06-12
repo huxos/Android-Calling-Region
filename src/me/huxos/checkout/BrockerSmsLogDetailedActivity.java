@@ -68,15 +68,15 @@ public class BrockerSmsLogDetailedActivity extends Activity {
 			this.m_Inflater = LayoutInflater.from(m_context);
 			m_number = number;
 			m_db = DBHelper.getInstance(this.m_context);
-			m_Brockerlist = m_db.findBlockerSMSLog("where phone_number="
-					+ m_number);
+			m_Brockerlist = m_db.findBlockerSMSLog("where phone_number='"
+					+ m_number + "'");
 			m_db.updateBlockerSMSLogIsread(m_number);
 		}
 
 		// 更新数据
 		public void UpdateDate() {
-			m_Brockerlist = m_db.findBlockerSMSLog("where phone_number="
-					+ m_number);
+			m_Brockerlist = m_db.findBlockerSMSLog("where phone_number='"
+					+ m_number +"'");
 			notifyDataSetChanged();
 			return;
 		}

@@ -63,7 +63,20 @@
     <string name="title_activity_brocker_sms_log_detailed">Interception Sms Log Detailed</string>
     <string name="title_activity_brocker_list_call">Call list</string>
     <string name="title_activity_assistant_main">Android ssistant</string>
-	<string name="query_area">Query area</string>
-	<string name="outgoing_type">outgoing</string>
-	<string name="incoming_type">incoming</string>
+    <string name="query_area">Query area</string>
+    <string name="outgoing_type">outgoing</string>
+    <string name="incoming_type">incoming</string>
+    <string name="title_activity_intercept_mode">Intercept Mode</string>
+    <string name="intercept_type">Intercept type</string>
+    <string name="intercept_type_no">No intercept</string>
+    <string name="intercept_type_normal">"Normal Intercept "</string>
+    <string name="intercept_type_prompt">Intercept prompt</string>
+    <string name="intercept_direction">Intercept direction</string>
+    <string name="intercept_direction_incoming">Intercept incoming</string>
+    <string name="intercept_direction_outgoing">Intercept outgoing</string>
+    <string name="intercept_direction_double_side">Intercept double side</string>
+    <string name="intercept_condition">Intercept condition</string>
+    <string name="intercept_condition_normal">Whitelist and blacklist</string>
+    <string name="intercept_condition_no_contact">Whitelist、blacklist and no contact</string>
+
 </resources>

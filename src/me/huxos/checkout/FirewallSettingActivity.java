@@ -2,6 +2,7 @@ package me.huxos.checkout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class FirewallSettingActivity extends Activity implements
 	List<Map<String, String>> m_List;
 	ListView m_lstView;
 	SimpleAdapter m_Adapter;
+	List<onChickCalllInterface> m_chickCallInterface;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +57,13 @@ public class FirewallSettingActivity extends Activity implements
 	protected void onResume() {
 
 		initListView();
-		m_Adapter = new SimpleAdapter(this, m_List,
-				android.R.layout.simple_list_item_1, // List 显示一行item1
-				new String[] { "CONTENT" }, // "TITLE",
-				new int[] { android.R.id.text1 });
-		m_lstView.setAdapter(m_Adapter);
-
+		if (null != m_List && null != m_lstView) {
+			m_Adapter = new SimpleAdapter(this, m_List,
+					android.R.layout.simple_list_item_1, // List 显示一行item1
+					new String[] { "CONTENT" }, // "TITLE",
+					new int[] { android.R.id.text1 });
+			m_lstView.setAdapter(m_Adapter);
+		}
 		// m_Adapter.notifyDataSetChanged();
 
 		super.onResume();
@@ -73,42 +76,40 @@ public class FirewallSettingActivity extends Activity implements
 		return true;
 	}
 
+	/**
+	 * 初始化 listview
+	 * 
+	 * @return
+	 */
 	private boolean initListView() {
-		DBHelper db = DBHelper.getInstance(this.getBaseContext());
+		if (null != m_chickCallInterface)
+			m_chickCallInterface.clear();
+		m_chickCallInterface = new ArrayList<onChickCalllInterface>();
+		onSetInerceptMode inerceptMode = new onSetInerceptMode(this);
+		m_chickCallInterface.add(inerceptMode);
+		onSetWhitelist whitelist = new onSetWhitelist(this);
+		m_chickCallInterface.add(whitelist);
+		onSetBlacklist blacklist = new onSetBlacklist(this);
+		m_chickCallInterface.add(blacklist);
+		onSetSmsKeyWordWhitelist keywordWhitelist = new onSetSmsKeyWordWhitelist(
+				this);
+		m_chickCallInterface.add(keywordWhitelist);
+		onSetSmsKeyWordBlacklist keywordBlacklist = new onSetSmsKeyWordBlacklist(
+				this);
+		m_chickCallInterface.add(keywordBlacklist);
+		onBrockerPhoneLog phoneLog = new onBrockerPhoneLog(this);
+		m_chickCallInterface.add(phoneLog);
+		onBrockerSMSLog smsLog = new onBrockerSMSLog(this);
+		m_chickCallInterface.add(smsLog);
+
 		if (null != m_List)
 			m_List.clear();
 		m_List = new ArrayList<Map<String, String>>();
-		Map<String, String> mapWhitelist = new HashMap<String, String>();
-		mapWhitelist.put("CONTENT", this.getString(R.string.whitelist));
-		m_List.add(mapWhitelist);
-		Map<String, String> mapBlacklist = new HashMap<String, String>();
-		mapBlacklist.put("CONTENT", getString(R.string.blacklist));
-		m_List.add(mapBlacklist);
-		Map<String, String> mapSmsKeyWhitelist = new HashMap<String, String>();
-		mapSmsKeyWhitelist.put("CONTENT",
-				getString(R.string.brocker_sms_keyword_whitelist));
-		m_List.add(mapSmsKeyWhitelist);
-		Map<String, String> mapSmsKeyBlacklist = new HashMap<String, String>();
-		mapSmsKeyBlacklist.put("CONTENT",
-				getString(R.string.brocker_sms_keyword_blacklist));
-		m_List.add(mapSmsKeyBlacklist);
-		int[] unRead = db.getBlockerPhoneLogUnread();
-		String szPhoneLog = this.getString(R.string.brocker_phone_log);
-		Map<String, String> mapPhoneLog = new HashMap<String, String>();
-		if (0 != unRead[0] /*|| 0 != unRead[1]*/)
-			szPhoneLog += "(" + String.valueOf(unRead[0]) + "/"
-					+ String.valueOf(unRead[1]) + ")";
-		mapPhoneLog.put("CONTENT", szPhoneLog);
-		m_List.add(mapPhoneLog);
-		unRead = db.getBlockerSmsLogUnreadCount();
-		String szSmsLog = this.getString(R.string.brocker_sms_log);
-		Map<String, String> mapSmsLog = new HashMap<String, String>();
-		if (0 != unRead[0] /*|| 0 != unRead[1]*/)
-			szSmsLog += "(" + String.valueOf(unRead[0]) + "/"
-					+ String.valueOf(unRead[1]) + ")";
-		mapSmsLog.put("CONTENT", szSmsLog);
-		m_List.add(mapSmsLog);
-
+		Iterator<onChickCalllInterface> it = m_chickCallInterface.iterator();
+		while (it.hasNext()) {
+			onChickCalllInterface node = it.next();
+			m_List.add(node.getItem());
+		}
 		return true;
 	}
 
@@ -135,103 +136,224 @@ public class FirewallSettingActivity extends Activity implements
 	}
 
 	/**
-	 * 设置白名单事件
+	 * listview item 点击事件接口
 	 * 
-	 * @param source
+	 * @author KangLin<kl222@126.com>
+	 * 
 	 */
-	private void onSetWhitelist() {
-		Intent intent = new Intent();
-		// 用intent.putExtra(String name, String value);来传递参数。
-		intent.putExtra("isWhitelist", "true");
-		intent.setClass(this, BrockerListActivity.class);
-		startActivity(intent);
+	public interface onChickCalllInterface {
+		// listview item 显示 map
+		public Map<String, String> getItem();
+		// listview item 点击事件
+		public void onChick();
+	}
+
+	/**
+	 * 设置拦截模式事件
+	 * 
+	 * @author KangLin<kl222@126.com>
+	 */
+	class onSetInerceptMode implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onSetInerceptMode(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.setClass(m_activity, InterceptModeActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("CONTENT",
+					getString(R.string.title_activity_intercept_mode));
+			return map;
+		}
+	}
+
+	/**
+	 * 设置白名单事件
+	 */
+	class onSetWhitelist implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onSetWhitelist(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.putExtra("isWhitelist", "true");
+			intent.setClass(m_activity, BrockerListActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			Map<String, String> mapWhitelist = new HashMap<String, String>();
+			mapWhitelist.put("CONTENT", getString(R.string.whitelist));
+			return mapWhitelist;
+		}
 	}
 
 	/**
 	 * 设置黑名单事件
-	 * 
-	 * @param source
 	 */
-	private void onSetBlackist() {
-		Intent intent = new Intent();
-		// 用intent.putExtra(String name, String value);来传递参数。
-		intent.putExtra("isWhitelist", "false");
-		intent.setClass(this, BrockerListActivity.class);
-		startActivity(intent);
+	class onSetBlacklist implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onSetBlacklist(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.putExtra("isWhitelist", "false");
+			intent.setClass(m_activity, BrockerListActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			Map<String, String> mapBlacklist = new HashMap<String, String>();
+			mapBlacklist.put("CONTENT", getString(R.string.blacklist));
+
+			return mapBlacklist;
+		}
 	}
 
 	/**
 	 * 设置短信关键字白名单
-	 * 
-	 * @param source
 	 */
-	private void onSetSmsKeyWordWhitelist() {
-		Intent intent = new Intent();
-		// 用intent.putExtra(String name, String value);来传递参数。
-		intent.putExtra("isWhitelist", "true");
-		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
-		startActivity(intent);
+	class onSetSmsKeyWordWhitelist implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onSetSmsKeyWordWhitelist(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.putExtra("isWhitelist", "true");
+			intent.setClass(m_activity, BrockerSmsKeyWordListActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			Map<String, String> mapSmsKeyWhitelist = new HashMap<String, String>();
+			mapSmsKeyWhitelist.put("CONTENT",
+					getString(R.string.brocker_sms_keyword_whitelist));
+			return mapSmsKeyWhitelist;
+		}
 	}
 
 	/**
 	 * 设置短信关键字黑名单
-	 * 
-	 * @param source
 	 */
-	private void onSetSmsKeyWordBlacklist() {
-		Intent intent = new Intent();
-		// 用intent.putExtra(String name, String value);来传递参数。
-		intent.putExtra("isWhitelist", "false");
-		intent.setClass(this, BrockerSmsKeyWordListActivity.class);
-		startActivity(intent);
+	class onSetSmsKeyWordBlacklist implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onSetSmsKeyWordBlacklist(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.putExtra("isWhitelist", "false");
+			intent.setClass(m_activity, BrockerSmsKeyWordListActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			Map<String, String> mapSmsKeyBlacklist = new HashMap<String, String>();
+			mapSmsKeyBlacklist.put("CONTENT",
+					getString(R.string.brocker_sms_keyword_blacklist));
+			return mapSmsKeyBlacklist;
+		}
 	}
 
 	/**
 	 * 查看电话拦截日志
-	 * 
-	 * @param source
 	 */
-	private void onBrockerPhoneLog() {
-		Intent intent = new Intent();
-		intent.setClass(this, BrockerPhoneLogActivity.class);
-		startActivity(intent);
+	class onBrockerPhoneLog implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onBrockerPhoneLog(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.setClass(m_activity, BrockerPhoneLogActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			DBHelper db = DBHelper.getInstance(getBaseContext());
+			int[] unRead = db.getBlockerPhoneLogUnread();
+			String szPhoneLog = getString(R.string.brocker_phone_log);
+			Map<String, String> mapPhoneLog = new HashMap<String, String>();
+			if (0 != unRead[0] /* || 0 != unRead[1] */)
+				szPhoneLog += "(" + String.valueOf(unRead[0]) + "/"
+						+ String.valueOf(unRead[1]) + ")";
+			mapPhoneLog.put("CONTENT", szPhoneLog);
+			return mapPhoneLog;
+		}
 	}
 
 	/**
 	 * 查看短信拦截日志
-	 * 
-	 * @param source
 	 */
-	private void onBrockerSMSLog() {
-		Intent intent = new Intent();
-		intent.setClass(this, BrockerSmsLogActivity.class);
-		startActivity(intent);
+	class onBrockerSMSLog implements onChickCalllInterface {
+		Activity m_activity;
+
+		public onBrockerSMSLog(Activity activity) {
+			m_activity = activity;
+		}
+
+		@Override
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.setClass(m_activity, BrockerSmsLogActivity.class);
+			startActivity(intent);
+		}
+
+		@Override
+		public Map<String, String> getItem() {
+			DBHelper db = DBHelper.getInstance(getBaseContext());
+			int[] unRead = db.getBlockerSmsLogUnreadCount();
+			String szSmsLog = getString(R.string.brocker_sms_log);
+			Map<String, String> mapSmsLog = new HashMap<String, String>();
+			if (0 != unRead[0] /* || 0 != unRead[1] */)
+				szSmsLog += "(" + String.valueOf(unRead[0]) + "/"
+						+ String.valueOf(unRead[1]) + ")";
+			mapSmsLog.put("CONTENT", szSmsLog);
+			m_List.add(mapSmsLog);
+
+			return null;
+		}
 	}
 
+	/**
+	 * 处理 listview 的 item 点击事件
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		switch (position) {
-		case 0:
-			onSetWhitelist();
-			break;
-		case 1:
-			onSetBlackist();
-			break;
-		case 2:
-			onSetSmsKeyWordWhitelist();
-			break;
-		case 3:
-			onSetSmsKeyWordBlacklist();
-			break;
-		case 4:
-			onBrockerPhoneLog();
-			break;
-		case 5:
-			onBrockerSMSLog();
-			break;
-		}
-
+		onChickCalllInterface cf = m_chickCallInterface.get(position);
+		cf.onChick();
 	}
-
 }
