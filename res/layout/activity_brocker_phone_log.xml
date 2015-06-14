@@ -12,8 +12,31 @@
         android:id="@+id/lstBrockerPhoneLog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btBrockerPhoneLogDelete"
         android:layout_alignParentTop="true" >
 
     </ListView>
+
+    <Button
+        android:id="@+id/btBrockerPhoneLogDelete"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="false"
+        android:text="@string/delete"
+        android:onClick="onDeleteButtonOnclick" />
+
+    <CheckBox
+        android:id="@+id/cbBrockerPhoneLogDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false"
+        android:onClick="onCheckBoxClick" />
 
 </RelativeLayout>

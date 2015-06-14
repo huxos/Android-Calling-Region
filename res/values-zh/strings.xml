@@ -59,7 +59,7 @@
     <string name="input_keyword">[输入关键字]</string>
     <string name="title_activity_brocker_sms_log_detailed">拦截短信日志详情</string>
     <string name="title_activity_brocker_list_call">呼叫列表</string>
-    <string name="title_activity_assistant_main">Android 助手</string>
+    <string name="title_activity_assistant_main">手机助手</string>
     <string name="query_area">区域查询</string>
     <string name="outgoing_type">呼出</string>
     <string name="incoming_type">呼入</string>

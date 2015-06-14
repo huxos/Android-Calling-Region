@@ -515,6 +515,26 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * 删除拦截电话日志
+	 * @param condition
+	 * @return
+	 */
+	public boolean deleteBlockerPhoneLog(String condition){
+		boolean bRet = false;
+		String szTable = "blocker_phone_log";
+
+		try {
+			db.delete(szTable, condition, null);
+			bRet = true;
+		} catch (Exception e) {
+			Log.e(TAG, "deleteBlockerSMSLog exception:" + e.getMessage());
+		} finally {
+			;
+		}
+		return bRet;
+	}
+	
+	/**
 	 * 更新所有未读拦截电话为已读
 	 * 
 	 * @author KangLin <kl222@126.com>

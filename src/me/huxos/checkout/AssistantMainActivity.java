@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -48,10 +51,30 @@ public class AssistantMainActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.assistant_main, menu);
+		getMenuInflater().inflate(R.menu.assistant_main, menu);
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		// 关于菜单
+		case R.id.action_about:
+			LayoutInflater inflater = LayoutInflater.from(this);
+			final View dialog_view = inflater.inflate(R.layout.dialog_view,
+					null);
+			new AlertDialog.Builder(this).setTitle(R.string.action_about)
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setView(dialog_view).setPositiveButton(R.string.ok, null)
+					.show();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * listview item 点击事件
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
