@@ -1,9 +1,9 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.List;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerSMSLog;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBlockerSMSLog;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;

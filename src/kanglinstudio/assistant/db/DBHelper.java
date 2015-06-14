@@ -1,4 +1,4 @@
-package me.huxos.checkout.db;
+package kanglinstudio.assistant.db;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,13 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import me.huxos.checkout.entity.CBlockerPhoneLog;
-import me.huxos.checkout.entity.CBlockerSMSLog;
-import me.huxos.checkout.entity.CBlockerSMSLogs;
-import me.huxos.checkout.entity.CBlockerSmsKeyword;
-import me.huxos.checkout.entity.CBrockerlist;
-import me.huxos.checkout.entity.CSystemInformation;
-import me.huxos.checkout.entity.PhoneArea;
+import kanglinstudio.assistant.entity.CBlockerPhoneLog;
+import kanglinstudio.assistant.entity.CBlockerSMSLog;
+import kanglinstudio.assistant.entity.CBlockerSMSLogs;
+import kanglinstudio.assistant.entity.CBlockerSmsKeyword;
+import kanglinstudio.assistant.entity.CBrockerlist;
+import kanglinstudio.assistant.entity.CSystemInformation;
+import kanglinstudio.assistant.entity.PhoneArea;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase db = null;
 
 	private static final Integer DB_VERSION = 1;
-	public static final String DB_PATH = "/data/data/me.huxos.checkout/databases/";
+	public static final String DB_PATH = "/data/data/kanglinstudio.assistant/databases/";
 	private static final String DB_NAME = "location.db";
 
 	/**

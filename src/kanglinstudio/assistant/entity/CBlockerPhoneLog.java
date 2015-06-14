@@ -1,4 +1,4 @@
-package me.huxos.checkout.entity;
+package kanglinstudio.assistant.entity;
 
 /**
  * 拦截日志实体类

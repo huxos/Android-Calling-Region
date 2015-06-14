@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.huxos.checkout"
+    package="kanglinstudio.assistant"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -35,7 +35,7 @@
         android:theme="@style/AppTheme" >
 
         <!-- BoradcastReceiver -->
-        <receiver android:name="me.huxos.checkout.PhoneStatReceiver" >
+        <receiver android:name="kanglinstudio.assistant.PhoneStatReceiver" >
             <intent-filter>
 
                 <!-- 获取来电广播 -->
@@ -44,7 +44,7 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        <receiver android:name="me.huxos.checkout.SMSSTateReceiver" >
+        <receiver android:name="kanglinstudio.assistant.SMSSTateReceiver" >
             <intent-filter android:priority="2147483647" >
 
                 <!-- 获取接收短信的广播 -->
@@ -56,7 +56,7 @@
 
         <!-- android 助手主界面 -->
         <activity
-            android:name="me.huxos.checkout.AssistantMainActivity"
+            android:name="kanglinstudio.assistant.AssistantMainActivity"
             android:label="@string/title_activity_assistant_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,51 +66,51 @@
         </activity>
         <!-- 区域查询界面 -->
         <activity
-            android:name="me.huxos.checkout.QueryAreaActivity"
+            android:name="kanglinstudio.assistant.QueryAreaActivity"
             android:label="@string/app_name" >
         </activity>
         <!-- 区域设置界面 -->
         <activity
-            android:name="me.huxos.checkout.SettingsActivity"
+            android:name="kanglinstudio.assistant.SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
         <!-- 防火墙设置界面 -->
         <activity
-            android:name="me.huxos.checkout.FirewallSettingActivity"
+            android:name="kanglinstudio.assistant.FirewallSettingActivity"
             android:label="@string/title_activity_firewall_setting" >
         </activity>
-        <!-- 攔截列表界面 -->
+        <!-- 拦截列表界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerListActivity"
+            android:name="kanglinstudio.assistant.BrockerListActivity"
             android:label="@string/title_activity_brocker_list" >
         </activity>
-        <!-- 短信攔截關鍵字界面 -->
+        <!-- 短信拦截关鍵字界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerSmsKeyWordListActivity"
+            android:name="kanglinstudio.assistant.BrockerSmsKeyWordListActivity"
             android:label="@string/title_activity_brocker_sms_key_word_list" >
         </activity>
-        <!-- 攔截電話日志界面 -->
+        <!-- 拦截电话日志界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerPhoneLogActivity"
+            android:name="kanglinstudio.assistant.BrockerPhoneLogActivity"
             android:label="@string/title_activity_brocker_phone_log" >
         </activity>
-        <!-- 攔截短信日志界面 -->
+        <!-- 拦截短信日志界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerSmsLogActivity"
+            android:name="kanglinstudio.assistant.BrockerSmsLogActivity"
             android:label="@string/title_activity_brocker_sms_log" >
         </activity>
-        <!-- 攔截短信詳情界面 -->
+        <!-- 拦截短信詳情界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerSmsLogDetailedActivity"
+            android:name="kanglinstudio.assistant.BrockerSmsLogDetailedActivity"
             android:label="@string/title_activity_brocker_sms_log_detailed" >
         </activity>
         <!-- 最近呼叫界面 -->
         <activity
-            android:name="me.huxos.checkout.BrockerListCallActivity"
+            android:name="kanglinstudio.assistant.BrockerListCallActivity"
             android:label="@string/title_activity_brocker_list_call" >
         </activity>
         <activity
-            android:name="me.huxos.checkout.InterceptModeActivity"
+            android:name="kanglinstudio.assistant.InterceptModeActivity"
             android:label="@string/title_activity_intercept_mode" >
         </activity>
     </application>

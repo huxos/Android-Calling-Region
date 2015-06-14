@@ -1,4 +1,4 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.ArrayList;
 import java.util.HashMap;

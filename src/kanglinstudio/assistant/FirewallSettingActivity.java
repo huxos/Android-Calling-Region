@@ -1,4 +1,4 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CSystemInformation;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CSystemInformation;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;

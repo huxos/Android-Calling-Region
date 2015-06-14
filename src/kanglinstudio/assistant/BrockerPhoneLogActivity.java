@@ -1,11 +1,11 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerPhoneLog;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBlockerPhoneLog;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;

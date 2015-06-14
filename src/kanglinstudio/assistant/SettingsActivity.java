@@ -1,4 +1,4 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

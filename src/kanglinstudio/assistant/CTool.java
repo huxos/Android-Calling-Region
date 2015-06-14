@@ -1,11 +1,11 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBrockerlist;
-import me.huxos.checkout.entity.CSmsInfo;
-import me.huxos.checkout.entity.PhoneArea;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBrockerlist;
+import kanglinstudio.assistant.entity.CSmsInfo;
+import kanglinstudio.assistant.entity.PhoneArea;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;

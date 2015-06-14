@@ -1,14 +1,14 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.lang.reflect.Method;
 import java.util.Date;
 
 import com.android.internal.telephony.ITelephony;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerPhoneLog;
-import me.huxos.checkout.entity.CSystemInformation;
-import me.huxos.checkout.entity.PhoneArea;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBlockerPhoneLog;
+import kanglinstudio.assistant.entity.CSystemInformation;
+import kanglinstudio.assistant.entity.PhoneArea;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,12 +1,12 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.Iterator;
 import java.util.List;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerSmsKeyword;
-import me.huxos.checkout.entity.CBrockerlist;
-import me.huxos.checkout.entity.CSystemInformation;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBlockerSmsKeyword;
+import kanglinstudio.assistant.entity.CBrockerlist;
+import kanglinstudio.assistant.entity.CSystemInformation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;

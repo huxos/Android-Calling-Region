@@ -1,9 +1,9 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.util.List;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBrockerlist;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBrockerlist;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;

@@ -1,8 +1,8 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CBlockerSMSLog;
-import me.huxos.checkout.entity.CSystemInformation;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CBlockerSMSLog;
+import kanglinstudio.assistant.entity.CSystemInformation;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

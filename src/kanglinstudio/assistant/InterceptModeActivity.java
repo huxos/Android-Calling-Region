@@ -1,7 +1,7 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.CSystemInformation;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.CSystemInformation;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;

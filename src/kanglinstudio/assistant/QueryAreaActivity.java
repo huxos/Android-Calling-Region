@@ -1,4 +1,4 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +14,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.PhoneArea;
-import me.huxos.checkout.entity.Product;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.PhoneArea;
+import kanglinstudio.assistant.entity.Product;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
