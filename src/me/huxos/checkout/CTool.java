@@ -5,6 +5,7 @@ import java.util.List;
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.CBrockerlist;
 import me.huxos.checkout.entity.CSmsInfo;
+import me.huxos.checkout.entity.PhoneArea;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -25,6 +26,36 @@ public class CTool {
 	private static final String TAG = "CTool";
 
 	/**
+	 * 得到用于显示的电话号码（包括区域)
+	 * 
+	 * @param context
+	 * @param phone
+	 * @return
+	 */
+	static public String getShowPhone(Context context, String phone) {
+		String szPhone = phone;
+		if (null == phone || phone.isEmpty())
+			return "";
+		try {
+			// 截取前面7个数字
+			String phoneNumberShort = phone.substring(0, 7);
+			if (null == phoneNumberShort)
+				return "";
+			// 查询数据库
+			DBHelper helper;
+			PhoneArea phoneArea;
+			helper = DBHelper.getInstance(context);
+			if ((phoneArea = helper
+					.findPhoneArea(new String[] { phoneNumberShort.toString() })) != null)
+				szPhone += "[" + phoneArea.getArea() + "]";
+		} catch (Exception e) {
+			Log.e(TAG, "getShowPhone exception", e);
+		}
+
+		return szPhone;
+	}
+
+	/**
 	 * 从电话号码得到相应的名字
 	 * 
 	 * @author KangLin<kl222@126.com>
@@ -35,16 +66,21 @@ public class CTool {
 	static public String getNameFromPhone(Context context, String phone) {
 		// 从通信薄中得到
 		String szName = "";
-		szName = getContactNameFromPhoneBook(context, phone);
-		if (szName.isEmpty()) {
-			// 从黑名单中得到
-			DBHelper db = DBHelper.getInstance(context);
-			CBrockerlist brockerlist = db.findBlacklist(phone);
-			if (null != brockerlist)
-				szName = brockerlist.getName();
+		try {
+			szName = getContactNameFromPhoneBook(context, phone);
+			if (szName.isEmpty()) {
+				// 从黑名单中得到
+				DBHelper db = DBHelper.getInstance(context);
+				CBrockerlist brockerlist = db.findBlacklist(phone);
+				if (null != brockerlist)
+					szName = brockerlist.getName();
+			}
+
+			if (szName.isEmpty())
+				szName = phone;
+		} catch (Exception e) {
+			Log.e(TAG, "getNameFromPhone exception", e);
 		}
-		if (szName.isEmpty())
-			szName = phone;
 		return szName;
 	}
 
@@ -72,10 +108,14 @@ public class CTool {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "getContactNameFromPhoneBook exception", e);
-		}finally {
-			if(null != cursor)
+		} finally {
+			if (null != cursor)
 				cursor.close();
 		}
+
+		if (null == contactName)
+			contactName = "";
+
 		return contactName;
 	}
 

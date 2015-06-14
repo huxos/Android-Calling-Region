@@ -20,8 +20,9 @@ import android.widget.TextView;
 
 /**
  * 短信拦截日志界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
 public class BrockerSmsLogActivity extends Activity {
 	private static final String TAG = "BrockerSmsLogActivity";
@@ -45,7 +46,7 @@ public class BrockerSmsLogActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.brocker_sms_log, menu);
+		// getMenuInflater().inflate(R.menu.brocker_sms_log, menu);
 		return true;
 	}
 
@@ -125,7 +126,6 @@ public class BrockerSmsLogActivity extends Activity {
 
 			// 更新值
 			CBlockerSMSLogs brockerList = m_Brockerlist.get(position);
-			holder.m_Text.setText(brockerList.getPhone_number());
 			String name = CTool.getNameFromPhone(m_context,
 					brockerList.getPhone_number());
 			holder.m_Name.setText(name);
@@ -139,6 +139,7 @@ public class BrockerSmsLogActivity extends Activity {
 			// 设置删除按钮事件
 			class CDeleteClickListener implements View.OnClickListener {
 				private int m_position;
+
 				public CDeleteClickListener(listAdapter listAdapter,
 						int position) {
 					super();

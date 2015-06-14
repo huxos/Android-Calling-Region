@@ -8,10 +8,10 @@ import java.util.TreeSet;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.provider.CallLog;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -103,6 +103,7 @@ public class BrockerListCallActivity extends Activity implements
 				return getString(R.string.incoming_type);
 			if(0 == type)
 				return getString(R.string.sms);
+			Log.d(TAG, "getType:" + String.valueOf(type));
 			return "";
 		}
 
@@ -132,11 +133,15 @@ public class BrockerListCallActivity extends Activity implements
 
 	}
 
+	/**
+	 * 得到最近呼叫与短信列表
+	 *
+	 */
 	private List<CCall> getList(){
 		Set<CCall> setCall = getCallList();
+		setCall.addAll(getAllSms());
 		// TreeSet排序
 		Set<CCall> treeset = new TreeSet<CCall>(setCall);
-		treeset.addAll(getAllSms());
 		return new ArrayList<CCall>(treeset);
 	}
 	
@@ -190,7 +195,7 @@ public class BrockerListCallActivity extends Activity implements
 			c = cr.query(uri, projection, null, null, "date desc");
 			while (c.moveToNext()) {
 				CCall msg = new CCall(c.getString(c.getColumnIndex("person")),
-						c.getString(c.getColumnIndex("address")), 0,
+						c.getString(c.getColumnIndex("address")), 0,//短信
 						c.getLong(c.getColumnIndex("date")));
 				setCall.add(msg);
 			}
@@ -207,10 +212,12 @@ public class BrockerListCallActivity extends Activity implements
 	class listAdapter extends BaseAdapter {
 		private LayoutInflater m_Inflater;
 		private BrockerListCallActivity m_activity;
-
+		private Context m_context;
+		
 		public listAdapter(BrockerListCallActivity activity) {
 			super();
 			m_activity = activity;
+			m_context = activity.getBaseContext();
 			this.m_Inflater = LayoutInflater.from(m_activity.getBaseContext());
 		}
 
@@ -255,8 +262,8 @@ public class BrockerListCallActivity extends Activity implements
 
 			// 更新值
 			CCall call = m_activity.m_lstCall.get(position);
-			holder.m_Name.setText(call.name);
-			holder.m_Number.setText(call.number);
+			holder.m_Name.setText(CTool.getNameFromPhone(m_context, call.number));
+			holder.m_Number.setText(CTool.getShowPhone(m_context, call.number));
 			holder.m_Type.setText(call.getType());
 			holder.m_Time.setText(CTool.formatTimeStampString(
 					m_activity.getBaseContext(), call.time, false));

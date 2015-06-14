@@ -159,7 +159,10 @@ public class BrockerListActivity extends Activity {
 		}
 		if (null == number || number.isEmpty())
 			return;
-		CBrockerlist list = new CBrockerlist(number, name, 1, 1);
+		// 去掉非数字字符
+		number = number.replaceAll("[^0-9]", "");
+		CBrockerlist list = new CBrockerlist(number, CTool.getNameFromPhone(
+				getBaseContext(), name), 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(list, m_isWhite == true ? true : false);
 		m_adapter.UpdateDate();
@@ -237,7 +240,8 @@ public class BrockerListActivity extends Activity {
 
 			// 更新值
 			CBrockerlist brockerList = m_Brockerlist.get(position);
-			holder.m_Number.setText(brockerList.getPhone_number());
+			holder.m_Number.setText(CTool.getShowPhone(m_context,
+					brockerList.getPhone_number()));
 			String name = CTool.getNameFromPhone(m_context,
 					brockerList.getPhone_number());
 			holder.m_Name.setText(name);

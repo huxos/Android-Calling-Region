@@ -22,8 +22,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
  * 增加短信关键字列表界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
 public class BrockerSmsKeyWordListActivity extends Activity {
 	private static final String TAG = "BrockerSmsKeyWordListActivity";
@@ -51,18 +52,18 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.brocker_sms_key_word_list, menu);
+		// getMenuInflater().inflate(R.menu.brocker_sms_key_word_list, menu);
 		return true;
 	}
 
-	//增加按钮事件
+	// 增加按钮事件
 	public void onAdd(View source) {
 		String keyword, number;
 		TextView text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordKeyWord);
 		keyword = text.getText().toString();
 		text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordPhone);
 		number = text.getText().toString();
-		if(null == keyword || keyword.isEmpty())
+		if (null == keyword || keyword.isEmpty())
 			return;
 		CBlockerSmsKeyword key = new CBlockerSmsKeyword(keyword, number);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
@@ -142,7 +143,8 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 			// 更新值
 			CBlockerSmsKeyword brockerList = m_Brockerlist.get(position);
 			holder.m_Keyword.setText(brockerList.getKeyword());
-			holder.m_Number.setText(brockerList.getPhone_number());
+			holder.m_Number.setText(CTool.getShowPhone(m_context,
+					brockerList.getPhone_number()));
 			holder.m_Enable.setChecked(brockerList.getEnable() == 1 ? true
 					: false);
 
