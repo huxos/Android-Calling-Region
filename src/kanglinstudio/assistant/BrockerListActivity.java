@@ -102,6 +102,8 @@ public class BrockerListActivity extends Activity {
 		text = (TextView) findViewById(R.id.edtBrockerNumber);
 		String number = text.getText().toString();
 		text.setText("");
+		if(null == number || number.isEmpty())
+			return;
 		Log.d(TAG, "onAdd:name:" + name + ";number:" + number);
 		CBrockerlist brockerlist = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
@@ -152,8 +154,9 @@ public class BrockerListActivity extends Activity {
 		case PICK_CALL:
 			if (null == data)
 				return;
-			name = data.getStringExtra("name");
 			number = data.getStringExtra("number");
+			name = CTool.getNameFromPhone(
+					getBaseContext(), number);
 			break;
 		default:
 			Log.e(TAG,
@@ -164,8 +167,7 @@ public class BrockerListActivity extends Activity {
 			return;
 		// 去掉非数字字符
 		number = number.replaceAll("[^0-9]", "");
-		CBrockerlist list = new CBrockerlist(number, CTool.getNameFromPhone(
-				getBaseContext(), name), 1, 1);
+		CBrockerlist list = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(list, m_isWhite == true ? true : false);
 		m_adapter.UpdateDate();

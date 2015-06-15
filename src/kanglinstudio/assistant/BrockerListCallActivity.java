@@ -62,7 +62,7 @@ public class BrockerListCallActivity extends Activity implements
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		CCall call = m_lstCall.get(arg2);
 		Intent intent = new Intent();
-		intent.putExtra("name", call.name);
+		//intent.putExtra("name", call.name);
 		intent.putExtra("number", call.number);
 		setResult(Activity.RESULT_OK, intent);
 		finish();// 结束之后会将结果传回From
