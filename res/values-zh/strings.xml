@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">归属地</string>
+    <string name="app_name">手机助手</string>
     <string name="action_settings">设置</string>
     <string name="label">查询归属地</string>
     <string name="using_network">联网查询</string>
@@ -12,7 +12,7 @@
     <string name="input_name">[输入姓名]</string>
     <string name="local">本地</string>
     <string name="remote">网络</string>
-    <string name="area">四川成都[联通]</string>
+    <string name="area">归属地</string>
     <string name="none_area">[暂无归属地信息]</string>
     <string name="action_save">更新到本地</string>
     <string name="action_about">关于</string>
@@ -29,7 +29,7 @@
     <string name="firewallsetting">防火墙设置</string>
     <string name="open_firewall">打开防火墙</string>
     <string name="close_firewall">关闭防火墙</string>
-    <string name="Ok">确定</string>
+    <string name="ok">确定</string>
     <string name="update_success_locale">更新到本地成功</string>
     <string name="update_faile_locale">更新到本地失败</string>
     <string name="whitelist">白名单</string>
@@ -52,6 +52,7 @@
     <string name="title_activity_brocker_phone_log">拦截电话日志</string>
     <string name="title_activity_brocker_list">拦截列表</string>
     <string name="title_activity_brocker_sms_log">拦截短信日志</string>
+    <string name="title_activity_brocker_sms_key_word_list">拦截短信关键字列表</string>
     <string name="phone">电话</string>
     <string name="sms">短信</string>
     <string name="brocker_sms_keyword_whitelist">短信关键字白名单</string>

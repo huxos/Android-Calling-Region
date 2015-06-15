@@ -128,7 +128,13 @@ public class QueryAreaActivity extends Activity {
 		}
 		return true;
 	}
-
+	
+	// 设置菜单点击事件
+	public void onQueryAreaSetting(View source){
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
+	
 	/**
 	 * 查询按钮触发事件
 	 * 

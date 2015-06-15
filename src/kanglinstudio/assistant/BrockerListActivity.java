@@ -98,13 +98,16 @@ public class BrockerListActivity extends Activity {
 	public void onAdd(View source) {
 		TextView text = (TextView) findViewById(R.id.edtBrockerName);
 		String name = text.getText().toString();
+		text.setText("");
 		text = (TextView) findViewById(R.id.edtBrockerNumber);
 		String number = text.getText().toString();
+		text.setText("");
 		Log.d(TAG, "onAdd:name:" + name + ";number:" + number);
 		CBrockerlist brockerlist = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(brockerlist, m_isWhite);
 		m_adapter.UpdateDate();
+		
 	}
 
 	// Handle result from the contact picker

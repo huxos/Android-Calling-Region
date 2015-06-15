@@ -1,4 +1,4 @@
-手机助手
+Android 手机助手
 =========
 
 ## 主要功能
@@ -10,6 +10,12 @@
      自己从网上一条一条抓取下来的，可能比我程序的价值还大些。
 5.  来电与短信防火墙
 6. 国际化（中文、英文)
+
+## 项目地址
+https://github.com/KangLin/Android-Assistant
+
+## 下载地址
+http://pan.baidu.com/s/1BCZzo
 
 ## 作者:
 + 康林<kl222@126.com>

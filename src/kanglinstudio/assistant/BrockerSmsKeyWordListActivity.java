@@ -61,8 +61,10 @@ public class BrockerSmsKeyWordListActivity extends Activity {
 		String keyword, number;
 		TextView text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordKeyWord);
 		keyword = text.getText().toString();
+		text.setText("");
 		text = (TextView) findViewById(R.id.edtBrockerSmsKeyWordPhone);
 		number = text.getText().toString();
+		text.setText("");
 		if (null == keyword || keyword.isEmpty())
 			return;
 		CBlockerSmsKeyword key = new CBlockerSmsKeyword(keyword, number);

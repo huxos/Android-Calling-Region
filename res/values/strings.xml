@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Area</string>
+    <string name="app_name">Assistant</string>
     <string name="action_settings">Setting</string>
     <string name="label">Query area</string>
     <string name="using_network">Use network</string>
@@ -51,14 +51,12 @@
     <string name="delete">Delete</string>
     <string name="brower">Brower</string>
     <string name="title_activity_brocker_phone_log">Intercept Phone Log</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_brocker_sms_log">Intercept Sms Log</string>
-    <string name="enable_interception_phone">Enable interception phone</string>
+    <string name="title_activity_brocker_sms_key_word_list">Intercept sms key word list</string>
     <string name="phone">Phone</string>
     <string name="sms">SMS</string>
     <string name="brocker_sms_keyword_whitelist">SMS keyword whitelist</string>
     <string name="brocker_sms_keyword_blacklist">SMS keyword blacklist</string>
-    <string name="title_activity_brocker_sms_key_word_list">Intercept sms key word list</string>
     <string name="input_keyword">[Input keyword]</string>
     <string name="title_activity_brocker_sms_log_detailed">Interception Sms Log Detailed</string>
     <string name="title_activity_brocker_list_call">Call list</string>
