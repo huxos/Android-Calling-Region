@@ -10,6 +10,8 @@
         android:targetSdkVersion="15" />
     <!-- 使用网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 访问网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 挂断手机的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 读取电话状态的权限 -->
@@ -26,7 +28,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
-
+    
     <!-- 注册Activity BroadCastreceiver -->
     <application
         android:allowBackup="true"
@@ -51,6 +53,13 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- 获取发送短信的广播 -->
                 <!-- action android:name="android.provider.Telephony.SMS_SENT" / -->
+            </intent-filter>
+        </receiver>
+        <receiver android:name="kanglinstudio.assistant.ConnectionChangeReceiver" >
+            <intent-filter>
+
+                <!-- 获取连接改变的广播 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 

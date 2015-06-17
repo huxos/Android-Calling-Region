@@ -11,6 +11,7 @@ import kanglinstudio.assistant.entity.CSystemInformation;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import android.widget.ListView;
  */
 public class FirewallSettingActivity extends Activity implements
 		OnItemClickListener {
+	private static final String TAG = "FirewallSettingActivity";
 	List<Map<String, String>> m_List;
 	ListView m_lstView;
 	SimpleAdapter m_Adapter;
@@ -85,6 +87,7 @@ public class FirewallSettingActivity extends Activity implements
 		if (null != m_chickCallInterface)
 			m_chickCallInterface.clear();
 		m_chickCallInterface = new ArrayList<onChickCalllInterface>();
+		
 		onSetInerceptMode inerceptMode = new onSetInerceptMode(this);
 		m_chickCallInterface.add(inerceptMode);
 		onSetWhitelist whitelist = new onSetWhitelist(this);
@@ -105,6 +108,7 @@ public class FirewallSettingActivity extends Activity implements
 		if (null != m_List)
 			m_List.clear();
 		m_List = new ArrayList<Map<String, String>>();
+		
 		Iterator<onChickCalllInterface> it = m_chickCallInterface.iterator();
 		while (it.hasNext()) {
 			onChickCalllInterface node = it.next();
@@ -341,9 +345,7 @@ public class FirewallSettingActivity extends Activity implements
 				szSmsLog += "(" + String.valueOf(unRead[0]) + "/"
 						+ String.valueOf(unRead[1]) + ")";
 			mapSmsLog.put("CONTENT", szSmsLog);
-			m_List.add(mapSmsLog);
-
-			return null;
+			return mapSmsLog;
 		}
 	}
 
@@ -354,6 +356,7 @@ public class FirewallSettingActivity extends Activity implements
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		onChickCalllInterface cf = m_chickCallInterface.get(position);
-		cf.onChick();
+		if(null != cf)
+			cf.onChick();
 	}
 }

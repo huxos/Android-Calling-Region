@@ -70,6 +70,8 @@ public class CFirewallOperate {
 	 * 
 	 * @param number
 	 *            ：短信发送号码
+	 * @param content
+	 *            ：短信消息内容
 	 * @return 拦截成功返回true，不拦截返回false
 	 */
 	public boolean brockerSMS(String number, String content) {

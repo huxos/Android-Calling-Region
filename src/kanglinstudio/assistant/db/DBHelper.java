@@ -39,6 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase db = null;
 
 	private static final Integer DB_VERSION = 1;
+	public static final String DB_PATH_SDCARD="/sdcard/kanglinstudio.assistant/databases/";
 	public static final String DB_PATH = "/data/data/kanglinstudio.assistant/databases/";
 	private static final String DB_NAME = "location.db";
 

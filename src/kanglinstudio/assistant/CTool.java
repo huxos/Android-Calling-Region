@@ -26,7 +26,7 @@ public class CTool {
 	private static final String TAG = "CTool";
 
 	/**
-	 * 得到用于显示的电话号码（包括区域)
+	 * 得到用于显示的电话号码的区域
 	 * 
 	 * @param context
 	 * @param phone
@@ -37,8 +37,12 @@ public class CTool {
 		if (null == phone || phone.isEmpty())
 			return "";
 		try {
+			String phoneNumberShort;
+			if(phone.length() >= 7)
 			// 截取前面7个数字
-			String phoneNumberShort = phone.substring(0, 7);
+				phoneNumberShort = phone.substring(0, 7);
+			else
+				phoneNumberShort = phone;
 			if (null == phoneNumberShort)
 				return "";
 			// 查询数据库

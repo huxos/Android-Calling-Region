@@ -36,10 +36,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 /**
  * 区域查询界面
+ * 
  * @author KangLin<kl222@126.com>
- *
+ * 
  */
 public class QueryAreaActivity extends Activity {
 
@@ -81,7 +83,8 @@ public class QueryAreaActivity extends Activity {
 		using_network = PreferenceManager.getDefaultSharedPreferences(this)
 				.getBoolean("using_network", false);
 		if (using_network) {
-			if (textView5.getText().toString().equals(R.string.without_using_network))
+			if (textView5.getText().toString()
+					.equals(R.string.without_using_network))
 				textView5.setText(R.string.input_phone_number);
 		} else
 			textView5.setText(R.string.without_using_network);
@@ -105,36 +108,40 @@ public class QueryAreaActivity extends Activity {
 			break;
 		// 关于菜单
 		case R.id.action_about:
-			LayoutInflater inflater = LayoutInflater.from(QueryAreaActivity.this);
+			LayoutInflater inflater = LayoutInflater
+					.from(QueryAreaActivity.this);
 			final View dialog_view = inflater.inflate(R.layout.dialog_view,
 					null);
 			new AlertDialog.Builder(this).setTitle(R.string.action_about)
 					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(dialog_view).setPositiveButton(R.string.ok, null).show();
+					.setView(dialog_view).setPositiveButton(R.string.ok, null)
+					.show();
 			break;
 		// 更新到本地
 		case R.id.action_save:
 			PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
 					.getText().toString()), textView5.getText().toString());
 			if (helper.saveOrUpdatePhoneArea(phoneArea)) {
-				toast = Toast.makeText(this, R.string.update_success_locale, Toast.LENGTH_SHORT);
+				toast = Toast.makeText(this, R.string.update_success_locale,
+						Toast.LENGTH_SHORT);
 				toast.show();
 				textView3.setText(phoneArea.getArea());
 			} else {
-				toast = Toast.makeText(this, R.string.update_faile_locale, Toast.LENGTH_SHORT);
+				toast = Toast.makeText(this, R.string.update_faile_locale,
+						Toast.LENGTH_SHORT);
 				toast.show();
 			}
 			break;
 		}
 		return true;
 	}
-	
+
 	// 设置菜单点击事件
-	public void onQueryAreaSetting(View source){
+	public void onQueryAreaSetting(View source) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 	}
-	
+
 	/**
 	 * 查询按钮触发事件
 	 * 
@@ -151,7 +158,8 @@ public class QueryAreaActivity extends Activity {
 			String phoneNumberShort = phoneNumber.substring(0, 7);
 
 			// 重置保存按钮
-			menuItem.setEnabled(false);
+			if (null != menuItem)
+				menuItem.setEnabled(false);
 
 			progressBar1.setVisibility(ProgressBar.VISIBLE);
 			textView3.setText(R.string.loading);
@@ -164,8 +172,8 @@ public class QueryAreaActivity extends Activity {
 
 			// 查询数据库
 			PhoneArea phoneArea;
-			if ((phoneArea = helper.findPhoneArea(new String[] { phoneNumberShort
-					.toString() })) != null) {
+			if ((phoneArea = helper
+					.findPhoneArea(new String[] { phoneNumberShort.toString() })) != null) {
 
 				textView3.setText(phoneArea.getArea());
 
@@ -174,7 +182,7 @@ public class QueryAreaActivity extends Activity {
 
 			progressBar1.setVisibility(View.GONE);
 
-			//使用网络查询
+			// 使用网络查询
 			if (using_network) {
 				textView5.setText(R.string.loading);
 				progressBar2.setVisibility(ProgressBar.VISIBLE);
@@ -209,14 +217,14 @@ public class QueryAreaActivity extends Activity {
 				InputStream is = entity.getContent();
 				if (is != null) {
 					try {
-						//解析XML 
+						// 解析XML
 						List<Product> products = parseXML(is);
 						if (products.size() == 1) {
 							Product product = products.get(0);
 							String phonenum = product.getPhonenum();
 							StringBuffer location = new StringBuffer(
 									product.getLocation());
-							
+
 							phoneArea = new PhoneArea(Integer.parseInt(phonenum
 									.substring(0, 7)), location.toString()
 									.replaceAll(" ", ""));
@@ -253,10 +261,10 @@ public class QueryAreaActivity extends Activity {
 					} else if ("city".equals(parser.getName())) {
 						product.setCity(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
-					} else if("province".equals(parser.getName())) {
+					} else if ("province".equals(parser.getName())) {
 						product.setProvince(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
-					} else if("supplier".equals(parser.getName())) {
+					} else if ("supplier".equals(parser.getName())) {
 						product.setSupplier(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
 					}
@@ -281,8 +289,9 @@ public class QueryAreaActivity extends Activity {
 			if (phoneArea != null && phoneArea.getArea() != null) {
 				String area = phoneArea.getArea();
 				textView5.setText(area);
-				//网络查询结果与本地不一致是，将「更新到本地」菜单设置为可以点击
-				if (!area.equals(textView3.getText().toString())) {
+				// 网络查询结果与本地不一致是，将「更新到本地」菜单设置为可以点击
+				if (!area.equals(textView3.getText().toString())
+						&& null != menuItem) {
 					menuItem.setEnabled(true);
 				}
 			} else
