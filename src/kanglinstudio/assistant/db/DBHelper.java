@@ -24,6 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -39,7 +40,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase db = null;
 
 	private static final Integer DB_VERSION = 1;
-	public static final String DB_PATH_SDCARD="/sdcard/kanglinstudio.assistant/databases/";
 	public static final String DB_PATH = "/data/data/kanglinstudio.assistant/databases/";
 	private static final String DB_NAME = "location.db";
 
@@ -152,23 +152,22 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * e); } ; return result; }
 	 */
 
-	/**
-	 * 复制数据库文件到软件目录
-	 * 
-	 * @param context
-	 */
-	private static void copyDB(Context context) {
-		Log.d(TAG, "copyDB");
-		boolean dBExists = new File(DB_PATH + DB_NAME).exists();
-		if (!dBExists) {
-			Log.i(TAG, "DATABASE: NOT EXISTS ");
-			File directory = new File(DB_PATH);
-			if (!directory.exists())
-				directory.mkdir();
-			try {
+	private static boolean copyDB(String path, Context context) {
+		boolean dBExists = new File(path + DB_NAME).exists();
+		boolean bRet = false;
+		try {
+			if (!dBExists) {
+				Log.i(TAG, "DATABASE: NOT EXISTS ");
+				File directory = new File(path);
+				if (!directory.exists())
+					if (!directory.mkdirs()) {
+						Log.e(TAG, "mkdirs path error:" + path);
+						return false;
+					}
+
 				Log.i(TAG, "DATABASE: COPYING .. ");
 				InputStream is = context.getAssets().open(DB_NAME);
-				OutputStream os = new FileOutputStream(DB_PATH + DB_NAME);
+				OutputStream os = new FileOutputStream(path + DB_NAME);
 				byte[] buffer = new byte[1024];
 				int length;
 				while ((length = is.read(buffer)) > 0) {
@@ -177,10 +176,28 @@ public class DBHelper extends SQLiteOpenHelper {
 				os.flush();
 				os.close();
 				is.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+
 			}
+			bRet = true;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+		return bRet;
+	}
+
+	/**
+	 * 复制数据库文件到软件目录
+	 * 
+	 * @param context
+	 */
+	private static void copyDB(Context context) {
+		Log.d(TAG, "copyDB");
+		String szSdcard = Environment.getExternalStorageDirectory().getPath()
+				+ "/kanglinstudio.assistant/databases/";
+		if (copyDB(szSdcard, context))
+			return;
+		copyDB(DB_PATH, context);
 	}
 
 	/**
@@ -248,7 +265,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		if (isWhite)
 			szTable = "whitelist";
 		String szSql = "select * from " + szTable + " where phone_number='"
-				+ number +"'";
+				+ number + "'";
 		Cursor c = null;
 		try {
 			c = db.rawQuery(szSql, null);
@@ -517,10 +534,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	/**
 	 * 删除拦截电话日志
+	 * 
 	 * @param condition
 	 * @return
 	 */
-	public boolean deleteBlockerPhoneLog(String condition){
+	public boolean deleteBlockerPhoneLog(String condition) {
 		boolean bRet = false;
 		String szTable = "blocker_phone_log";
 
@@ -534,7 +552,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		return bRet;
 	}
-	
+
 	/**
 	 * 更新所有未读拦截电话为已读
 	 * 
