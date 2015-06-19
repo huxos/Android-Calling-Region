@@ -1,5 +1,6 @@
 package kanglinstudio.assistant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kanglinstudio.assistant.db.DBHelper;
@@ -102,14 +103,14 @@ public class BrockerListActivity extends Activity {
 		text = (TextView) findViewById(R.id.edtBrockerNumber);
 		String number = text.getText().toString();
 		text.setText("");
-		if(null == number || number.isEmpty())
+		if (null == number || number.isEmpty())
 			return;
 		Log.d(TAG, "onAdd:name:" + name + ";number:" + number);
 		CBrockerlist brockerlist = new CBrockerlist(number, name, 1, 1);
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
 		db.updateBrockerList(brockerlist, m_isWhite);
 		m_adapter.UpdateDate();
-		
+
 	}
 
 	// Handle result from the contact picker
@@ -117,7 +118,8 @@ public class BrockerListActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(TAG, "onActivityResult");
-		String name = "", number = "";
+
+		List<CBrockerlist> lstBrocker = new ArrayList<CBrockerlist>();
 		switch (requestCode) {
 		case PICK_CONTACT:
 			// Define our database manager
@@ -136,11 +138,18 @@ public class BrockerListActivity extends Activity {
 								null, null, null);
 
 				if (c != null && c.moveToFirst()) {
+					String number = "";
 					number = c
 							.getString(c
 									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-					name = c.getString(c
-							.getColumnIndex(ContactsContract.CommonDataKinds.Identity.DISPLAY_NAME));
+					if (null == number || number.isEmpty())
+						return;
+					// 去掉非数字字符
+					number = number.replaceAll("[^0-9]", "");
+					CBrockerlist brocker = new CBrockerlist(number,
+							CTool.getNameFromPhone(getBaseContext(), number),
+							1, 1);
+					lstBrocker.add(brocker);
 
 				}
 			} catch (Exception e) {
@@ -154,22 +163,30 @@ public class BrockerListActivity extends Activity {
 		case PICK_CALL:
 			if (null == data)
 				return;
-			number = data.getStringExtra("number");
-			name = CTool.getNameFromPhone(
-					getBaseContext(), number);
+			int count = 0;
+			count = Integer.parseInt(data.getStringExtra("count"));
+			while (count > 0) {
+				String number = "";
+				number = data.getStringExtra("number" + String.valueOf(count));
+				if (null == number || number.isEmpty())
+					return;
+				// 去掉非数字字符
+				number = number.replaceAll("[^0-9]", "");
+				CBrockerlist brocker = new CBrockerlist(number,
+						CTool.getNameFromPhone(getBaseContext(), number), 1, 1);
+				lstBrocker.add(brocker);
+				count--;
+			}
+
 			break;
 		default:
 			Log.e(TAG,
 					"onActivityResult:don't know requestCode:"
 							+ String.valueOf(requestCode));
 		}
-		if (null == number || number.isEmpty())
-			return;
-		// 去掉非数字字符
-		number = number.replaceAll("[^0-9]", "");
-		CBrockerlist list = new CBrockerlist(number, name, 1, 1);
+
 		DBHelper db = DBHelper.getInstance(this.getBaseContext());
-		db.updateBrockerList(list, m_isWhite == true ? true : false);
+		db.updateBrockerList(lstBrocker, m_isWhite == true ? true : false);
 		m_adapter.UpdateDate();
 	}
 

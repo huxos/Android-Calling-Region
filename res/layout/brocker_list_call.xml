@@ -8,8 +8,9 @@
         android:id="@+id/txtBrockerListCallTiem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentRight="false"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/cbBrockerListCallItemSelect"
         android:text="time" />
 
     <TextView
@@ -25,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="false"
         android:layout_below="@id/txtBrockerListCallName"
         android:text="number" />
 
@@ -34,7 +36,15 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/txtBrockerListCallNumber"
         android:layout_alignBottom="@+id/txtBrockerListCallNumber"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentRight="false"
+        android:layout_toLeftOf="@+id/cbBrockerListCallItemSelect"
         android:text="status" />
+
+    <CheckBox
+        android:id="@+id/cbBrockerListCallItemSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

@@ -11,7 +11,6 @@ import kanglinstudio.assistant.entity.CSystemInformation;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,6 +27,7 @@ import android.widget.ListView;
  */
 public class FirewallSettingActivity extends Activity implements
 		OnItemClickListener {
+	@SuppressWarnings("unused")
 	private static final String TAG = "FirewallSettingActivity";
 	List<Map<String, String>> m_List;
 	ListView m_lstView;

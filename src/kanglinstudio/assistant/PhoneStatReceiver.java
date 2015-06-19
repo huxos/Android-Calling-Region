@@ -218,10 +218,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 	 */
 	class ShowArea extends AsyncTask<String, Void, TextView> {
 
-		private Context context;
-
 		public ShowArea(Context context) {
-			this.context = context;
 		}
 
 		@Override

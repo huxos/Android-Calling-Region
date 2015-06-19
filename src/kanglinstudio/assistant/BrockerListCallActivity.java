@@ -2,10 +2,10 @@ package kanglinstudio.assistant;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
@@ -19,9 +19,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,10 +36,13 @@ import android.widget.TextView;
  * 
  */
 public class BrockerListCallActivity extends Activity implements
-		OnItemClickListener {
+		OnItemClickListener, OnClickListener {
 	private static final String TAG = "BrockerListCallActivity";
 	private listAdapter m_Adapter;
 	private List<CCall> m_lstCall;
+	private Set<Integer> m_lstPostion;
+	private CheckBox m_cbDelete;
+	ListView m_listView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +51,13 @@ public class BrockerListCallActivity extends Activity implements
 
 		m_lstCall = getList();
 
-		ListView listView = (ListView) findViewById(R.id.lvBrockerListCallListView);
-		listView.setOnItemClickListener(this);
+		m_listView = (ListView) findViewById(R.id.lvBrockerListCallListView);
+		m_listView.setOnItemClickListener(this);
 		m_Adapter = new listAdapter(this);
-		listView.setAdapter(m_Adapter);
-
+		m_listView.setAdapter(m_Adapter);
+		m_lstPostion = new HashSet<Integer>();
+		m_cbDelete = (CheckBox) findViewById(R.id.cbBrockerListCallSelect);
+		m_cbDelete.setOnClickListener(this);
 	}
 
 	@Override
@@ -58,22 +67,54 @@ public class BrockerListCallActivity extends Activity implements
 		return true;
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		CCall call = m_lstCall.get(arg2);
+	/**
+	 * 增加按钮事件
+	 * 
+	 * @param source
+	 */
+	public void onClickButton(View source) {
+		Iterator<Integer> it = m_lstPostion.iterator();
 		Intent intent = new Intent();
-		//intent.putExtra("name", call.name);
-		intent.putExtra("number", call.number);
+		int count = 0;
+		while (it.hasNext()) {
+			count++;
+			int pos = it.next();
+			CCall call = m_lstCall.get(pos);
+			intent.putExtra("number" + String.valueOf(count), call.number);
+		}
+		intent.putExtra("count", String.valueOf(count));
 		setResult(Activity.RESULT_OK, intent);
 		finish();// 结束之后会将结果传回From
+	}
+
+	/**
+	 * 复选框点击改变事件
+	 */
+	@Override
+	public void onClick(View v) {
+		if (m_cbDelete.isChecked()) {
+			for (int i = 0; i < m_lstCall.size(); i++) {
+				m_lstPostion.add(i);
+			}
+		} else {
+			m_lstPostion.clear();
+		}
+		m_Adapter.notifyDataSetChanged();
 
 	}
 
-	public final class ViewHolder {
-		TextView m_Name;
-		TextView m_Number;
-		TextView m_Time;
-		TextView m_Type;
+	/**
+	 * listview item 点击事件
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		int position = arg2;
+		if (m_lstPostion.contains(position))
+			m_lstPostion.remove(position);
+		else
+			m_lstPostion.add(position);
+		m_Adapter.notifyDataSetChanged();
+
 	}
 
 	/**
@@ -101,7 +142,7 @@ public class BrockerListCallActivity extends Activity implements
 				return getString(R.string.outgoing_type);
 			if (CallLog.Calls.INCOMING_TYPE == type)
 				return getString(R.string.incoming_type);
-			if(0 == type)
+			if (0 == type)
 				return getString(R.string.sms);
 			Log.d(TAG, "getType:" + String.valueOf(type));
 			return "";
@@ -135,16 +176,16 @@ public class BrockerListCallActivity extends Activity implements
 
 	/**
 	 * 得到最近呼叫与短信列表
-	 *
+	 * 
 	 */
-	private List<CCall> getList(){
+	private List<CCall> getList() {
 		Set<CCall> setCall = getCallList();
 		setCall.addAll(getAllSms());
 		// TreeSet排序
 		Set<CCall> treeset = new TreeSet<CCall>(setCall);
 		return new ArrayList<CCall>(treeset);
 	}
-	
+
 	/**
 	 * 得到呼叫列表
 	 * 
@@ -184,6 +225,11 @@ public class BrockerListCallActivity extends Activity implements
 		return setCall;
 	}
 
+	/**
+	 * 得到所有短信列表
+	 * 
+	 * @return
+	 */
 	private Set<CCall> getAllSms() {
 		Set<CCall> setCall = new HashSet<CCall>();
 		ContentResolver cr = this.getContentResolver();
@@ -195,7 +241,7 @@ public class BrockerListCallActivity extends Activity implements
 			c = cr.query(uri, projection, null, null, "date desc");
 			while (c.moveToNext()) {
 				CCall msg = new CCall(c.getString(c.getColumnIndex("person")),
-						c.getString(c.getColumnIndex("address")), 0,//短信
+						c.getString(c.getColumnIndex("address")), 0,// 短信
 						c.getLong(c.getColumnIndex("date")));
 				setCall.add(msg);
 			}
@@ -209,11 +255,19 @@ public class BrockerListCallActivity extends Activity implements
 
 	}
 
+	public final class ViewHolder {
+		TextView m_Name;
+		TextView m_Number;
+		TextView m_Time;
+		TextView m_Type;
+		CheckBox m_Select;
+	}
+
 	class listAdapter extends BaseAdapter {
 		private LayoutInflater m_Inflater;
 		private BrockerListCallActivity m_activity;
 		private Context m_context;
-		
+
 		public listAdapter(BrockerListCallActivity activity) {
 			super();
 			m_activity = activity;
@@ -256,21 +310,56 @@ public class BrockerListCallActivity extends Activity implements
 						.findViewById(R.id.txtBrockerListCallTiem);
 				holder.m_Type = (TextView) convertView
 						.findViewById(R.id.txtBrockerListCallType);
+				holder.m_Select = (CheckBox) convertView
+						.findViewById(R.id.cbBrockerListCallItemSelect);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
 			// 更新值
 			CCall call = m_activity.m_lstCall.get(position);
-			holder.m_Name.setText(CTool.getNameFromPhone(m_context, call.number));
+			holder.m_Name.setText(CTool
+					.getNameFromPhone(m_context, call.number));
 			holder.m_Number.setText(CTool.getShowPhone(m_context, call.number));
 			holder.m_Type.setText(call.getType());
 			holder.m_Time.setText(CTool.formatTimeStampString(
 					m_activity.getBaseContext(), call.time, false));
+			if (m_activity.m_lstPostion.contains(position)) {
+				holder.m_Select.setChecked(true);
+			} else {
+				holder.m_Select.setChecked(false);
+			}
 
+			// 设置事件监听
+			class CCheckedChangeListener implements OnCheckedChangeListener {
+				private int m_position;
+				private BrockerListCallActivity m_activity;
+
+				CCheckedChangeListener(BrockerListCallActivity activity,
+						int position) {
+					super();
+					this.m_position = position;
+					m_activity = activity;
+				}
+
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					if (isChecked)
+						m_activity.m_lstPostion.add(m_position);
+					else
+						m_activity.m_lstPostion.remove(m_position);
+					if (m_activity.m_lstPostion.size() > 0)
+						m_activity.m_cbDelete.setChecked(true);
+					else
+						m_activity.m_cbDelete.setChecked(false);
+				}
+			}
+
+			holder.m_Select
+					.setOnCheckedChangeListener(new CCheckedChangeListener(
+							this.m_activity, position));
 			return convertView;
 		}
-
 	}
-
 }

@@ -34,8 +34,6 @@
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:hint="@string/input_name" >
-
-            <requestFocus />
         </EditText>
 
         <EditText
@@ -46,7 +44,10 @@
             android:layout_toRightOf="@id/edtBrockerName"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/input_phone_number" />
+            android:hint="@string/input_phone_number" >
+
+            <requestFocus />
+        </EditText>
 
         <Button
             android:id="@+id/btnBrocklistAdd"

@@ -155,6 +155,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static boolean copyDB(String path, Context context) {
 		boolean dBExists = new File(path + DB_NAME).exists();
 		boolean bRet = false;
+		Log.d(TAG, "database path:" + path);
 		try {
 			if (!dBExists) {
 				Log.i(TAG, "DATABASE: NOT EXISTS ");
@@ -164,7 +165,6 @@ public class DBHelper extends SQLiteOpenHelper {
 						Log.e(TAG, "mkdirs path error:" + path);
 						return false;
 					}
-
 				Log.i(TAG, "DATABASE: COPYING .. ");
 				InputStream is = context.getAssets().open(DB_NAME);
 				OutputStream os = new FileOutputStream(path + DB_NAME);
@@ -176,11 +176,12 @@ public class DBHelper extends SQLiteOpenHelper {
 				os.flush();
 				os.close();
 				is.close();
-
 			}
 			bRet = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			;
 		}
 
 		return bRet;
@@ -404,6 +405,19 @@ public class DBHelper extends SQLiteOpenHelper {
 		} finally {
 			;
 		}
+		return bRet;
+	}
+
+	public boolean updateBrockerList(List<CBrockerlist> brockerList,
+			boolean isWhite) {
+		boolean bRet = false;
+
+		Iterator<CBrockerlist> it = brockerList.iterator();
+		while (it.hasNext()) {
+			CBrockerlist brocker = it.next();
+			bRet = updateBrockerList(brocker, isWhite);
+		}
+
 		return bRet;
 	}
 
