@@ -100,7 +100,7 @@
                 android:gravity="right|center_vertical" >
 
                 <TextView
-                    android:id="@+id/txtWhitelist"
+                    android:id="@+id/txtQueryAreaLocal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
@@ -144,7 +144,7 @@
                 android:gravity="right|center_vertical" >
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/txtQueryAreaNetWork"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
@@ -177,5 +177,14 @@
         android:layout_alignParentRight="true"
         android:text="@string/set"
         android:onClick="onQueryAreaSetting" />
+
+    <Button
+        android:id="@+id/btmQueryAreaSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/action_save" 
+        android:onClick="onQueryAreaSave" />
 
 </RelativeLayout>

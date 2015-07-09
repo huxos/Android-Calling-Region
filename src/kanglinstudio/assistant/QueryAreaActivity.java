@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,12 +64,14 @@ public class QueryAreaActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query_area);
-		textView5 = (TextView) findViewById(R.id.textView5);
-		textView3 = (TextView) findViewById(R.id.txtWhitelist);
+		textView5 = (TextView) findViewById(R.id.txtQueryAreaNetWork);
+		textView3 = (TextView) findViewById(R.id.txtQueryAreaLocal);
 		textView6 = (TextView) findViewById(R.id.textView6);
 		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar2 = (ProgressBar) findViewById(R.id.ProgressBar2);
 
+		Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+		btmSave.setEnabled(false);
 		// 获得数据库连接
 		helper = DBHelper.getInstance(this.getBaseContext());
 
@@ -119,18 +122,7 @@ public class QueryAreaActivity extends Activity {
 			break;
 		// 更新到本地
 		case R.id.action_save:
-			PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
-					.getText().toString()), textView5.getText().toString());
-			if (helper.saveOrUpdatePhoneArea(phoneArea)) {
-				toast = Toast.makeText(this, R.string.update_success_locale,
-						Toast.LENGTH_SHORT);
-				toast.show();
-				textView3.setText(phoneArea.getArea());
-			} else {
-				toast = Toast.makeText(this, R.string.update_faile_locale,
-						Toast.LENGTH_SHORT);
-				toast.show();
-			}
+			onQueryAreaSave(null);
 			break;
 		}
 		return true;
@@ -140,6 +132,21 @@ public class QueryAreaActivity extends Activity {
 	public void onQueryAreaSetting(View source) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
+	}
+	
+	public void onQueryAreaSave(View source){
+		PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
+				.getText().toString()), textView5.getText().toString());
+		if (helper.saveOrUpdatePhoneArea(phoneArea)) {
+			toast = Toast.makeText(this, R.string.update_success_locale,
+					Toast.LENGTH_SHORT);
+			toast.show();
+			textView3.setText(phoneArea.getArea());
+		} else {
+			toast = Toast.makeText(this, R.string.update_faile_locale,
+					Toast.LENGTH_SHORT);
+			toast.show();
+		}
 	}
 
 	/**
@@ -159,7 +166,11 @@ public class QueryAreaActivity extends Activity {
 
 			// 重置保存按钮
 			if (null != menuItem)
+			{
 				menuItem.setEnabled(false);
+				Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+				btmSave.setEnabled(false);
+			}
 
 			progressBar1.setVisibility(ProgressBar.VISIBLE);
 			textView3.setText(R.string.loading);
@@ -293,6 +304,8 @@ public class QueryAreaActivity extends Activity {
 				if (!area.equals(textView3.getText().toString())
 						&& null != menuItem) {
 					menuItem.setEnabled(true);
+					Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+					btmSave.setEnabled(true);
 				}
 			} else
 				textView5.setText(R.string.none_area);

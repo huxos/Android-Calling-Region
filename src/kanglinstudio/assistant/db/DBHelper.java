@@ -181,7 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			bRet = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			;
 		}
 
@@ -197,8 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		Log.d(TAG, "copyDB");
 		String szSdcard = Environment.getExternalStorageDirectory().getPath()
 				+ "/kanglinstudio.assistant/databases/";
-		if (copyDB(szSdcard, context))
-		{
+		if (copyDB(szSdcard, context)) {
 			DB_FILE = szSdcard + DB_NAME;
 			return;
 		}
@@ -245,14 +244,24 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * @return
 	 */
 	public boolean saveOrUpdatePhoneArea(PhoneArea phoneArea) {
-		ContentValues addToDB = new ContentValues();
-		addToDB.put("_id", phoneArea.get_id());
-		addToDB.put("area", phoneArea.getArea());
-		long count = db.update("phone_location", addToDB, "_id = ?",
-				new String[] { phoneArea.get_id().toString() });
-		if (count != 1)
-			db.insert("phone_location", null, addToDB);
-		return count == 1;
+		boolean bRet = false;
+		try {
+			ContentValues addToDB = new ContentValues();
+			addToDB.put("_id", phoneArea.get_id());
+			addToDB.put("area", phoneArea.getArea());
+			long count = db.update("phone_location", addToDB, "_id = ?",
+					new String[] { phoneArea.get_id().toString() });
+			if (count != 1)
+				count = db.insert("phone_location", null, addToDB);
+			bRet = true;
+		} catch (Exception e) {
+			Log.e(TAG, "saveOrUpdatePhoneArea exception:" + e.getMessage());
+			bRet = false;
+		} finally {
+			;
+		}
+
+		return bRet;
 	}
 
 	/**
