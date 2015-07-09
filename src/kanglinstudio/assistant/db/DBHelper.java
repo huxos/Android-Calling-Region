@@ -42,6 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final Integer DB_VERSION = 1;
 	public static final String DB_PATH = "/data/data/kanglinstudio.assistant/databases/";
 	private static final String DB_NAME = "location.db";
+	private static String DB_FILE = DB_NAME;
 
 	/**
 	 * 单例模式
@@ -49,7 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	private DBHelper(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
+		super(context, DB_FILE, null, DB_VERSION);
 		try {
 			db = getWritableDatabase();
 		} catch (Exception e) {
@@ -197,8 +198,12 @@ public class DBHelper extends SQLiteOpenHelper {
 		String szSdcard = Environment.getExternalStorageDirectory().getPath()
 				+ "/kanglinstudio.assistant/databases/";
 		if (copyDB(szSdcard, context))
+		{
+			DB_FILE = szSdcard + DB_NAME;
 			return;
+		}
 		copyDB(DB_PATH, context);
+		DB_FILE = DB_PATH + DB_NAME;
 	}
 
 	/**
