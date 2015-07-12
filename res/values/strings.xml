@@ -76,5 +76,15 @@
     <string name="intercept_condition">Intercept condition</string>
     <string name="intercept_condition_normal">Whitelist and blacklist</string>
     <string name="intercept_condition_no_contact">Whitelist、blacklist and no contact</string>
+    <string name="title_activity_activity_locale_gps">Gps locale</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="gps_is_ok">Gps is ok</string>
+    <string name="please_open_gps">Please open gps</string>
+    <string name="position_has_changed">Position has changed</string>
+    <string name="Unable_to_get_geographic_information">Unable to get geographic information</string>
+    <string name="gps_is_disabled">Gps is disabled</string>
+    <string name="gps_is_enabled">Gps is enabled</string>
+    <string name="provider_changed">provider changed</string>
+    
 
 </resources>

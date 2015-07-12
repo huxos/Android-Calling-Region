@@ -2,6 +2,7 @@ package kanglinstudio.assistant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import android.os.Bundle;
@@ -26,18 +27,26 @@ import android.widget.AdapterView.OnItemClickListener;
 public class AssistantMainActivity extends Activity implements
 		OnItemClickListener {
 
+	List<onChickCallInstance> m_chickCallInterface;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_assistant_main);
 
+		m_chickCallInterface = new ArrayList<onChickCallInstance>();
+		m_chickCallInterface.add(new onChickCallInstance(
+				R.string.setting_query_title, QueryAreaActivity.class));
+		m_chickCallInterface.add(new onChickCallInstance(
+				R.string.firewallsetting, FirewallSettingActivity.class));
+		m_chickCallInterface.add(new onChickCallInstance(
+				R.string.title_activity_activity_locale_gps, ActivityLocaleGps.class));
 		List<Map<String, String>> m_List = new ArrayList<Map<String, String>>();
-		Map<String, String> mapArea = new HashMap<String, String>();
-		mapArea.put("CONTENT", this.getString(R.string.setting_query_title));
-		m_List.add(mapArea);
-		Map<String, String> mapFirewall = new HashMap<String, String>();
-		mapFirewall.put("CONTENT", getString(R.string.firewallsetting));
-		m_List.add(mapFirewall);
+		Iterator<onChickCallInstance> it = m_chickCallInterface.iterator();
+		while (it.hasNext()) {
+			onChickCallInstance node = it.next();
+			m_List.add(node.getItem());
+		}
 
 		SimpleAdapter adapter = new SimpleAdapter(this, m_List,
 				android.R.layout.simple_list_item_1, // List 显示一行item1
@@ -73,21 +82,42 @@ public class AssistantMainActivity extends Activity implements
 	}
 
 	/**
+	 * listview item 点击事件接口
+	 * 
+	 * @author KangLin<kl222@126.com>
+	 * 
+	 */
+	class onChickCallInstance {
+		int m_IdRes;
+		Class<?> m_Class;
+
+		onChickCallInstance(int idRes, Class<?> cls) {
+			m_IdRes = idRes;
+			m_Class = cls;
+		}
+		// listview item 点击事件
+		public void onChick() {
+			Intent intent = new Intent();
+			intent.setClass(AssistantMainActivity.this, m_Class);
+			startActivity(intent);
+		}
+		// listview item 显示 map
+		public Map<String, String> getItem() {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("CONTENT", getString(m_IdRes));
+			return map;
+		}
+	}
+
+	/**
 	 * listview item 点击事件
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		Intent intent = new Intent();
-		switch (position) {
-		case 0:// 区域查询界面
-			intent.setClass(this, QueryAreaActivity.class);
-			break;
-		case 1:// 防火墙设置界面
-			intent.setClass(this, FirewallSettingActivity.class);
-			break;
-		}
-		startActivity(intent);
+		onChickCallInstance cf = m_chickCallInterface.get(position);
+		if (null != cf)
+			cf.onChick();
 	}
 
 }

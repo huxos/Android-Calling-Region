@@ -76,5 +76,12 @@
     <string name="intercept_condition">拦截条件</string>
     <string name="intercept_condition_normal">白名单和黑名单</string>
     <string name="intercept_condition_no_contact">白名单、黑名单和非通信薄中</string>
-
+    <string name="title_activity_activity_locale_gps">Gps 定位</string>
+	<string name="gps_is_ok">Gps 正常</string>
+	<string name="please_open_gps">请打开 GPS</string>
+	<string name="position_has_changed">位置已经发生改变</string>
+	<string name="Unable_to_get_geographic_information">无法获取地理信息</string>
+	<string name="gps_is_disabled">Gps 被禁用</string>
+	<string name="gps_is_enabled">Gps 已启用</string>
+	<string name="provider_changed">提供者改变</string>
 </resources>

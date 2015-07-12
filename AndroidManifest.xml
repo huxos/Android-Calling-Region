@@ -10,8 +10,22 @@
         android:targetSdkVersion="15" />
     <!-- 使用网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 访问网络状态 -->
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 这个权限用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<!-- 这个权限用于访问GPS定位-->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+	<!-- 用于读取手机当前的状态-->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!--允许应用读取低级别的系统日志文件 -->
+	<uses-permission android:name="android.permission.READ_LOGS"/>
     <!-- 挂断手机的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 读取电话状态的权限 -->
@@ -125,6 +139,10 @@
         <activity
             android:name="kanglinstudio.assistant.InterceptModeActivity"
             android:label="@string/title_activity_intercept_mode" >
+        </activity>
+        <activity
+            android:name="kanglinstudio.assistant.ActivityLocaleGps"
+            android:label="@string/title_activity_activity_locale_gps" >
         </activity>
     </application>
 

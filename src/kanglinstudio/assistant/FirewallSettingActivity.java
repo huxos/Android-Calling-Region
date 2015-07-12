@@ -32,7 +32,7 @@ public class FirewallSettingActivity extends Activity implements
 	List<Map<String, String>> m_List;
 	ListView m_lstView;
 	SimpleAdapter m_Adapter;
-	List<onChickCalllInterface> m_chickCallInterface;
+	List<onChickCallInterface> m_chickCallInterface;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class FirewallSettingActivity extends Activity implements
 	private boolean initListView() {
 		if (null != m_chickCallInterface)
 			m_chickCallInterface.clear();
-		m_chickCallInterface = new ArrayList<onChickCalllInterface>();
+		m_chickCallInterface = new ArrayList<onChickCallInterface>();
 		
 		onSetInerceptMode inerceptMode = new onSetInerceptMode(this);
 		m_chickCallInterface.add(inerceptMode);
@@ -109,9 +109,9 @@ public class FirewallSettingActivity extends Activity implements
 			m_List.clear();
 		m_List = new ArrayList<Map<String, String>>();
 		
-		Iterator<onChickCalllInterface> it = m_chickCallInterface.iterator();
+		Iterator<onChickCallInterface> it = m_chickCallInterface.iterator();
 		while (it.hasNext()) {
-			onChickCalllInterface node = it.next();
+			onChickCallInterface node = it.next();
 			m_List.add(node.getItem());
 		}
 		return true;
@@ -145,7 +145,7 @@ public class FirewallSettingActivity extends Activity implements
 	 * @author KangLin<kl222@126.com>
 	 * 
 	 */
-	public interface onChickCalllInterface {
+	private interface onChickCallInterface {
 		// listview item 显示 map
 		public Map<String, String> getItem();
 		// listview item 点击事件
@@ -157,7 +157,7 @@ public class FirewallSettingActivity extends Activity implements
 	 * 
 	 * @author KangLin<kl222@126.com>
 	 */
-	class onSetInerceptMode implements onChickCalllInterface {
+	class onSetInerceptMode implements onChickCallInterface {
 		Activity m_activity;
 
 		public onSetInerceptMode(Activity activity) {
@@ -183,7 +183,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 设置白名单事件
 	 */
-	class onSetWhitelist implements onChickCalllInterface {
+	class onSetWhitelist implements onChickCallInterface {
 		Activity m_activity;
 
 		public onSetWhitelist(Activity activity) {
@@ -209,7 +209,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 设置黑名单事件
 	 */
-	class onSetBlacklist implements onChickCalllInterface {
+	class onSetBlacklist implements onChickCallInterface {
 		Activity m_activity;
 
 		public onSetBlacklist(Activity activity) {
@@ -236,7 +236,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 设置短信关键字白名单
 	 */
-	class onSetSmsKeyWordWhitelist implements onChickCalllInterface {
+	class onSetSmsKeyWordWhitelist implements onChickCallInterface {
 		Activity m_activity;
 
 		public onSetSmsKeyWordWhitelist(Activity activity) {
@@ -263,7 +263,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 设置短信关键字黑名单
 	 */
-	class onSetSmsKeyWordBlacklist implements onChickCalllInterface {
+	class onSetSmsKeyWordBlacklist implements onChickCallInterface {
 		Activity m_activity;
 
 		public onSetSmsKeyWordBlacklist(Activity activity) {
@@ -290,7 +290,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 查看电话拦截日志
 	 */
-	class onBrockerPhoneLog implements onChickCalllInterface {
+	class onBrockerPhoneLog implements onChickCallInterface {
 		Activity m_activity;
 
 		public onBrockerPhoneLog(Activity activity) {
@@ -321,7 +321,7 @@ public class FirewallSettingActivity extends Activity implements
 	/**
 	 * 查看短信拦截日志
 	 */
-	class onBrockerSMSLog implements onChickCalllInterface {
+	class onBrockerSMSLog implements onChickCallInterface {
 		Activity m_activity;
 
 		public onBrockerSMSLog(Activity activity) {
@@ -355,7 +355,7 @@ public class FirewallSettingActivity extends Activity implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		onChickCalllInterface cf = m_chickCallInterface.get(position);
+		onChickCallInterface cf = m_chickCallInterface.get(position);
 		if(null != cf)
 			cf.onChick();
 	}
