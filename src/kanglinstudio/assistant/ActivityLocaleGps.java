@@ -28,6 +28,7 @@ public class ActivityLocaleGps extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_activity_locale_gps);
 		m_txtStatus = (TextView) this.findViewById(R.id.txtLocalGpsStatus);
+		m_txtStatus.setText("");
 		openGPSSettings();
 	}
 
