@@ -76,8 +76,7 @@
     <string name="intercept_condition">Intercept condition</string>
     <string name="intercept_condition_normal">Whitelist and blacklist</string>
     <string name="intercept_condition_no_contact">Whitelist、blacklist and no contact</string>
-    <string name="title_activity_activity_locale_gps">Gps locale</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_activity_locale_gps">Gps locale</string> 
     <string name="gps_is_ok">Gps is ok</string>
     <string name="please_open_gps">Please open gps</string>
     <string name="position_has_changed">Position has changed</string>
