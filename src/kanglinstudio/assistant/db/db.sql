@@ -15,3 +15,5 @@ create table  if not exists blocker_sms_log(no integer primary key, phone_number
 /*系统信息*/
 create table  if not exists system_infomation(key text primary key not null, value text not null);
 insert into system_infomation values("firewallstatus", "0");
+/*建立gps位置表*/
+create table if not exists position (no integer primary key, userid text, deviceid text, systime long, gpstime long, accuracy float, bearing float, speed float, latitude double, longitude double, altitude double, satellite_number integer, state integer);

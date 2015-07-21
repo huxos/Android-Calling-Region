@@ -9,9 +9,56 @@
     tools:context=".ActivityLocaleGps" >
 
     <TextView
+        android:id="@+id/txtLocalGpsMinTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/minTime" />
+
+    <TextView
+        android:id="@+id/txtLocalGpsMinDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/edtLocalGpsMinTime"
+        android:text="@string/minDistance" />
+
+    <EditText
+        android:id="@+id/edtLocalGpsMinTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtLocalGpsMinTime"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/txtLocalGpsMinTime"
+        android:layout_marginTop="14dp"
+        android:ems="10"
+        android:hint="@string/minTime"
+        android:inputType="numberSigned"
+        android:text="1" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/edtLocalGpsMinDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtLocalGpsMinDistance"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/txtLocalGpsMinDistance"
+        android:layout_toLeftOf="@+id/btnLocalGpsOpen"
+        android:ems="10"
+        android:hint="@string/minDistance"
+        android:inputType="numberDecimal"
+        android:text="0" />
+
+    <TextView
         android:id="@+id/txtLocalGpsDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edtLocalGpsMinDistance"
+        android:layout_below="@+id/edtLocalGpsMinDistance"
         android:text="position" />
 
     <TextView
@@ -20,7 +67,15 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/txtLocalGpsDisplay"
         android:layout_below="@+id/txtLocalGpsDisplay"
-        android:layout_marginTop="24dp"
         android:text="status" />
+
+    <Button
+        android:id="@+id/btnLocalGpsOpen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/edtLocalGpsMinDistance"
+        android:text="@string/open"
+        android:onClick="onOpenClick" />
 
 </RelativeLayout>

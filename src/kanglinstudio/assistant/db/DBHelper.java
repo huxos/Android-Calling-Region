@@ -15,6 +15,7 @@ import kanglinstudio.assistant.entity.CBlockerSMSLog;
 import kanglinstudio.assistant.entity.CBlockerSMSLogs;
 import kanglinstudio.assistant.entity.CBlockerSmsKeyword;
 import kanglinstudio.assistant.entity.CBrockerlist;
+import kanglinstudio.assistant.entity.CPositionInfo;
 import kanglinstudio.assistant.entity.CSystemInformation;
 import kanglinstudio.assistant.entity.PhoneArea;
 
@@ -124,6 +125,12 @@ public class DBHelper extends SQLiteOpenHelper {
 					+ "time integer, content text default '', isread integer default 0)");
 			// 系统信息
 			db.execSQL("create table if not exists system_infomation(key text primary key, value text not null)");
+			// gps 信息表
+			db.execSQL("create table if not exists position"
+					+ "(no integer primary key, userid text, deviceid text, systime long, "
+					+ "gpstime long, accuracy float, bearing float,"
+					+ "speed float, latitude double, longitude double,"
+					+ "altitude double, satellite_number integer, state integer);");
 		} catch (Exception e) {
 			Log.e(TAG, "createDatabase Exception:" + e.getMessage(), e);
 			return false;
@@ -1013,5 +1020,33 @@ public class DBHelper extends SQLiteOpenHelper {
 				c.close();
 		}
 		return lstRet;
+	}
+	
+	public boolean insertPositionInfo(CPositionInfo info) {
+		boolean bRet = false;
+		try{
+			ContentValues cv = new ContentValues();
+			cv.put("userid", info.getUserid());
+			cv.put("deviceid", info.getDeviceid());
+			cv.put("systime", info.getSystime());
+			cv.put("gpstime", info.getGpstime());
+			cv.put("accuracy", info.getAccuracy());
+			cv.put("bearing", info.getBearing());
+			cv.put("speed", info.getSpeed());
+			cv.put("latitude",  info.getLatitude());
+			cv.put("longitude", info.getLongitude());
+			cv.put("altitude", info.getAltitude());
+			cv.put("satellite_number",  info.getSatellite_number());
+			cv.put("state", info.getState());
+			long count = db.insert("position", null, cv);
+			if (-1 == count)
+				Log.e(TAG, "insertPositionInfo fail");
+			else
+				bRet = true;
+		}catch (Exception e) {
+			Log.e(TAG, "insertPositionInfo exception:" + e.getMessage());
+		} finally {
+		}
+		return bRet;
 	}
 }

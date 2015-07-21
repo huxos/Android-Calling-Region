@@ -84,4 +84,22 @@
 	<string name="gps_is_disabled">Gps 被禁用</string>
 	<string name="gps_is_enabled">Gps 已启用</string>
 	<string name="provider_changed">提供者改变</string>
+	<string name="accuracy">精度:</string>
+    <string name="meters"> 米</string>
+    <string name="meters_second"> 米/秒</string>
+    <string name="degrees"> 度</string>
+    <string name="latitude">纬度:</string>
+    <string name="longitude">经度:</string>
+    <string name="bearing">方位:</string>
+    <string name="altitude">海拔:</string>
+    <string name="speed">速度:</string>
+    <string name="systime">系统时间：</string>
+    <string name="gpstime">gps 时间：</string>
+    <string name="satellite_number">卫星个数:</string>
+    <string name="time">时间</string>
+    <string name="minTime">最小时间间隔(单位：秒)：</string>
+    <string name="minDistance">最小距离变化（单位：米）：</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="use_network_provider">网络提供者</string>
 </resources>

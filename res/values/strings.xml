@@ -83,7 +83,23 @@
     <string name="Unable_to_get_geographic_information">Unable to get geographic information</string>
     <string name="gps_is_disabled">Gps is disabled</string>
     <string name="gps_is_enabled">Gps is enabled</string>
-    <string name="provider_changed">provider changed</string>
-    
-
+    <string name="provider_changed">Provider changed</string>
+    <string name="accuracy">Accuracy:</string>
+    <string name="meters"> M</string>
+    <string name="meters_second"> M/S</string>
+    <string name="degrees"> degrees</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="bearing">Bearing:</string>
+    <string name="altitude">Altitude:</string>
+    <string name="speed">Speed:</string>
+    <string name="systime">System time：</string>
+    <string name="gpstime">Gps time：</string>
+    <string name="satellite_number">Satellite number:</string>
+    <string name="time">time</string>
+    <string name="minTime">The minimum time interval(unit:s):</string>
+    <string name="minDistance">Minimum distance(unit:m):</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="use_network_provider">Network provider</string>
 </resources>
