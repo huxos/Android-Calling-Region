@@ -131,6 +131,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					+ "gpstime long, accuracy float, bearing float,"
 					+ "speed float, latitude double, longitude double,"
 					+ "altitude double, satellite_number integer, state integer);");
+			db.execSQL("create index if not exists position_time on position(gpstime);");
+			db.execSQL("create index if not exists position_user_device on position(userid, deviceid);");
 		} catch (Exception e) {
 			Log.e(TAG, "createDatabase Exception:" + e.getMessage(), e);
 			return false;
