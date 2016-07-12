@@ -9,3 +9,9 @@ gen/me/huxos/checkout/R.java
 libs/android-support-v4.jar
 lint.xml
 project.properties
+gradlew.bat
+gradlew
+gradle
+build
+.idea
+.gradle
