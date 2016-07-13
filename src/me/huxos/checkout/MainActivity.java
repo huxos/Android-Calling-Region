@@ -17,8 +17,10 @@ import org.xmlpull.v1.XmlPullParserException;
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.PhoneArea;
 import me.huxos.checkout.entity.Product;
+import me.huxos.checkout.utils.PermissionUtils;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.annotation.SuppressLint;
@@ -68,6 +70,9 @@ public class MainActivity extends Activity {
 		// 获得数据库连接
 		helper = DBHelper.getInstance(this);
 
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			PermissionUtils.checkAppPermissions(this, true);
+		}
 	}
 
 	/**
