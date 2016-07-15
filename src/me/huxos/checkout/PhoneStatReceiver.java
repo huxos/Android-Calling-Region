@@ -1,19 +1,23 @@
 package me.huxos.checkout;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.PhoneArea;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.cabe.lib.cache.CacheSource;
+import com.cabe.lib.cache.interactor.impl.SimpleViewPresenter;
+
+import me.huxos.checkout.db.DBHelper;
+import me.huxos.checkout.entity.PhoneArea;
+import me.huxos.checkout.usecase.DBLocationUseCase;
 
 /**
  * 接收来去电广播
@@ -53,7 +57,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 				phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
 				Log.i(TAG, "view_area_call_out:" + String.valueOf(view_area_call_out) + "; CALL OUT: " + phoneNumber);
 				if (view_area_call_out)
-					new ShowArea(context).execute(phoneNumber);
+					showArea(context, phoneNumber);
 			} else {
 				// 来电
 				TelephonyManager tm = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
@@ -67,7 +71,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 					incoming_number = incoming_number.replaceAll("[^0-9]", "");
 					Log.i(TAG,  "view_area_call_in:" + String.valueOf(view_area_call_in) + "; CALL IN RINGING :" + incoming_number);
 					if (view_area_call_in)
-						new ShowArea(context).execute(incoming_number);
+						showArea(context, incoming_number);
 					break;
 				//电话摘机
 				case TelephonyManager.CALL_STATE_OFFHOOK:
@@ -92,67 +96,56 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		}
 	}
 
-	/**
-	 * 异步任务
-	 * @author hy511
-	 *
-	 */
-	class ShowArea extends AsyncTask<String, Void, String> {
+	private void showArea(final Context context, String phoneNum) {
+		if(tv == null) {
+			tv = new TextView(context);
+			tv.setPadding(30, 50, 50, 30);
+			tv.setTextSize(20);
+			tv.setTextColor(0xFFFFFFFF);
+			tv.setBackgroundColor(0x66000000);
+		}
 
-		private Context context;
-
-		public ShowArea(Context context) {
-			this.context = context;
-			//构建显示内容
-			if(tv == null) {
-				tv = new TextView(context);
-				tv.setPadding(30, 50, 50, 30);
-				tv.setTextSize(20);
-				tv.setTextColor(0xFFFFFFFF);
-				tv.setBackgroundColor(0x66000000);
+		DBHelper helper = DBHelper.getInstance(context);
+		DBLocationUseCase useCase = new DBLocationUseCase(helper, phoneNum);
+		useCase.execute(new SimpleViewPresenter<PhoneArea>() {
+			private PhoneArea phoneArea;
+			@Override
+			public void load(CacheSource from, PhoneArea data) {
+				this.phoneArea = data;
 			}
-		}
-
-		@Override
-		protected String doInBackground(String... param) {
-			//得到连接
-			DBHelper helper = DBHelper.getInstance(context);
-			String incomingNumber = param[0];
-			Log.d(TAG, "Number:" + incomingNumber);
-			PhoneArea phoneArea;
-			String locationLocation;
-			if ((incomingNumber != null && incomingNumber.length() >= 7) && ((phoneArea = helper.findPhoneArea((incomingNumber).substring(0, 7))) != null)) {
-				locationLocation = phoneArea.getArea();
-			} else {
-				locationLocation = context.getString(R.string.none_area);
+			@Override
+			public void error(CacheSource from, int code, String info) {
+				super.error(from, code, info);
+				Log.w("MainActivity", "error:" + info);
 			}
-			return locationLocation;
-		}
+			@Override
+			public void complete(CacheSource from) {
+				if(tv == null) return;
 
-		@Override
-		protected void onPostExecute(String phoneLocation) {
-			if(tv == null) return;
+				//构造显示参数
+				WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 
-			//构造显示参数
-			WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-			
-			//在所有窗体之上
-			params.type = WindowManager.LayoutParams.TYPE_TOAST;
-			params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-			params.y = 150;
-			
-			//设置失去焦点，不能被点击
-			params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-			//高度宽度
-			params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-			params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-			//透明
-			params.format = PixelFormat.RGBA_8888;
-			//显示
-			wm.addView(tv, params);
+				//在所有窗体之上
+				params.type = WindowManager.LayoutParams.TYPE_TOAST;
+				params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+				params.y = 150;
 
-			tv.setText(phoneLocation);
-		}
+				//设置失去焦点，不能被点击
+				params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+				//高度宽度
+				params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+				params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+				//透明
+				params.format = PixelFormat.RGBA_8888;
+				//显示
+				wm.addView(tv, params);
+
+				String locationLocation = context.getString(R.string.none_area);
+				if(phoneArea != null) {
+					locationLocation = phoneArea.getArea();
+				}
+				tv.setText(locationLocation);
+			}
+		});
 	}
-
 }

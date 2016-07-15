@@ -28,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase db = null;
 
 	private static final Integer DB_VERSION = 1;
+	private static final Integer DB_VERSION_SERVICE = DB_VERSION + 1;
 	public static final String DB_PATH = "/data/data/me.huxos.checkout/databases/";
 	private static final String DB_NAME = "location.db";
 
@@ -36,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	private DBHelper(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
+		super(context, DB_NAME, null, DB_VERSION_SERVICE);
 		try {
 			db = getWritableDatabase();
 		} catch (Exception e) {
@@ -63,12 +64,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		if(newVersion == DB_VERSION_SERVICE) {
+			db.execSQL("create table phone_service (" +
+					"phone_num char(20)," +
+					"service_name char(128)" +
+					")");
+		}
 	}
 
 	/**
 	 * 复制数据库文件到软件目录
-	 * @param context
 	 */
 	public static void copyDB(Context context) {
 
@@ -94,41 +99,6 @@ public class DBHelper extends SQLiteOpenHelper {
 				e.printStackTrace();
 			}
 		}
-
-	}
-
-	/**
-	 * 查询号码归属地
-	 * @param args
-	 * @return
-	 */
-	public PhoneArea findPhoneArea(String... args) {
-
-		Cursor c = null;
-		PhoneArea phoneArea = null;
-		try {
-			c = db.rawQuery("select * from phone_location where rowid = ?",
-					args);
-			if (c.getCount() == 1) {
-				c.moveToNext();
-				Integer id = c.getInt(c.getColumnIndex("_id"));
-				String area = c.getString(c.getColumnIndex("area"));
-				phoneArea = new PhoneArea(id, area);
-				Log.d(TAG, "find:" + args[0] + ";area:" + area);
-			}
-			else
-			{
-				Log.e(TAG, "Don't find:" + args[0]);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			Log.e(TAG, "findPhoneArea exception:" + e.getMessage());
-		} finally {
-			if (c != null)
-				c.close();
-		}
-		return phoneArea;
-
 	}
 
 	/**

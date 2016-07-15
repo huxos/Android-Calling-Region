@@ -11,9 +11,10 @@
     <string name="input_phone_number">[输入手机号码]</string>
     <string name="local">本地</string>
     <string name="remote">网络</string>
-    <string name="area">四川成都[联通]</string>
+    <string name="area">浙江杭州[移动]</string>
     <string name="none_area">[暂无归属地信息]</string>
     <string name="action_save">更新到本地</string>
+    <string name="action_service_update">更新电话服务</string>
     <string name="action_about">关于</string>
     <string name="setting_show_area_title">显示设置</string>
     <string name="setting_show_area">归属地显示</string>

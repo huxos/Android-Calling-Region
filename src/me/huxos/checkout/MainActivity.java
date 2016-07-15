@@ -20,9 +20,13 @@ import android.widget.Toast;
 import com.cabe.lib.cache.CacheSource;
 import com.cabe.lib.cache.interactor.impl.SimpleViewPresenter;
 
+import java.util.List;
+
 import me.huxos.checkout.db.DBHelper;
 import me.huxos.checkout.entity.PhoneArea;
+import me.huxos.checkout.entity.PhoneService;
 import me.huxos.checkout.usecase.DBLocationUseCase;
+import me.huxos.checkout.usecase.ServiceUpdateUseCase;
 import me.huxos.checkout.usecase.WebLocationUseCase;
 import me.huxos.checkout.utils.PermissionUtils;
 import rx.Subscription;
@@ -95,29 +99,55 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		// 设置菜单
 		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			actionSetting();
 			break;
 		// 关于菜单
 		case R.id.action_about:
-			LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-			final View dialog_view = inflater.inflate(R.layout.dialog_view, null);
-			new AlertDialog.Builder(this).setTitle(R.string.action_about)
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(dialog_view).setPositiveButton("确定", null).show();
+			actionAbout();
 			break;
 		// 更新到本地
 		case R.id.action_save:
-			PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6.getText().toString()), textView5.getText().toString());
-			if (helper.saveOrUpdatePhoneArea(phoneArea)) {
-				Toast.makeText(this, "更新到本地成功", Toast.LENGTH_SHORT).show();
-				textView3.setText(phoneArea.getArea());
-			} else {
-				Toast.makeText(this, "更新到本地失败", Toast.LENGTH_SHORT).show();
-			}
+			actionSavePhone();
+			break;
+		case R.id.action_service_update:
+			actionUpdateService();
 			break;
 		}
 		return true;
+	}
+
+	private void actionSetting() {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
+
+	private void actionSavePhone() {
+		PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6.getText().toString()), textView5.getText().toString());
+		if (helper.saveOrUpdatePhoneArea(phoneArea)) {
+			Toast.makeText(this, "更新到本地成功", Toast.LENGTH_SHORT).show();
+			textView3.setText(phoneArea.getArea());
+		} else {
+			Toast.makeText(this, "更新到本地失败", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	private void actionUpdateService() {
+		ServiceUpdateUseCase useCase = new ServiceUpdateUseCase();
+		Subscription sc = useCase.execute(new SimpleViewPresenter<List<PhoneService>>(){
+			@Override
+			public void load(CacheSource from, List<PhoneService> data) {
+				super.load(from, data);
+			}
+		});
+		cs.add(sc);
+	}
+
+	private void actionAbout() {
+		LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+		final View dialog_view = inflater.inflate(R.layout.dialog_view, null);
+		new AlertDialog.Builder(this).setTitle(R.string.action_about)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setView(dialog_view).setPositiveButton("确定", null).show();
 	}
 
 	/**
@@ -126,19 +156,14 @@ public class MainActivity extends Activity {
 	public void query(View view) {
 		EditText editText = (EditText) findViewById(R.id.editText1);
 		String phoneNumber = editText.getText().toString();
-		// 去掉非数字字符
-		phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
 		if (phoneNumber.length() >= 7 && phoneNumber.length() <= 11) {
-			// 截取前面7个数字
-			String phoneNumberShort = phoneNumber.substring(0, 7);
-
 			// 重置保存按钮
 			menuItem.setEnabled(false);
 
 			progressBar1.setVisibility(ProgressBar.VISIBLE);
 			textView3.setText(R.string.loading);
 
-			DBLocationUseCase useCase = new DBLocationUseCase(helper, phoneNumberShort);
+			DBLocationUseCase useCase = new DBLocationUseCase(helper, phoneNumber);
 			Subscription sc = useCase.execute(new SimpleViewPresenter<PhoneArea>() {
 				private PhoneArea phoneArea;
 				@Override
@@ -163,7 +188,7 @@ public class MainActivity extends Activity {
 			cs.add(sc);
 
 			textView6.setVisibility(View.VISIBLE);
-			textView6.setText(phoneNumberShort);
+			textView6.setText(phoneNumber.substring(0, 7));
 			textView6.setTextSize(40);
 			// 清空输入框
 			editText.setText("");

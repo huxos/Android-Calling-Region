@@ -24,6 +24,12 @@ public class DBLocationUseCase extends HttpCacheUseCase<PhoneArea> {
     public DBLocationUseCase(DBHelper dbHelper, String phoneNum) {
         super(null, null);
         this.dbHelper = dbHelper;
+        // 去掉非数字字符
+        phoneNum = phoneNum.replaceAll("[^0-9]", "");
+        if(phoneNum.length() > 7) {
+            // 截取前面7个数字
+            phoneNum = phoneNum.substring(0, 7);
+        }
         this.phoneNum = phoneNum;
     }
 
