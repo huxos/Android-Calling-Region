@@ -3,6 +3,7 @@ package me.huxos.checkout;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.cabe.lib.cache.CacheSource;
 import com.cabe.lib.cache.interactor.impl.SimpleViewPresenter;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 
@@ -30,11 +33,12 @@ import me.huxos.checkout.usecase.ServiceUpdateUseCase;
 import me.huxos.checkout.usecase.WebLocationUseCase;
 import me.huxos.checkout.utils.PermissionUtils;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends Activity {
 
-	private static DBHelper helper;
+	private static DBHelper dbHelper;
 	private TextView textView5;
 	private TextView textView6;
 	private TextView textView3;
@@ -59,7 +63,7 @@ public class MainActivity extends Activity {
 		// 初次使用将准备好的数据库文件考入到系统目录共程序使用
 		DBHelper.copyDB(getBaseContext());
 		// 获得数据库连接
-		helper = DBHelper.getInstance(this);
+		dbHelper = DBHelper.getInstance(this);
 
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			PermissionUtils.checkAppPermissions(this, true);
@@ -123,7 +127,7 @@ public class MainActivity extends Activity {
 
 	private void actionSavePhone() {
 		PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6.getText().toString()), textView5.getText().toString());
-		if (helper.saveOrUpdatePhoneArea(phoneArea)) {
+		if (dbHelper.saveOrUpdatePhoneArea(phoneArea)) {
 			Toast.makeText(this, "更新到本地成功", Toast.LENGTH_SHORT).show();
 			textView3.setText(phoneArea.getArea());
 		} else {
@@ -136,7 +140,17 @@ public class MainActivity extends Activity {
 		Subscription sc = useCase.execute(new SimpleViewPresenter<List<PhoneService>>(){
 			@Override
 			public void load(CacheSource from, List<PhoneService> data) {
-				super.load(from, data);
+				if(data != null) {
+					SqlBrite sqlBrite = SqlBrite.create();
+					BriteDatabase db = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
+
+					for(PhoneService phone : data) {
+						ContentValues val = new ContentValues();
+						val.put(DBHelper.SERVICE_COLUMN_NAME, phone.getName());
+						val.put(DBHelper.SERVICE_COLUMN_NUMBER, phone.getNumber());
+						db.insert(DBHelper.TABLE_SERVICE, val);
+					}
+				}
 			}
 		});
 		cs.add(sc);
@@ -155,51 +169,46 @@ public class MainActivity extends Activity {
 	 */
 	public void query(View view) {
 		EditText editText = (EditText) findViewById(R.id.editText1);
-		String phoneNumber = editText.getText().toString();
-		if (phoneNumber.length() >= 7 && phoneNumber.length() <= 11) {
-			// 重置保存按钮
-			menuItem.setEnabled(false);
+		final String phoneNumber = editText.getText().toString();
+		// 重置保存按钮
+		menuItem.setEnabled(false);
 
-			progressBar1.setVisibility(ProgressBar.VISIBLE);
-			textView3.setText(R.string.loading);
+		progressBar1.setVisibility(ProgressBar.VISIBLE);
+		textView3.setText(R.string.loading);
 
-			DBLocationUseCase useCase = new DBLocationUseCase(helper, phoneNumber);
-			Subscription sc = useCase.execute(new SimpleViewPresenter<PhoneArea>() {
-				private PhoneArea phoneArea;
-				@Override
-				public void load(CacheSource from, PhoneArea data) {
-					this.phoneArea = data;
-				}
-				@Override
-				public void error(CacheSource from, int code, String info) {
-					super.error(from, code, info);
-					Log.w("MainActivity", "error:" + info);
-				}
-				@Override
-				public void complete(CacheSource from) {
-					if (phoneArea != null) {
-						textView3.setText(phoneArea.getArea());
-					} else {
-						textView3.setText(R.string.none_area);
-					}
-					progressBar1.setVisibility(View.GONE);
-				}
-			});
-			cs.add(sc);
-
-			textView6.setVisibility(View.VISIBLE);
-			textView6.setText(phoneNumber.substring(0, 7));
-			textView6.setTextSize(40);
-			// 清空输入框
-			editText.setText("");
-
-			//使用网络查询
-			if (using_network) {
-				getLocationFromWeb(phoneNumber);
+		DBLocationUseCase useCase = new DBLocationUseCase(dbHelper, phoneNumber);
+		Subscription sc = useCase.execute(new SimpleViewPresenter<PhoneArea>() {
+			private PhoneArea phoneArea;
+			@Override
+			public void load(CacheSource from, PhoneArea data) {
+				this.phoneArea = data;
 			}
-		} else {
-			Toast.makeText(this, "输入7到11位手机号码", Toast.LENGTH_SHORT).show();
-		}
+			@Override
+			public void error(CacheSource from, int code, String info) {
+				Log.w("MainActivity", "error:" + info);
+			}
+			@Override
+			public void complete(CacheSource from) {
+				if (phoneArea != null) {
+					textView3.setText(phoneArea.getArea());
+				} else {
+					textView3.setText(R.string.none_area);
+				}
+				progressBar1.setVisibility(View.GONE);
+
+				//使用网络查询
+				if (using_network) {
+					getLocationFromWeb(phoneNumber);
+				}
+			}
+		});
+		cs.add(sc);
+
+		textView6.setVisibility(View.VISIBLE);
+		textView6.setText(phoneNumber.substring(0, 7));
+		textView6.setTextSize(40);
+		// 清空输入框
+		editText.setText("");
 	}
 
 	private void getLocationFromWeb(String phoneNum) {

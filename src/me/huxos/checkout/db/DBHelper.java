@@ -10,7 +10,6 @@ import me.huxos.checkout.entity.PhoneArea;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -28,14 +27,18 @@ public class DBHelper extends SQLiteOpenHelper {
 	private SQLiteDatabase db = null;
 
 	private static final Integer DB_VERSION = 1;
-	private static final Integer DB_VERSION_SERVICE = DB_VERSION + 1;
+	private static final Integer DB_VERSION_SERVICE = DB_VERSION + 3;
 	public static final String DB_PATH = "/data/data/me.huxos.checkout/databases/";
 	private static final String DB_NAME = "location.db";
 
-	/**
-	 * 单例模式
-	 * @param context
-	 */
+	public final static String TABLE_SERVICE = "phone_service";
+	public final static String SERVICE_COLUMN_NAME = "service_name";
+	public final static String SERVICE_COLUMN_NUMBER = "service_number";
+	private final static String SQL_TABLE_SERVICE = "create table if not exists " + TABLE_SERVICE + " (" +
+			SERVICE_COLUMN_NUMBER + " char(20)," +
+			SERVICE_COLUMN_NAME + " char(128)" +
+			")";
+
 	private DBHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION_SERVICE);
 		try {
@@ -43,13 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		} catch (Exception e) {
 			db = getReadableDatabase();
 		}
-
 	}
 
-	/**
-	 * @param context
-	 * @return
-	 */
 	public static synchronized DBHelper getInstance(Context context) {
 		if (instance == null) {
 			instance = new DBHelper(context);
@@ -59,16 +57,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// db.execSQL("create table phone_location (_id INTEGER primary key,location varchar(32) not null)");
+		db.execSQL(SQL_TABLE_SERVICE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if(newVersion == DB_VERSION_SERVICE) {
-			db.execSQL("create table phone_service (" +
-					"phone_num char(20)," +
-					"service_name char(128)" +
-					")");
+			Log.w("DBHelper", "onUpgrade:" + SQL_TABLE_SERVICE);
+			db.execSQL("drop table " + TABLE_SERVICE);
+			db.execSQL(SQL_TABLE_SERVICE);
 		}
 	}
 

@@ -9,7 +9,7 @@ public class PhoneService {
     private String number;
     public PhoneService(String name, String number) {
         setName(name);
-        setName(number);
+        setNumber(number);
     }
 
     public String getName() {

@@ -1,7 +1,5 @@
 package me.huxos.checkout.usecase;
 
-import android.util.Log;
-
 import com.cabe.lib.cache.http.HttpStringCacheManager;
 import com.cabe.lib.cache.http.RequestParams;
 import com.cabe.lib.cache.impl.HttpCacheUseCase;
@@ -75,7 +73,6 @@ public class ServiceUpdateUseCase extends HttpCacheUseCase<List<PhoneService>> {
                                 }
                             }
                         }
-
                         return list;
                     }
                 });
@@ -84,7 +81,6 @@ public class ServiceUpdateUseCase extends HttpCacheUseCase<List<PhoneService>> {
     }
 
     private PhoneService createPhone(String name, String number) {
-        Log.w("ServiceUpdateUseCase", "createPhone:" + name + ":" + number);
-        return new PhoneService(number, number);
+        return new PhoneService(name, number);
     }
 }
