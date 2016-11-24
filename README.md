@@ -15,7 +15,7 @@ Android 手机助手
 https://github.com/KangLin/Android-Assistant
 
 ## 下载地址
-http://pan.baidu.com/s/1gdjJZer
+http://pan.baidu.com/s/1jHZN6AU
 
 ## 作者:
 + 康林<kl222@126.com>
