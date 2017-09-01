@@ -1,4 +1,4 @@
-package me.huxos.checkout.entity;
+package kanglinstudio.assistant.entity;
 
 /**
  * 实体类

@@ -1,21 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.huxos.checkout"
+    package="kanglinstudio.assistant"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"/>
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
     <!-- 使用网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 这个权限用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<!-- 这个权限用于访问GPS定位-->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+	<!-- 用于读取手机当前的状态-->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!--允许应用读取低级别的系统日志文件 -->
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+    <!-- 挂断手机的权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 读取电话状态的权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-   	<!-- 在其他程序之上显示窗口的权限 -->
+    <!-- 在其他程序之上显示窗口的权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 过去呼出电话的权限 -->
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <!-- 读取联系人权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <!-- 在SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- 往SDCard写入数据权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- 注册Activity BroadCastreceiver -->
     <application
@@ -23,29 +53,97 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="me.huxos.checkout.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="me.huxos.checkout.SettingsActivity"
-            android:label="@string/action_settings" >
-        </activity>
-        
-		<!-- BoradcastReceiver -->
-        <receiver android:name="me.huxos.checkout.PhoneStatReceiver" >
+        <!-- BoradcastReceiver -->
+        <receiver android:name="kanglinstudio.assistant.PhoneStatReceiver" >
             <intent-filter>
+
                 <!-- 获取来电广播 -->
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <!-- 获取去电广播 -->
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+        <receiver android:name="kanglinstudio.assistant.SMSSTateReceiver" >
+            <intent-filter android:priority="2147483647" >
+
+                <!-- 获取接收短信的广播 -->
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <!-- 获取发送短信的广播 -->
+                <!-- action android:name="android.provider.Telephony.SMS_SENT" / -->
+            </intent-filter>
+        </receiver>
+        <receiver android:name="kanglinstudio.assistant.ConnectionChangeReceiver" >
+            <intent-filter>
+
+                <!-- 获取连接改变的广播 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- android 助手主界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.AssistantMainActivity"
+            android:label="@string/title_activity_assistant_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 区域查询界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.QueryAreaActivity"
+            android:label="@string/area" >
+        </activity>
+        <!-- 区域设置界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.SettingsActivity"
+            android:label="@string/action_settings" >
+        </activity>
+        <!-- 防火墙设置界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.FirewallSettingActivity"
+            android:label="@string/title_activity_firewall_setting" >
+        </activity>
+        <!-- 拦截列表界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerListActivity"
+            android:label="@string/title_activity_brocker_list" >
+        </activity>
+        <!-- 短信拦截关鍵字界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerSmsKeyWordListActivity"
+            android:label="@string/title_activity_brocker_sms_key_word_list" >
+        </activity>
+        <!-- 拦截电话日志界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerPhoneLogActivity"
+            android:label="@string/title_activity_brocker_phone_log" >
+        </activity>
+        <!-- 拦截短信日志界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerSmsLogActivity"
+            android:label="@string/title_activity_brocker_sms_log" >
+        </activity>
+        <!-- 拦截短信詳情界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerSmsLogDetailedActivity"
+            android:label="@string/title_activity_brocker_sms_log_detailed" >
+        </activity>
+        <!-- 最近呼叫界面 -->
+        <activity
+            android:name="kanglinstudio.assistant.BrockerListCallActivity"
+            android:label="@string/title_activity_brocker_list_call" >
+        </activity>
+        <activity
+            android:name="kanglinstudio.assistant.InterceptModeActivity"
+            android:label="@string/title_activity_intercept_mode" >
+        </activity>
+        <activity
+            android:name="kanglinstudio.assistant.ActivityLocaleGps"
+            android:label="@string/title_activity_activity_locale_gps" >
+        </activity>
     </application>
 
 </manifest>

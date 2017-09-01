@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+
+
+            <TextView
+                android:id="@+id/txtBrockerSmsLogName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="text" />
+
+            <TextView
+                android:id="@+id/txtBrockerSmsLogText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/txtBrockerSmsLogName"
+                android:layout_gravity="left"
+                android:layout_toLeftOf="@+id/txtBrockerSmsLogCount"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:minLines="1"
+                android:text="Text" />
+
+        <TextView
+            android:id="@+id/txtBrockerSmsLogTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/btnBrockerSmsLogDelete"
+            android:text="time" />
+
+        <TextView
+            android:id="@+id/txtBrockerSmsLogCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtBrockerSmsLogTime"
+            android:layout_toLeftOf="@+id/btnBrockerSmsLogDelete"
+            android:text="count" />
+
+        <Button
+            android:id="@+id/btnBrockerSmsLogDelete"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btnBrockerSmsLogBrower"
+            android:text="@string/delete" />
+
+        <Button
+            android:id="@+id/btnBrockerSmsLogBrower"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/brower" />
+
+    </RelativeLayout>
+
+</LinearLayout>

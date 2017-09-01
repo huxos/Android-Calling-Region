@@ -1,0 +1,115 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".InterceptModeActivity" >
+
+    <TextView
+        android:id="@+id/txtInterceptModeInterceptType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/intercept_type" />
+
+    <RadioGroup
+        android:id="@+id/rgInterceptModeInterceptType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/rgInterceptModeInterceptDirection"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtInterceptModeInterceptType"
+        android:layout_marginTop="16dp" >
+
+        <RadioButton
+            android:id="@+id/rgInterceptModelInterceptTypeNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intercept_type_no" />
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptTypeNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/intercept_type_normal" />
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptTypePrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intercept_type_prompt" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/txtInterceptModeInterceptDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rgInterceptModeInterceptType"
+        android:text="@string/intercept_direction" />
+
+    <RadioGroup
+        android:id="@+id/rgInterceptModeInterceptDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtInterceptModeInterceptDirection"
+        android:layout_marginLeft="18dp" >
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptDirectionIncoming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/intercept_direction_incoming" />
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptDirectionOutgoing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intercept_direction_outgoing" />
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptDirectionDouble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intercept_direction_double_side" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/txtInterceptModeInterceptCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtInterceptModeInterceptType"
+        android:layout_below="@+id/rgInterceptModeInterceptDirection"
+        android:text="@string/intercept_condition" />
+
+    <RadioGroup
+        android:id="@+id/rgInterceptModeInterceptCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/rgInterceptModeInterceptType"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txtInterceptModeInterceptCondition" >
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptConditionNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/intercept_condition_normal" />
+
+        <RadioButton
+            android:id="@+id/rgInterceptModeInterceptConditionNoContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intercept_condition_no_contact" />
+    </RadioGroup>
+
+</RelativeLayout>

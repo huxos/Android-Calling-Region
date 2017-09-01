@@ -1,4 +1,4 @@
-package me.huxos.checkout;
+package kanglinstudio.assistant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +14,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import me.huxos.checkout.db.DBHelper;
-import me.huxos.checkout.entity.PhoneArea;
-import me.huxos.checkout.entity.Product;
+import kanglinstudio.assistant.db.DBHelper;
+import kanglinstudio.assistant.entity.PhoneArea;
+import kanglinstudio.assistant.entity.Product;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,12 +32,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+/**
+ * 区域查询界面
+ * 
+ * @author KangLin<kl222@126.com>
+ * 
+ */
+public class QueryAreaActivity extends Activity {
 
 	private static DBHelper helper;
 	private TextView textView5;
@@ -49,24 +56,24 @@ public class MainActivity extends Activity {
 	private boolean using_network;
 	private Toast toast;
 
-	public MainActivity() {
+	public QueryAreaActivity() {
 	}
 
 	@SuppressLint("SdCardPath")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		textView5 = (TextView) findViewById(R.id.textView5);
-		textView3 = (TextView) findViewById(R.id.textView3);
+		setContentView(R.layout.activity_query_area);
+		textView5 = (TextView) findViewById(R.id.txtQueryAreaNetWork);
+		textView3 = (TextView) findViewById(R.id.txtQueryAreaLocal);
 		textView6 = (TextView) findViewById(R.id.textView6);
 		progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 		progressBar2 = (ProgressBar) findViewById(R.id.ProgressBar2);
 
-		// 初次使用将准备好的数据库文件考入到系统目录共程序使用
-		DBHelper.copyDB(getBaseContext());
+		Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+		btmSave.setEnabled(false);
 		// 获得数据库连接
-		helper = DBHelper.getInstance(this);
+		helper = DBHelper.getInstance(this.getBaseContext());
 
 	}
 
@@ -79,7 +86,8 @@ public class MainActivity extends Activity {
 		using_network = PreferenceManager.getDefaultSharedPreferences(this)
 				.getBoolean("using_network", false);
 		if (using_network) {
-			if (textView5.getText().toString().equals("[未开启网络查询]"))
+			if (textView5.getText().toString()
+					.equals(R.string.without_using_network))
 				textView5.setText(R.string.input_phone_number);
 		} else
 			textView5.setText(R.string.without_using_network);
@@ -103,28 +111,42 @@ public class MainActivity extends Activity {
 			break;
 		// 关于菜单
 		case R.id.action_about:
-			LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+			LayoutInflater inflater = LayoutInflater
+					.from(QueryAreaActivity.this);
 			final View dialog_view = inflater.inflate(R.layout.dialog_view,
 					null);
 			new AlertDialog.Builder(this).setTitle(R.string.action_about)
 					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(dialog_view).setPositiveButton("确定", null).show();
+					.setView(dialog_view).setPositiveButton(R.string.ok, null)
+					.show();
 			break;
 		// 更新到本地
 		case R.id.action_save:
-			PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
-					.getText().toString()), textView5.getText().toString());
-			if (helper.saveOrUpdatePhoneArea(phoneArea)) {
-				toast = Toast.makeText(this, "更新到本地成功", Toast.LENGTH_SHORT);
-				toast.show();
-				textView3.setText(phoneArea.getArea());
-			} else {
-				toast = Toast.makeText(this, "更新到本地失败", Toast.LENGTH_SHORT);
-				toast.show();
-			}
+			onQueryAreaSave(null);
 			break;
 		}
 		return true;
+	}
+
+	// 设置菜单点击事件
+	public void onQueryAreaSetting(View source) {
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
+	
+	public void onQueryAreaSave(View source){
+		PhoneArea phoneArea = new PhoneArea(Integer.parseInt(textView6
+				.getText().toString()), textView5.getText().toString());
+		if (helper.saveOrUpdatePhoneArea(phoneArea)) {
+			toast = Toast.makeText(this, R.string.update_success_locale,
+					Toast.LENGTH_SHORT);
+			toast.show();
+			textView3.setText(phoneArea.getArea());
+		} else {
+			toast = Toast.makeText(this, R.string.update_faile_locale,
+					Toast.LENGTH_SHORT);
+			toast.show();
+		}
 	}
 
 	/**
@@ -134,7 +156,7 @@ public class MainActivity extends Activity {
 	 */
 	public void query(View view) {
 
-		EditText editText = (EditText) findViewById(R.id.editText1);
+		EditText editText = (EditText) findViewById(R.id.edtQueryAreaNumber);
 		String phoneNumber = editText.getText().toString();
 		// 去掉非数字字符
 		phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
@@ -143,7 +165,12 @@ public class MainActivity extends Activity {
 			String phoneNumberShort = phoneNumber.substring(0, 7);
 
 			// 重置保存按钮
-			menuItem.setEnabled(false);
+			if (null != menuItem)
+			{
+				menuItem.setEnabled(false);
+				Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+				btmSave.setEnabled(false);
+			}
 
 			progressBar1.setVisibility(ProgressBar.VISIBLE);
 			textView3.setText(R.string.loading);
@@ -156,8 +183,8 @@ public class MainActivity extends Activity {
 
 			// 查询数据库
 			PhoneArea phoneArea;
-			if ((phoneArea = helper.findPhoneArea(new String[] { phoneNumberShort
-					.toString() })) != null) {
+			if ((phoneArea = helper
+					.findPhoneArea(new String[] { phoneNumberShort.toString() })) != null) {
 
 				textView3.setText(phoneArea.getArea());
 
@@ -166,7 +193,7 @@ public class MainActivity extends Activity {
 
 			progressBar1.setVisibility(View.GONE);
 
-			//使用网络查询
+			// 使用网络查询
 			if (using_network) {
 				textView5.setText(R.string.loading);
 				progressBar2.setVisibility(ProgressBar.VISIBLE);
@@ -201,14 +228,14 @@ public class MainActivity extends Activity {
 				InputStream is = entity.getContent();
 				if (is != null) {
 					try {
-						//解析XML 
+						// 解析XML
 						List<Product> products = parseXML(is);
 						if (products.size() == 1) {
 							Product product = products.get(0);
 							String phonenum = product.getPhonenum();
 							StringBuffer location = new StringBuffer(
 									product.getLocation());
-							
+
 							phoneArea = new PhoneArea(Integer.parseInt(phonenum
 									.substring(0, 7)), location.toString()
 									.replaceAll(" ", ""));
@@ -245,10 +272,10 @@ public class MainActivity extends Activity {
 					} else if ("city".equals(parser.getName())) {
 						product.setCity(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
-					} else if("province".equals(parser.getName())) {
+					} else if ("province".equals(parser.getName())) {
 						product.setProvince(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
-					} else if("supplier".equals(parser.getName())) {
+					} else if ("supplier".equals(parser.getName())) {
 						product.setSupplier(parser.nextText());
 						Log.d("RemoteHelper", "city:" + product.getLocation());
 					}
@@ -273,9 +300,12 @@ public class MainActivity extends Activity {
 			if (phoneArea != null && phoneArea.getArea() != null) {
 				String area = phoneArea.getArea();
 				textView5.setText(area);
-				//网络查询结果与本地不一致是，将「更新到本地」菜单设置为可以点击
-				if (!area.equals(textView3.getText().toString())) {
+				// 网络查询结果与本地不一致是，将「更新到本地」菜单设置为可以点击
+				if (!area.equals(textView3.getText().toString())
+						&& null != menuItem) {
 					menuItem.setEnabled(true);
+					Button btmSave = (Button) findViewById(R.id.btmQueryAreaSave);
+					btmSave.setEnabled(true);
 				}
 			} else
 				textView5.setText(R.string.none_area);
